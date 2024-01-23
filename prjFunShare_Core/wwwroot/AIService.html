@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>智慧AI客服</title>
+</head>
+<body>
+    <section class="outter">
+        <div class="chat">
+            <button id="closeButton" class="btn-close">關閉AI客服</button>
+            <iframe src='https://webchat.botframework.com/embed/MSIT150Team04Language-botV2?s=nhYgV5PyiYk.8cYcXm-KLZzrKg5Q5l-2VFTfNPH3gjtnJJp1CUEelnI' style='min-width: 400px; width: 100%; min-height: 400px;' class="frame"></iframe>
+
+        </div>
+    </section>
+</body>
+
+</html>
+
+<script>
+    document.getElementById("closeButton").addEventListener("click", function () {
+        // 需求關閉iframe
+        parent.postMessage("closeIframe", "*");
+    });
+</script>
+
+<style>
+    .outter {
+        box-sizinng: border-box;
+        border: 30px;
+        border-radius: 10px;
+        background-color: #0dbf8c;
+    }
+
+    .btn-close {
+        background-color: #faf0e6;
+        border-radius: 5px;
+    }
+
+    .chat {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .frame {
+        background-color: transparent;
+    }
+</style>

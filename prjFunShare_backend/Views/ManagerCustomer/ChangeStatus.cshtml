@@ -1,0 +1,73 @@
+﻿@model prjFunShare_backend.Models.CustomerInfomationWrap
+
+@{
+    ViewData["Title"] = "停權";
+}
+
+
+<h1>停權</h1>
+
+<h4>停權資訊</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChangeStatus">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div class="form-group">
+                <label asp-for="MemberId" class="control-label"></label>
+                <input asp-for="MemberId" class="form-control" />
+                <span asp-validation-for="MemberId" class="text-danger"></span>
+            </div> *@
+           @*  <div class="form-group">
+                <label asp-for="ResidentId" class="control-label"></label>
+                <input asp-for="ResidentId" class="form-control" readonly disabled />
+                <span asp-validation-for="ResidentId" class="text-danger"></span>
+            </div>   *@         
+            <input asp-for="MemberId" class="form-control" type="hidden" />
+            @* <input asp-for="StatusId" value="3" class="form-control" type="hidden" /> *@
+                
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" readonly disabled />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="SuspensionReason" class="control-label"></label>
+                <input asp-for="SuspensionReason" class="form-control" />
+                <span asp-validation-for="SuspensionReason" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input id="btnSubmit" type="submit" value="停權" class="btn btn-outline-danger" />
+                <a class="btn btn-outline-primary" type="button" asp-action="List">回上一頁</a>
+                <input id="btnDemo" type="button" value="DEMO1" class="btn btn-outline-danger" />
+               @*  <input id="btnDemo2" type="button" value="DEMO2" class="btn btn-danger" /> *@
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+            
+    
+    <script>
+
+        // $('#btnDemo1').on('click', function () {
+        //     $('#SuspensionReason').addClass('active');
+        //     $('#SuspensionReason').val('無故缺席五次以上');
+        // })
+        $('#btnDemo').on('click', function () {
+            $('#SuspensionReason').addClass('active');
+            $('#SuspensionReason').val('積欠貨款，態度不佳。');
+        })
+        // document.getElementById("#btnSubmit").addEventListener("click", function () {
+        //     swal( "停權", "你確定嗎?", "success",{ button: "確定!" })
+        // }).then(function (){ location.href = "@Url.Action("List","ManagerCustomer")";
+        // })
+    </script>
+
+}

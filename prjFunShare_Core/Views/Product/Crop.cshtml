@@ -1,0 +1,86 @@
+﻿@addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Crop";
+}
+
+<h1>Crop</h1>
+
+<form method="post" enctype="multipart/form-data" asp-controller="Product" asp-action="Save">
+    <input type="file" id="FileUpload1" />
+    <br />
+    <br />
+    <table border="0" cellpadding="0" cellspacing="5">
+        <tr>
+            <td>
+                <img id="Image1" src="" alt="" style="display: none"/>
+            </td>
+            <td>
+                <canvas id="canvas" height="5" width="5"></canvas>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <input type="button" id="btnCrop" value="Crop" style="display: none" />
+    <input type="submit" id="btnUpload" value="Upload" style="display: none" />
+    <input type="hidden" name="imgX1" id="imgX1" />
+    <input type="hidden" name="imgY1" id="imgY1" />
+    <input type="hidden" name="imgWidth" id="imgWidth" />
+    <input type="hidden" name="imgHeight" id="imgHeight" />
+    <input type="hidden" name="imgCropped" id="imgCropped" />
+
+    <input type="number" name="id" />
+        <textarea rows="5" cols="33" name="intro">
+    產品簡介
+  </textarea>
+
+</form>
+
+@section Scripts{
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.9/js/jquery.Jcrop.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#FileUpload1').change(function () {
+           
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#Image1').show();
+                $('#Image1').attr("src", e.target.result);
+                $('#Image1').Jcrop({
+                    onChange: SetCoordinates,
+                    onSelect: SetCoordinates,
+                    // 設定圖片比例
+                    aspectRatio: 4 / 3
+                });
+            }
+            reader.readAsDataURL($(this)[0].files[0]);
+        });
+
+        $('#btnCrop').click(function () {
+            var x1 = $('#imgX1').val();
+            var y1 = $('#imgY1').val();
+            var width = $('#imgWidth').val();
+            var height = $('#imgHeight').val();
+            var canvas = $("#canvas")[0];
+            var context = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function () {
+                canvas.height = height;
+                canvas.width = width;
+                context.drawImage(img, x1, y1, width, height, 0, 0, width, height);
+                $('#imgCropped').val(canvas.toDataURL());
+                $('#btnUpload').show();
+            };
+            img.src = $('#Image1').attr("src");
+        });
+    });
+    function SetCoordinates(c) {
+        $('#imgX1').val(c.x);
+        $('#imgY1').val(c.y);
+        $('#imgWidth').val(c.w);
+        $('#imgHeight').val(c.h);
+        $('#btnCrop').show();
+    };
+    </script>
+}

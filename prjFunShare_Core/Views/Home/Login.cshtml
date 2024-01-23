@@ -1,0 +1,288 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+
+    <!-- FunShare icon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!--bootstrap-->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="~/css/mdb.min.css" />
+    <!-- 自訂 -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- 密碼眼睛 -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+
+    <style>
+        /*眼睛*/
+        #checkEye {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    @{
+        ViewData["Title"] = "Login";
+    }
+
+    @model prjFunShare_Core.ViewModels.CLoginViewModel
+
+    @Html.AntiForgeryToken()
+
+    @* 要改成彈跳視窗 *@
+
+    @*登入套版範例*@
+    <div class="border d-flex justify-content-center align-items-center" style="width: 100%; height:calc(100vh)">
+        <div class="col-md-3" style="width: 350px">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="card" style="padding: 30px">
+                <h2 class="text-center">登入</h2>
+                @*用card的外框裝Form*@
+                <div style="width: 100%; height:100%; padding: 10px">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height:100%">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                        </svg>
+                        使用 Facebook 登入
+                    </button>
+                </div>
+                <div style="width: 100%; height:100%; padding: 10px">
+                    <button type="submit" class="btn btn-light" style="width: 100%; height:100%">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                        </svg>
+                        使用 Google 登入
+                    </button>
+                </div>
+
+                <div class="text-center" style="width: 100%; height:100%; padding: 10px">或</div>
+
+                <form method="post" class="row g-3 needs-validation" id="loginform">
+                    @* col-12 代表填滿一列 *@
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            @{
+                                if (@Model.txtAccount != null)
+                                {
+                                                <input type="text" class="form-control" id="Account" name="txtAccount" value="@Model.txtAccount" required />
+                                }
+                                else
+                                {
+                                                <input type="text" class="form-control" id="Account" name="txtAccount" required />
+                                }
+                            }
+                            <label for="Account" class="form-label">Email 或 手機號碼</label>
+                            <div class="invalid-feedback">請輸入Email 或 手機號碼</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            @{
+                                if (@Model.txtPassword != null)
+                                {
+                                                <input type="password" class="form-control" id="Password" name="txtPassword" value="@Model.txtPassword" required />
+                                }
+                                else
+                                {
+                                                <input type="password" class="form-control" id="Password" name="txtPassword" required />
+                                }
+                            }
+                            <label for="Password" class="form-label">密碼</label>
+                            <div class="invalid-feedback">請輸入密碼</div>
+                            <i id="checkEye" class="fas fa-eye-slash"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <img id="img-captcha" src="~/get-captcha-image" />
+                        </div>
+                        <input type="text" class="form-control" placeholder="請輸入驗證碼" maxlength="4" id="CaptchaCode" name="txtCaptchaCode" required />
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <input type="submit" value="登入" class="btn btn-success" id="login" />
+                        <input id="btnDemo" type="button" value="demo" class="btn btn-danger ms-2" />
+                    </div>
+
+                    <div class="form-group" style="text-align: center">
+                        @Html.ActionLink("忘記密碼", "ResetPassword", "Home", null, null)
+                    </div>
+
+                    <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+
+                    <div class="form-group" style="text-align: center">
+                        @Html.ActionLink("註冊", "Register", "Home", null, new { @class = "btn btn-secondary" })
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="~/js/mdb.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $('#btnDemo').on('click', function () {
+            $('#Password').addClass('active');
+            $('#Account').addClass('active');
+            $('#Password').val(11111);
+            $('#Account').val('111@gmail.com');
+        })
+        $("#checkEye").click(function () {
+            if ($(this).hasClass('fa-eye')) {
+                $("#Password").attr('type', 'password');
+            } else {
+                $("#Password").attr('type', 'text');
+            }
+            $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+        });
+
+        $("#img-captcha").click(function () {
+            resetCaptchaImage();
+        });
+
+        function resetCaptchaImage() {
+            d = new Date();
+            $("#img-captcha").attr("src", "/get-captcha-image?" + d.getTime());
+        }
+
+        const loginform = document.querySelector('#loginform');
+        $("#loginform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault(); //防止預設行為(action="~/api/getdemo" 之類)的發生
+
+                loadlogin();
+
+                // fetch('@Url.Content("/api/Login")', {
+                //     body: formData,
+                //     method: 'post'
+                // })
+                //     .then(response => {
+                //         return response.text();
+                //     })
+                //     .then(data => {
+                //         if (data == "登入成功") {
+                //             alert("登入成功");
+                //             history.back();
+                //         }
+                //         else {
+                //             alert(data);
+                //             // alert("@TempData["LoginErrorMessage"]");
+                //             $('#CaptchaCode').val("");
+                //             resetCaptchaImage();
+                //             // window.location.reload();
+                //         }
+                // xhr.send(formData);
+
+                // xhr.addEventListener('load', () => {
+                //     const data = xhr.responseText;
+                //     console.log(data);
+                //     if (data == "登入成功") {
+                //         alert("登入成功");
+                //         history.back();
+                //     }
+                //     else {
+                //         alert(data);
+                //         // alert("@TempData["LoginErrorMessage"]");
+                //         $('#CaptchaCode').val("");
+                //         resetCaptchaImage();
+                //         // window.location.reload();
+                //     }
+                // })
+
+                // fetch('@Url.Content("/api/Login")', {
+                //     body: formData,
+                //     method: 'post'
+                // })
+                //     .then(response => {
+                //         const data = xhr.responseText;
+                //         if (response.ok) {
+                //             // history.back();
+                //         }
+                //         else {
+                //             alert("錯誤！登入失敗...")
+                //             window.location.reload();
+                //         }
+                //     })
+            }
+        })
+
+        async function loadlogin() {
+            const formData = new FormData(loginform);
+            const response = await fetch('@Url.Content("/api/Login")', {
+                body: formData,
+                method: 'post'
+            })
+            const data = await response.text();
+            if (data == "登入成功") {
+                // alert("登入成功");
+                Swal.fire({
+                    icon: 'success',
+                    title: '登入成功',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(
+                    function () { 
+                        history.back(); 
+                    }, 2000);
+            }
+            else {
+                // alert(data);
+                Swal.fire({
+                    icon: 'error',
+                    title: '登入失敗',
+                    text: data,
+                })
+                // alert("@TempData["LoginErrorMessage"]");
+                $('#CaptchaCode').val("");
+                resetCaptchaImage();
+                // window.location.reload();
+            }
+        }
+
+        console.log(document.referrer);
+
+    </script>
+</body>
+
+</html>
+@*
+@if (TempData["LoginErrorMessage"] != null && TempData["LoginErrorMessage"] != string.Empty)
+{
+    @:alert("@TempData["LoginErrorMessage"]");
+    TempData["LoginErrorMessage"] = null;
+} *@

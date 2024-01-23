@@ -1,0 +1,427 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.ManagerOrder.COrder>
+@{
+    ViewData["Title"] = "訂單總覽";
+    ViewBag.Action = "List";
+}
+
+<h1>訂單總覽</h1>
+
+<div align="left">
+    @using (Html.BeginForm())
+    {
+        <select>
+            <option>關鍵字查詢</option>
+            <option>訂單編號</option>
+            <option>訂購人</option>
+            <option>訂購狀態</option>
+            <option>付款狀態</option>
+        </select>
+        @Html.TextBox("txtKeyword")
+        <input type="submit" value="查詢" class="btn btn-outline-primary" id="input1" />
+        <div>
+            <label for="itemsPerPage">每頁顯示筆數：</label>
+            <select id="itemsPerPage" name="itemsPerPage">
+                <option value="20">請選擇</option>
+                <option value="30">30 筆</option>
+                <option value="50">50 筆</option>
+                <option value="100">100 筆</option>
+            </select>
+        </div>
+    }
+    <a asp-action="Create" class="btn btn-outline-primary">新增訂單</a>
+</div>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">全部</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pay-tab" data-bs-toggle="tab" data-bs-target="#pay-tab-pane" type="button" role="tab" aria-controls="pay-tab-pane" aria-selected="false">已付款</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="nopay-tab" data-bs-toggle="tab" data-bs-target="#nopay-tab-pane" type="button" role="tab" aria-controls="nopay-tab-pane" aria-selected="false">未付款</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="ok-tab" data-bs-toggle="tab" data-bs-target="#ok-tab-pane" type="button" role="tab" aria-controls="ok-tab-pane" aria-selected="false">報名成功</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="wait-tab" data-bs-toggle="tab" data-bs-target="#wait-tab-pane" type="button" role="tab" aria-controls="wait-tab-pane" aria-selected="false">候補中</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>序號 </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_ID) </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Time)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Count)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                    <th>@Html.DisplayNameFor(model => model.小計)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Status)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string statusClassForPay = "";//改變付款顏色
+                    string statusClassForOrder = "";//改變報名
+                    int count = 0;
+                    foreach (var item in Model)
+                    {
+                        switch (item.FOrderPay_Status)
+                        {
+                            case "已付款":
+                                statusClassForPay = "text-success";
+                                break;
+                            case "未付款":
+                                statusClassForPay = "text-danger";
+                                break;
+                            case "取消":
+                                statusClassForPay = "text-warning";
+                                break;
+                        }
+                        switch (item.FOrder_Status)
+                        {
+                            case "報名成功":
+                                statusClassForOrder = "text-success";
+                                break;
+                            case "停課":
+                                statusClassForOrder = "text-danger";
+                                break;
+                            case "候補中":
+                                statusClassForOrder = "text-warning";
+                                break;
+                        }
+                        count++;
+                        <tr>
+                            <td> @count</td>
+                            <td>@Html.DisplayFor(modelItem => item.FOrder_ID) </td>
+                            <td>@Html.DisplayFor(modelItem => item.FOrder_Time)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                            <td>@Html.DisplayFor(model => item.FCustomer_PhoneNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FOrder_Count)</td>
+                            <td>
+                                <span class="currency">@item.FProduct_UnitPrice.Value.ToString("C")</span>
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.小計)</td>
+                            <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item.FOrder_Status)</td>
+                            <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status) </td>
+                            <td>
+                                @Html.ActionLink("修改", "Edit", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-primary" }) |
+                                @Html.ActionLink("留言", "Message", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-success" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="pay-tab-pane" role="tabpanel" aria-labelledby="pay-tab" tabindex="0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>序號 </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_ID) </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Time)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                    <th> @Html.DisplayNameFor(model => model.FOrder_Count)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                    <th> @Html.DisplayNameFor(model => model.小計)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Status)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FOrderPay_Status == "已付款")
+                        {
+                            switch (item.FOrderPay_Status)
+                            {
+                                case "已付款":
+                                    statusClassForPay = "text-success";
+                                    break;
+                                case "未付款":
+                                    statusClassForPay = "text-danger";
+                                    break;
+                                case "取消":
+                                    statusClassForPay = "text-warning";
+                                    break;
+                            }
+                            switch (item.FOrder_Status)
+                            {
+                                case "報名成功":
+                                    statusClassForOrder = "text-success";
+                                    break;
+                                case "停課":
+                                    statusClassForOrder = "text-danger";
+                                    break;
+                                case "候補中":
+                                    statusClassForOrder = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td> @count</td>
+                                <td> @Html.DisplayFor(modelItem => item.FOrder_ID) </td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Time)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                <td>@Html.DisplayFor(model => item.FCustomer_PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Count)</td>
+                                <td>
+                                    <span class="currency">@item.FProduct_UnitPrice.Value.ToString("C")</span>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.小計)</td>
+                                <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item.FOrder_Status)</td>
+                                <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status) </td>
+                                <td>
+                                    @Html.ActionLink("修改", "Edit", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-primary" }) |
+                                    @Html.ActionLink("留言", "Message", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="nopay-tab-pane" role="tabpanel" aria-labelledby="nopay-tab" tabindex="0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>序號 </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_ID) </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Time)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                    <th> @Html.DisplayNameFor(model => model.FOrder_Count)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                    <th> @Html.DisplayNameFor(model => model.小計)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Status)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FOrderPay_Status == "未付款")
+                        {
+                            switch (item.FOrderPay_Status)
+                            {
+                                case "已付款":
+                                    statusClassForPay = "text-success";
+                                    break;
+                                case "未付款":
+                                    statusClassForPay = "text-danger";
+                                    break;
+                                case "取消":
+                                    statusClassForPay = "text-warning";
+                                    break;
+                            }
+                            switch (item.FOrder_Status)
+                            {
+                                case "報名成功":
+                                    statusClassForOrder = "text-success";
+                                    break;
+                                case "停課":
+                                    statusClassForOrder = "text-danger";
+                                    break;
+                                case "候補中":
+                                    statusClassForOrder = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td> @count</td>
+                                <td> @Html.DisplayFor(modelItem => item.FOrder_ID) </td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Time)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                <td>@Html.DisplayFor(model => item.FCustomer_PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Count)</td>
+                                <td>
+                                    <span class="currency">@item.FProduct_UnitPrice.Value.ToString("C")</span>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.小計)</td>
+                                <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item.FOrder_Status)</td>
+                                <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status) </td>
+                                <td>
+                                    @Html.ActionLink("修改", "Edit", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-primary" }) |
+                                    @Html.ActionLink("留言", "Message", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="ok-tab-pane" role="tabpanel" aria-labelledby="ok-tab" tabindex="0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>序號 </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_ID) </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Time)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                    <th> @Html.DisplayNameFor(model => model.FOrder_Count)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                    <th> @Html.DisplayNameFor(model => model.小計)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Status)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FOrder_Status == "報名成功")
+                        {
+                            switch (item.FOrderPay_Status)
+                            {
+                                case "已付款":
+                                    statusClassForPay = "text-success";
+                                    break;
+                                case "未付款":
+                                    statusClassForPay = "text-danger";
+                                    break;
+                                case "取消":
+                                    statusClassForPay = "text-warning";
+                                    break;
+                            }
+                            switch (item.FOrder_Status)
+                            {
+                                case "報名成功":
+                                    statusClassForOrder = "text-success";
+                                    break;
+                                case "停課":
+                                    statusClassForOrder = "text-danger";
+                                    break;
+                                case "候補中":
+                                    statusClassForOrder = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td> @count</td>
+                                <td> @Html.DisplayFor(modelItem => item.FOrder_ID) </td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Time)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                <td>@Html.DisplayFor(model => item.FCustomer_PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Count)</td>
+                                <td>
+                                    <span class="currency">@item.FProduct_UnitPrice.Value.ToString("C")</span>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.小計)</td>
+                                <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item.FOrder_Status)</td>
+                                <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status) </td>
+                                <td>
+                                    @Html.ActionLink("修改", "Edit", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-primary" }) |
+                                    @Html.ActionLink("留言", "Message", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="wait-tab-pane" role="tabpanel" aria-labelledby="wait-tab" tabindex="0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>序號 </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_ID) </th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Time)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.FCustomer_PhoneNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                    <th> @Html.DisplayNameFor(model => model.FOrder_Count)</th>
+                    <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                    <th> @Html.DisplayNameFor(model => model.小計)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrder_Status)</th>
+                    <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FOrder_Status == "候補中")
+                        {
+                            switch (item.FOrderPay_Status)
+                            {
+                                case "已付款":
+                                    statusClassForPay = "text-success";
+                                    break;
+                                case "未付款":
+                                    statusClassForPay = "text-danger";
+                                    break;
+                                case "取消":
+                                    statusClassForPay = "text-warning";
+                                    break;
+                            }
+                            switch (item.FOrder_Status)
+                            {
+                                case "報名成功":
+                                    statusClassForOrder = "text-success";
+                                    break;
+                                case "停課":
+                                    statusClassForOrder = "text-danger";
+                                    break;
+                                case "候補中":
+                                    statusClassForOrder = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td> @count</td>
+                                <td> @Html.DisplayFor(modelItem => item.FOrder_ID) </td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Time)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                <td>@Html.DisplayFor(model => item.FCustomer_PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FOrder_Count)</td>
+                                <td>
+                                    <span class="currency">@item.FProduct_UnitPrice.Value.ToString("C")</span>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.小計)</td>
+                                <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item.FOrder_Status)</td>
+                                <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status) </td>
+                                <td>
+                                    @Html.ActionLink("修改", "Edit", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-primary" }) |
+                                    @Html.ActionLink("留言", "Message", "ManagerOrder", new { id = item.FOrder_ID }, new { Class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

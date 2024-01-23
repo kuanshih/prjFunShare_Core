@@ -1,0 +1,186 @@
+﻿@model IEnumerable<FunShare_Admin.Models.CustomerInfomation>
+
+@{
+    ViewData["Title"] = "會員總覽";
+}
+
+<h1>會員總覽</h1>
+
+@using (Html.BeginForm())
+{
+    <div align="right">
+        關鍵字 @Html.TextBox("txtKeyword")
+        <input class="btn btn-outline-primary" type="submit" value="查詢" />
+        <a class="btn btn-outline-primary" type="button" asp-action="Create">新增會員</a>
+    </div>
+}
+<div class="row row-cols-1 row-cols-md-6 g-2" id="cardView">
+    @{
+        foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card" h-100>
+                    @if (item.Photo != null)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="card-img-top" alt="Card image cap" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <p class="card-text">
+                            @Html.DisplayFor(modelItem => item.ResidentId)
+                            <br />
+                            @Html.DisplayFor(modelItem => item.Email)
+                            <br />
+                            @Html.DisplayFor(modelItem => item.District.DistrictName)
+                            <br />
+                            @Html.DisplayFor(modelItem => item.Status.Description)
+                            <div>
+                                @Html.ActionLink("編輯", "Edit", new { id=item.MemberId }, new {@class="btn btn-primary"})
+                            </div>
+                            @{
+                                if (item.Status.Description == "停權中")
+                                {
+                                    <div name="btnReverseStatus">
+                                        @Html.ActionLink("復權", "ReverseStatus", new { id=item.MemberId },new {@class="btn btn-primary"})
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div name="btnChangeStatus">
+                                        @Html.ActionLink("停權", "ChangeStatus", new { id=item.MemberId },new {@class="btn btn-danger"})
+                                    </div>
+                                }
+                            }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                會員姓名
+                @*  @Html.DisplayNameFor(model => model.Name) *@
+            </th>
+            <th>
+                身分字號
+                @*  @Html.DisplayNameFor(model => model.ResidentId) *@
+            </th>
+            <th>
+                家長姓名
+                @*  @Html.DisplayNameFor(model => model.ParentId) *@
+            </th>
+            <th>
+                性別
+                @*  @Html.DisplayNameFor(model => model.Gender) *@
+            </th>
+            <th>
+                電話
+                @*  @Html.DisplayNameFor(model => model.PhoneNumber) *@
+            </th>
+            <th>
+                信箱
+                @* @Html.DisplayNameFor(model => model.Email) *@
+            </th>
+            <th>
+                行政區
+                @*  @Html.DisplayNameFor(model => model.DisctrictId) *@
+            </th>
+            <th>
+                生日
+                @* @Html.DisplayNameFor(model => model.BirthDate) *@
+            </th>
+            <th>
+                匿名
+                @*  @Html.DisplayNameFor(model => model.Nickname) *@
+            </th>
+            <th>
+                過敏
+                @*  @Html.DisplayNameFor(model => model.IsAllergy) *@
+            </th>
+
+            <th>
+                狀態
+                @*  @Html.DisplayNameFor(model => model.StatusId) *@
+            </th>
+            <th>
+                編輯/刪除
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)<br />
+                        @if (item.Photo != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" class="img-thumbnail" />
+                        }
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResidentId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Parent.Name)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.District.DistrictName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BirthDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nickname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsAllergy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status.Description)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("編輯", "Edit", new { id=item.MemberId }, new {Class="btn btn-primary"}) |
+                        @Html.ActionLink("刪除", "Delete", new { id=item.MemberId },new {onclick="return confirm('確定要刪除嗎?')", @class="btn btn-danger"})
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        // $("table").hide();
+        $("#cardView").hide();
+
+    </script>
+
+}

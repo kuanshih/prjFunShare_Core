@@ -1,0 +1,114 @@
+﻿<h3>圖片辨識</h3>
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data" id="imgForm">
+        <label class="form-label">圖片檔案:</label>
+        <img id="imgPreview" src="~/img/commentimg/NoImage.jpg" style="width:800px;  height:600px;" />
+        <input id="file" type="file" accept="image/*" class="form-control" name="file" />
+        <button type="submit" class="btn btn-primary" onclick="reviewImage()">辨識</button>
+    </form> 
+    </div>
+
+@section Scripts
+    { 
+        <script>
+            function reviewImage() {
+                event.preventDefault();
+                const form = document.querySelector('#imgForm');
+                const formData = new FormData(form);
+                    fetch('@Url.Content("/Customer/UploadImage")', {
+                    body: formData,
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        //取到照片連結了
+                        console.log(data.url);
+                        
+
+                        var moderationData = {
+                            "DataRepresentation": "URL",
+                            "Value": data.url
+                        };
+                    })
+                                        }
+
+
+
+
+    @* <script type="text/javascript">
+        var arrayBuffer = null;
+
+        $("#uploadFile").on("change", function () {
+            var file = this.files[0];
+            var allowFileType = "image.*"
+            if (file.type.match(allowFileType)) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    arrayBuffer = this.result;
+                    var blob = new Blob([arrayBuffer], { type: "image/jpeg" });
+                    var urlCreator = window.URL || window.webkitURL;
+                    var objectUrl = urlCreator.createObjectURL(blob);
+                    $("#imgPreview").attr("src", objectUrl);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            else {
+                alert("檔案格式錯誤!");
+            }
+        }); 
+        
+
+            // var dat = 
+            // {
+            // "DataRepresentation": "URL",
+            // "Value": data.url            
+            // }
+
+        function reviewImage() {
+            // 创建一个 FormData 对象，用于将图像数据发送到服务器
+            var formData = new FormData();
+            var blob = new Blob([arrayBuffer], { type: "image/jpeg" });
+            formData.append('image', blob);
+
+            $.ajax({
+                url: "https://msit150team04imageview.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    "Ocp-Apim-Subscription-Key": "d5b56999d03d47cfad43deb0694bd708"
+                },
+                success: function (data) {
+                    // 在这里处理返回的数据
+                    console.log(data);
+                },
+                error: function (xhr, status, error) {
+                    alert("请求失败: " + error);
+                }
+            });
+        }
+
+        // function reviewImage() {
+        //         $.ajax({
+        //         url: "https://msit150team04imageview.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate",
+        //             beforeSend: function (xhrObj) {
+        //                 // Request headers
+        //                 xhrObj.setRequestHeader("Content-Type", "application/json");
+        //                 xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "d5b56999d03d47cfad43deb0694bd708");
+        //             },
+        //             type: "POST",
+        //             // 使用 FormData 作为请求数据
+        //             data: arrayBuffer,
+        //             processData: false, // 告诉 jQuery 不要处理数据
+        //             contentType: false, // 告诉 jQuery 不要设置内容类型
+        //         }).done(function (visionData) {
+        //             alert(JSON.stringify(visionData));
+        //         }).fail(function (err) {
+        //             alert(err.statusText);
+        //         });            
+        // } *@
+    </script>
+}
+}

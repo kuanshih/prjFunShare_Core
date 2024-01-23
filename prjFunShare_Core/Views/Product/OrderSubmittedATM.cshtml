@@ -1,0 +1,91 @@
+﻿@model prjFunShare_Core.ViewModels.CATMViewModel
+@{
+    ViewData["Title"] = "已送出訂單";
+}
+
+
+<div class="container text-center">
+    <div class="row ">
+        <div>
+            <img src="~/img/ATM.png" style="width:300px" />
+        </div>
+        <div class="align-content-center">
+            <h1>我們已收到您的訂單</h1>
+            <br /><br />
+            <div class="info">
+            <div class="rowLeft">付款期限</div>
+            <div class="rowRight">
+                <span class="orange">2023/09/16 15:00</span>
+            </div>
+                <div class="rowLeft">銀行代碼</div>
+                <div class="rowRight">
+                    <span class="orange">050 (臺灣企銀)</span>
+                </div>
+                <div class="rowLeft">ATM帳戶</div>
+                <div class="rowRight">
+                    <span class="orange">2271 - 0908 - 9535 - 0144</span>
+                </div>
+                <div class="rowLeft">繳費金額</div>
+                <div class="rowRight">
+                    <span class="orange">@Model.BillingAmount 元</span>
+                </div>
+            </div>
+            <br />
+            <div class="notice">
+                <div class="ATMnote">ATM 轉帳繳款說明：</div>
+                <ul>
+                    <li>
+                        "本訂單請於"<span class="orange">2023/09/16 15:00</span>"完成付款，逾時未付者將無法保留您的預訂！"
+                    </li>
+                    <li>
+                        "請依下列繳款說明進行轉帳，並確認您的轉帳金額入帳後，即自動完成交易；若逾時未入帳，則系統會自動取消此筆交易。"
+                    </li>
+
+                </ul>
+
+            </div>
+            <br />
+            <div class="alert-warning">                    
+                    <img src="~/img/exmark.png" /> 防詐騙提醒說明 ：我們不會以任何原因，請求顧客操作ATM作帳款變更，或索取信用卡資料，若有疑慮請洽客服專線(02-6631-6588)。​
+                </div>
+                <br />
+
+
+
+        </div>
+        <div>
+            @Html.ActionLink("回首頁", "Index", "Home", new { area = "" }, new { @class = "btn btn-secondary btn-lg" })
+            @Html.ActionLink("檢視訂單", "myOrderList", "Customer", new { area = "" }, new { @class = "btn btn-primary btn-lg" })
+            @*             <button class="btn btn-primary" ><a href="~/Home/Home"></a>回首頁</button>
+            <button class="btn btn-secondary">檢視訂單</button> *@
+            <br /> <br />
+        </div>
+    </div>
+</div>
+
+        <style>
+            .info 
+            {
+                width: 480px;
+                margin: 0 auto;
+                padding: 20px 0;
+                font-size: 15px;
+                background-color: #fafafa
+            
+            }
+
+            .notice 
+            {
+                text-align:left;
+                font-weight:bold;
+            
+            }
+
+            .orange
+            {
+                text-align:left;
+                color: #ff8b00
+            
+            }
+
+        </style>

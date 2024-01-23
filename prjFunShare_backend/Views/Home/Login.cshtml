@@ -1,0 +1,106 @@
+﻿
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head><script src="/docs/5.3/assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.115.4">
+    <title>登入</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="css/mdb.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/prjFunShare_Core.styles.css" asp-append-version="true" />
+    <!-- 密碼眼睛 -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+
+<link href="/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+    <link href="sign-in.css" rel="stylesheet">
+  </head>
+
+  <body class="d-flex align-items-center py-4 bg-body-tertiary">    
+  <main class="form-signin" style="margin:auto" width=40% >
+
+        <img src="~/img/funsharelogo.svg" width="100%" />
+        <form method="post" class="row g-3 needs-validation" novalidate>
+            @* col-12 代表填滿一列 *@
+            <div class="col-md-12">
+                <div class="form-outline">
+                    <input type="text" class="form-control" id="Account" name="txtAccount" required />
+                    <label for="Account" class="form-label">請輸入統一編號</label>
+                    <div class="invalid-feedback">請輸入統一編號</div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-outline">
+                    <input type="password" class="form-control" id="Password" name="txtPassword" required />
+                    <label for="Password" class="form-label">密碼</label>
+                    <i id="checkEye" class="fas fa-eye"></i>
+                 </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <input type="submit" value="登入" class="btn btn-primary" />
+                <input id="btnDemo" type="button" value="廠商" class="btn btn-danger ms-2" />
+                <input id="btnDemoForAdmin" type="button" value="管理員" class="btn btn-warning ms-2" />
+                <input id="btnDemoNewSupplier" type="button" value="新加入廠商" class="btn btn-success ms-2" />
+            </div>
+            <div class="form-group" style="text-align: center">
+                @Html.ActionLink("忘記密碼", "ForgetPassword", "Home", null, null)
+            </div>
+            <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+            <p class="text-center text-secondary mb-1">
+                Hi 您是擁有優質親子體驗的供應商嗎？<br/>
+                歡迎填寫註冊表單，加入FUNShare！
+            </p>
+            <div class="form-group" style="text-align: center">
+                @Html.ActionLink("註冊", "Register", "Home", null, new { @class = "btn btn-secondary" })
+            </div>
+        </form>
+</main>
+<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <!-- MDB -->
+    <script type="text/javascript" src="~/js/mdb.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $('#btnDemo').on('click', function () {
+            $('#Password').addClass('active');
+            $('#Account').addClass('active');
+            $('#Password').val(1234);
+            $('#Account').val('98270077');
+        })
+        $('#btnDemoForAdmin').on('click', function () {
+            $('#Password').addClass('active');
+            $('#Account').addClass('active');
+            $('#Password').val(987654321);
+            $('#Account').val('FUNShare');
+        })
+        $('#btnDemoNewSupplier').on('click', function () {
+            $('#Password').addClass('active');
+            $('#Account').addClass('active');
+            $('#Password').val(1234);
+            $('#Account').val('56842578');
+        })
+        $("#checkEye").click(function () {
+            if ($(this).hasClass('fa-eye')) {
+                $("#Password").attr('type', 'text');
+            } else {
+                $("#Password").attr('type', 'password');
+            }
+            $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>
+

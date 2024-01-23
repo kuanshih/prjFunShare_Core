@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjFunShare_Core", "prjFunShare_Core\prjFunShare_Core.csproj", "{985AA5B9-851A-41D1-9FC9-283241FD3BD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prjFunShare_backend", "prjFunShare_backend\prjFunShare_backend.csproj", "{E5412EBD-07D6-4FEF-AA4C-55C6C76379AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{985AA5B9-851A-41D1-9FC9-283241FD3BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{985AA5B9-851A-41D1-9FC9-283241FD3BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{985AA5B9-851A-41D1-9FC9-283241FD3BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{985AA5B9-851A-41D1-9FC9-283241FD3BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5412EBD-07D6-4FEF-AA4C-55C6C76379AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5412EBD-07D6-4FEF-AA4C-55C6C76379AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5412EBD-07D6-4FEF-AA4C-55C6C76379AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5412EBD-07D6-4FEF-AA4C-55C6C76379AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B850B98F-4B03-4E72-B8FE-00690F1FD09B}
+	EndGlobalSection
+EndGlobal

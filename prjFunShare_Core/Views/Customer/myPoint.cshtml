@@ -1,0 +1,90 @@
+﻿@model IEnumerable<prjFunShare_Core.Models.Bonus>
+
+@{
+    ViewData["Title"] = "我的紅利金";
+}
+
+<h1 class="location=cneter">我的紅利金</h1>
+
+
+<div class="g-5">
+    <h5 id="total">
+        會員紅利累積:
+    </h5>
+</div>
+<div class="container-md">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @*                 @Html.DisplayNameFor(model => model.PointsId) *@
+                </th>
+                <th>
+                  @*   @Html.DisplayNameFor(model => model.Points) *@ 我的紅利
+                </th>
+                <th>
+                   @*  @Html.DisplayNameFor(model => model.OrderId) *@
+                </th>
+                <th>
+                   @*  @Html.DisplayNameFor(model => model.EndDate) *@ 截止日期
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @*                 @Html.DisplayFor(modelItem => item.PointsId) *@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Points)
+                    </td>
+                    <td>
+                       @*  @Html.DisplayFor(modelItem => item.OrderId) *@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    @*            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="alert-info g-4">
+    <div class="Precautions__Title-u0x4ge-3 gsllmF">注意事項 :</div>
+    <div class="Precautions__StyleContent-u0x4ge-2 beyCDZ">1. 取消/更改訂單時，系統將自動歸還使用的紅利金，若歸還後的紅利金剛好逾期，FUNShare 將不另行通知。</div>
+    <div class="Precautions__StyleContent-u0x4ge-2 beyCDZ">2. 取消訂單時，若您不符合全額退款的條件，則 FUNShare 將優先退還紅利金再退現金。</div>
+    <div class="Precautions__StyleContent-u0x4ge-2 beyCDZ">3. 發票開立金額以消費者實際支付的金額為主。</div>
+</div>
+
+
+@section Styles{
+    <style>
+
+    </style>
+}
+
+@section Scripts{
+    <script>
+
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count += (int)item.Points;
+            }
+        }
+            $(document).ready(function () {
+                $('#total').html("目前累積: " + '@count' + " 點");
+            });
+
+    </script>
+}

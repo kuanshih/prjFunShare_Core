@@ -1,0 +1,70 @@
+﻿@model IEnumerable<prjFunShare_Core.ViewModels.CMyCouponViewModel>
+
+@{
+    ViewData["Title"] = "我的優惠券";
+}
+
+<h1>我的優惠券</h1>
+
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                優惠券名稱
+            </th>
+            <th>
+                折扣
+            </th>
+            <th>
+                說明
+            </th>
+            <th>
+                適用活動/課程
+            </th>
+            <th>
+                到期日
+            </th>
+            <th>
+                狀態
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem =>item.Discount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DueDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusDescription)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

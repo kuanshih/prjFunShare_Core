@@ -1,0 +1,694 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.ManagerProduct.CProduct>
+
+@{
+    ViewData["Title"] = "課程總覽";
+    ViewBag.Action = "ProductList";
+}
+
+<h1>課程總覽</h1>
+
+<div align="left">
+    @using (Html.BeginForm())
+    {
+        <select>
+            <option>關鍵字查詢</option>
+            <option>訂單編號</option>
+            <option>訂購人</option>
+            <option>訂購狀態</option>
+            <option>付款狀態</option>
+        </select>
+        @Html.TextBox("txtKeyword")
+        <input type="submit" value="查詢" class="btn btn-outline-primary" id="input1" />
+        <div>
+            <label for="itemsPerPage">每頁顯示筆數：</label>
+            <select id="itemsPerPage" name="itemsPerPage">
+                <option value="20">請選擇</option>
+                <option value="30">30 筆</option>
+                <option value="50">50 筆</option>
+                <option value="100">100 筆</option>
+            </select>
+        </div>
+    }
+</div>
+<p align="left">
+    @*  <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">查詢</button> *@
+    <a class="btn btn-outline-primary" type="button" asp-controller="SuperProduct" asp-action="Create">新增課程</a>
+</p>
+<ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">全部</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="sale-tab" data-bs-toggle="tab" data-bs-target="#sale-tab-pane" type="button" role="tab" aria-controls="sale-tab-pane" aria-selected="false">銷售中</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="notavailable-tab" data-bs-toggle="tab" data-bs-target="#notavailable-tab-pane" type="button" role="tab" aria-controls="notavailable-tab-pane" aria-selected="false">已下架</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="draft-tab" data-bs-toggle="tab" data-bs-target="#draft-tab-pane" type="button" role="tab" aria-controls="draft-tab-pane" aria-selected="false">待上架</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+        <table class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>產品ID</th>
+                    <th>產品名稱</th>
+                    <th>廠商</th>
+                    <th>難易度</th>
+                    <th>上架日</th>
+                    <th>堂數</th>
+                    <th>狀態</th>
+                    <th>是長期課程?</th>
+                    <th>傭金</th>
+                    <th>編輯/上下架</th>
+                    <th>詳細資料</th>                    
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string statusSale = "";//改變產品狀態顏色
+                    string statusClassForOrder = "";//改變開課狀態
+                    int count = 0;
+                    foreach (var item in Model)
+                    {
+                        switch (item.FProductSale_Status)
+                        {
+                            case "銷售中":
+                                statusSale = "text-success";
+                                break;
+                            case "已下架":
+                                statusSale = "text-danger";
+                                break;
+                            case "待上架":
+                                statusSale = "text-warning";
+                                break;
+                        }
+
+                        count++;
+                        <tr>
+                            <td>@count</td>
+                            <td>@Html.DisplayFor(modelItem => item.FProductId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FProductName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FSupplierName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FLevel)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FReleasedTime)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FTimes)</td>
+                            <td class="@statusSale">@Html.DisplayFor(modelItem => item.FStatusDescription)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FIsClass)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FCommision)</td>
+                            <!-- 編輯/上下架 -->
+                            <td>
+                                <a href="@Url.Action("Edit", "SuperProduct", new { id = item.FProductId })" class="btn bg-transparent text-success">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                </a>
+                                @{
+                                    if (item.FStatusDescription == "銷售中")
+                                    {
+                                        @Html.ActionLink("下架", "ChangeStatustoDiscontinue", new { id=item.FProductId },new { @class="btn btn-outline-danger",onClick="confirm()"})
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("上架", "ChangeStatustoLaunch", new { id=item.FProductId},new { @class="btn  btn-outline-primary"})
+                                    }
+                                }
+                            </td>
+                            <!-- 詳細資料 -->
+                            <td>
+                                <a href="#" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#detail-@count">
+                                    詳細資料
+                                </a>
+                            </td>
+                            
+                        </tr>
+                        <!-- 明細的部分修正版 -->
+                        <tr id="detail-@count" class="collapse">
+                            <th>序號:</th>
+                            <th>課程明細編號:</th>
+                            <th>開始時間:</th>
+                            <th>結束時間:</th>
+                            <th>課程價格:</th>
+                            <th>已報名/總額:</th>
+                            <th>行政區編號:</th>
+                            <th>明細狀態:</th>
+                            <th>課程地址:</th>
+                            <th>截止日期:</th>
+                            <th>刪除:</th>
+                            <th>報名系統:</th>
+                            
+                        </tr>
+
+                        int countdetial = 0;
+                        foreach (var item2 in item.CProductDetails)
+                        {
+                            switch (item2.FProductClass_Status)
+                            {
+                                case "準時開課":
+                                    statusClassForOrder = "text-success";
+                                    break;
+                                case "停課":
+                                    statusClassForOrder = "text-danger";
+                                    break;
+                                case "延期":
+                                    statusClassForOrder = "text-warning";
+                                    break;
+                            }
+                            countdetial++;
+                            <tr id="detail-@count" class="collapse">
+                                <td>@countdetial</td>
+                                <td>@Html.DisplayFor(modelItem => item2.FProductDetailId)</td>
+                                <td>@Html.DisplayFor(modelItem => item2.FBeginTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item2.FEndTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item2.FUnitPrice)</td>
+                                <td class="@(item2.FSales == 0 ? "text-danger fw-bold" : "")">
+                                    @(item2.FStock != null && item2.FSales != null && item2.FStock != 0
+                                    ? (item2.FSales).ToString() + "/" + item2.FStock.ToString()
+                                    : "查無資料")
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item2.FDistrictName)</td>
+                                <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item2.FDetailStatusDescription)</td>
+                                <td>@Html.DisplayFor(modelItem => item2.FAddress)</td>
+                                <td>@Html.DisplayFor(modelItem => item2.FDealine)</td>
+                                <td>
+                                    @if (item2.FSales != 0)
+                                    {
+                                        <button class="btn btn-danger" onclick="showAlert();"><i class="fa-solid fa-trash-can"></i></button>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-danger"
+                                           onclick="deleteAlert(event, @item2.FProductDetailId);">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("DetailList" , "ManagerProduct", new { pid=item2.FProductDetailId , id=item2.FProductId })" class="btn btn-success">
+                                        <i class="fa-solid fa-list-check"></i>
+                                    </a>
+                                </td>
+                                
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <div class="tab-pane fade" id="sale-tab-pane" role="tabpanel" aria-labelledby="sale-tab" tabindex="0">
+        <table class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>產品ID</th>
+                    <th>產品名稱</th>
+                    <th>廠商</th>
+                    <th>難易度</th>
+                    <th>上架日</th>
+                    <th>堂數</th>
+                    <th>狀態</th>
+                    <th>是長期課程?</th>
+                    <th>傭金</th>
+                    <th>編輯/刪除</th>
+                    <th>詳細資料</th>
+                    <th>上下架</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    statusSale = "";//改變產品狀態顏色
+                    statusClassForOrder = "";//改變開課狀態
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FProductSale_Status == "銷售中")
+                        {
+                            switch (item.FProductSale_Status)
+                            {
+                                case "銷售中":
+                                    statusSale = "text-success";
+                                    break;
+                                case "已下架":
+                                    statusSale = "text-danger";
+                                    break;
+                                case "待上架":
+                                    statusSale = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FSupplierName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FLevel)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FReleasedTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FTimes)</td>
+                                <td class="@statusSale">@Html.DisplayFor(modelItem => item.FStatusDescription)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FIsClass)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCommision)</td>
+                                <!-- 編輯/刪除 -->
+                                <td>
+                                    <a href="@Url.Action("Edit", "SuperProduct", new { id = item.FProductId })" class="btn bg-transparent text-success">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a>|
+                                    <a href="@Url.Action("Delete", "ManagerProduct", new { id = item.FProductId })" class="btn bg-transparent text-danger"
+                                       onclick="return confirm('確定要刪除嗎?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a>
+                                </td>
+                                <!-- 詳細資料 -->
+                                <td>
+                                    <a href="#" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#detail-@count">
+                                        詳細資料
+                                    </a>
+                                </td>
+
+                                <td>
+                                    @{
+                                        if (item.FStatusDescription == "銷售中")
+                                        {
+                                            @Html.ActionLink("下架", "ChangeStatustoDiscontinue", new { id=item.FProductId },new { @class="btn btn-danger",onClick="confirm()"})
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("上架", "ChangeStatustoLaunch", new { id=item.FProductId},new { @class="btn  btn-primary"})
+                                        }
+                                    }
+                                </td>
+
+                            </tr>
+                            <!-- 明細的部分修正版 -->
+                            <tr id="detail-@count" class="collapse">
+                                <th>序號:</th>
+                                <th>課程明細編號:</th>
+                                <th>開始時間:</th>
+                                <th>結束時間:</th>
+                                <th>課程價格:</th>
+                                <th>課程數量:</th>
+                                <th>行政區編號:</th>
+                                <th>明細狀態:</th>
+                                <th>課程地址:</th>
+                                <th>截止日期:</th>
+                                <th>報名系統:</th>
+                                
+                            </tr>
+
+                            int countdetial = 0;
+                            foreach (var item2 in item.CProductDetails)
+                            {
+                                switch (item2.FProductClass_Status)
+                                {
+                                    case "準時開課":
+                                        statusClassForOrder = "text-success";
+                                        break;
+                                    case "停課":
+                                        statusClassForOrder = "text-danger";
+                                        break;
+                                    case "延期":
+                                        statusClassForOrder = "text-warning";
+                                        break;
+                                }
+                                countdetial++;
+                                <tr id="detail-@count" class="collapse">
+                                    <td>@countdetial</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FProductDetailId)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FBeginTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FEndTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FUnitPrice)</td>
+                                    <td>
+                                        @(item2.FStock != null && item2.FSales != null && item2.FStock != 0
+                                        ? ((decimal)item2.FStock - item2.FSales).ToString() + "/" + item2.FStock.ToString()
+                                        : "查無資料")
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDistrictName)</td>
+                                    <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item2.FDetailStatusDescription)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FAddress)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDealine)</td>
+                                    <td>
+                                        @if (item2.FSales != 0)
+                                        {
+                                            <button class="btn btn-danger" onclick="showAlert();"><i class="fa-solid fa-trash-can"></i></button>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-danger"
+                                               onclick="deleteAlert(event, @item2.FProductDetailId);">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("DetailList" , "ManagerProduct", new { pid=item2.FProductDetailId , id=item2.FProductId })" class="btn btn-success">
+                                            <i class="fa-solid fa-list-check"></i>
+                                        </a>
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="notavailable-tab-pane" role="tabpanel" aria-labelledby="notavailable-tab" tabindex="0">
+        <table class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>產品ID</th>
+                    <th>產品名稱</th>
+                    <th>廠商</th>
+                    <th>難易度</th>
+                    <th>上架日</th>
+                    <th>堂數</th>
+                    <th>狀態</th>
+                    <th>是長期課程?</th>
+                    <th>傭金</th>
+                    <th>編輯/刪除</th>
+                    <th>詳細資料</th>
+                    <th>上下架</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    statusSale = "";//改變產品狀態顏色
+                    statusClassForOrder = "";//改變開課狀態
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FProductSale_Status == "已下架")
+                        {
+                            switch (item.FProductSale_Status)
+                            {
+                                case "銷售中":
+                                    statusSale = "text-success";
+                                    break;
+                                case "已下架":
+                                    statusSale = "text-danger";
+                                    break;
+                                case "待上架":
+                                    statusSale = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FSupplierName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FLevel)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FReleasedTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FTimes)</td>
+                                <td class="@statusSale">@Html.DisplayFor(modelItem => item.FStatusDescription)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FIsClass)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCommision)</td>
+                                <!-- 編輯/刪除 -->
+                                <td>
+                                    <a href="@Url.Action("Edit", "SuperProduct", new { id = item.FProductId })" class="btn bg-transparent text-success">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a>|
+                                    <a href="@Url.Action("Delete", "ManagerProduct", new { id = item.FProductId })" class="btn bg-transparent text-danger"
+                                       onclick="return confirm('確定要刪除嗎?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a>
+                                </td>
+                                <!-- 詳細資料 -->
+                                <td>
+                                    <a href="#" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#detail-@count">
+                                        詳細資料
+                                    </a>
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.FStatusDescription == "銷售中")
+                                        {
+                                            @Html.ActionLink("下架", "ChangeStatustoDiscontinue", new { id=item.FProductId },new { @class="btn btn-outline-danger",onClick="confirm()"})
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("上架", "ChangeStatustoLaunch", new { id=item.FProductId},new { @class="btn btn-outline-primary"})
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            <!-- 明細的部分修正版 -->
+                            <tr id="detail-@count" class="collapse">
+                                <th>序號:</th>
+                                <th>課程明細編號:</th>
+                                <th>開始時間:</th>
+                                <th>結束時間:</th>
+                                <th>課程價格:</th>
+                                <th>課程數量:</th>
+                                <th>行政區編號:</th>
+                                <th>明細狀態:</th>
+                                <th>課程地址:</th>
+                                <th>截止日期:</th>
+                                <th>報名系統:</th>
+                               
+                            </tr>
+
+                            int countdetial = 0;
+                            foreach (var item2 in item.CProductDetails)
+                            {
+                                countdetial++;
+                                <tr id="detail-@count" class="collapse">
+                                    <td>@countdetial</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FProductDetailId)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FBeginTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FEndTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FUnitPrice)</td>
+                                    <td>
+                                        @(item2.FStock != null && item2.FSales != null && item2.FStock != 0
+                                        ? ((decimal)item2.FStock - item2.FSales).ToString() + "/" + item2.FStock.ToString()
+                                        : "查無資料")
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDistrictName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDetailStatusDescription)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FAddress)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDealine)</td>
+                                    <td>
+                                        @if (item2.FSales != 0)
+                                        {
+                                            <button class="btn btn-danger" onclick="showAlert();"><i class="fa-solid fa-trash-can"></i></button>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-danger"
+                                               onclick="deleteAlert(event, @item2.FProductDetailId);">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("DetailList" , "ManagerProduct", new { pid=item2.FProductDetailId , id=item2.FProductId })" class="btn btn-success">
+                                            <i class="fa-solid fa-list-check"></i>
+                                        </a>
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="draft-tab-pane" role="tabpanel" aria-labelledby="draft-tab" tabindex="0">
+        <table class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>產品ID</th>
+                    <th>產品名稱</th>
+                    <th>廠商</th>
+                    <th>難易度</th>
+                    <th>上架日</th>
+                    <th>堂數</th>
+                    <th>狀態</th>
+                    <th>是長期課程?</th>
+                    <th>傭金</th>
+                    <th>編輯/刪除</th>
+                    <th>詳細資料</th>
+                    <th>上下架</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    statusSale = "";//改變產品狀態顏色
+                    statusClassForOrder = "";//改變開課狀態
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.FProductSale_Status == "待上架")
+                        {
+                            switch (item.FProductSale_Status)
+                            {
+                                case "銷售中":
+                                    statusSale = "text-success";
+                                    break;
+                                case "已下架":
+                                    statusSale = "text-danger";
+                                    break;
+                                case "待上架":
+                                    statusSale = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FSupplierName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FLevel)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FReleasedTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FTimes)</td>
+                                <td class="@statusSale">@Html.DisplayFor(modelItem => item.FStatusDescription)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FIsClass)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCommision)</td>
+                                <!-- 編輯/刪除 -->
+                                <td>
+                                    <a href="@Url.Action("Edit", "SuperProduct", new { id = item.FProductId })" class="btn bg-transparent text-success">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a>|
+                                    <a href="@Url.Action("Delete", "ManagerProduct", new { id = item.FProductId })" class="btn bg-transparent text-danger"
+                                       onclick="return confirm('確定要刪除嗎?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a>
+                                </td>
+                                <!-- 詳細資料 -->
+                                <td>
+                                    <a href="#" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#detail-@count">
+                                        詳細資料
+                                    </a>
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.FStatusDescription == "銷售中")
+                                        {
+                                            @Html.ActionLink("下架", "ChangeStatustoDiscontinue", new { id=item.FProductId },new { @class="btn btn-danger",onClick="confirm()"})
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("上架", "ChangeStatustoLaunch", new { id=item.FProductId},new { @class="btn  btn-primary"})
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            <!-- 明細的部分修正版 -->
+                            <tr id="detail-@count" class="collapse">
+                                <th>序號:</th>
+                                <th>課程明細編號:</th>
+                                <th>開始時間:</th>
+                                <th>結束時間:</th>
+                                <th>課程價格:</th>
+                                <th>課程數量:</th>
+                                <th>行政區編號:</th>
+                                <th>明細狀態:</th>
+                                <th>課程地址:</th>
+                                <th>截止日期:</th>
+                                <th>報名系統:</th>
+                                
+                            </tr>
+
+                            int countdetial = 0;
+                            foreach (var item2 in item.CProductDetails)
+                            {
+                                countdetial++;
+                                <tr id="detail-@count" class="collapse">
+                                    <td>@countdetial</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FProductDetailId)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FBeginTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FEndTime)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FUnitPrice)</td>
+                                    <td>
+                                        @(item2.FStock != null && item2.FSales != null && item2.FStock != 0
+                                        ? ((decimal)item2.FStock - item2.FSales).ToString() + "/" + item2.FStock.ToString()
+                                        : "查無資料")
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDistrictName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDetailStatusDescription)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FAddress)</td>
+                                    <td>@Html.DisplayFor(modelItem => item2.FDealine)</td>
+                                    <td>
+                                        @if (item2.FSales != 0)
+                                        {
+                                            <button class="btn btn-danger" onclick="showAlert();"><i class="fa-solid fa-trash-can"></i></button>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-danger"
+                                               onclick="deleteAlert(event, @item2.FProductDetailId);">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("DetailList" , "ManagerProduct", new { pid=item2.FProductDetailId , id=item2.FProductId })" class="btn btn-success">
+                                            <i class="fa-solid fa-list-check"></i>
+                                        </a>
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+@section Scripts{
+    <script>
+        function deleteAlert(e, id) {
+            e = e || window.event;
+            e.preventDefault();
+
+            Swal.fire({
+                title: '請問確認要刪除此課程嗎?',
+                showCancelButton: true,
+                confirmButtonText: '確認',
+                cancelButtonText: `取消`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    location.href = `@Url.Action("DeleteDetail", "ManagerProduct")?pid=${id}`
+                }
+            })
+        }
+        function showAlert() {
+            Swal.fire({
+                icon: 'error',
+                title: 'QQ...',
+                text: '此課程已有報名紀錄，不可以刪除!',
+            });
+        }
+
+        function confirm() {
+            Swal.fire({
+                title: '請問確認要下架此課程嗎?',
+                showCancelButton: true,
+                confirmButtonText: '確認',
+                cancelButtonText: `取消`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    location.href = `@Url.Action("ChangeStatustoDiscontinue", "ManagerProduct")?pid=${id}`
+                }
+
+            })
+        }
+    </script>
+
+
+}
+
+

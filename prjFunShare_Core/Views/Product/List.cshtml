@@ -1,0 +1,1026 @@
+﻿@model prjFunShare_Core.ViewModels.CProductPageViewModel
+@{
+    ViewData["Title"] = Model.ProductName;
+}
+
+<!-- 大圖+標題 -->
+<section class="mb-2">
+    <div class="row">
+        <img src="~/img/product/@Model.MainImage" class="img-fluid ">
+    </div>
+    <h1 class="fw-bold my-4">@Model.ProductName</h1>
+    <div class="d-inline-flex gap-2">
+        <h4><span class="badge rounded-pill fw-medium text-light bg-success">@Model.IsClass</span></h4>
+        <!--長期課程加入頻率描述-->
+        @if (Model.IsClass == "長期課程")
+        {
+            <h4><span class="badge rounded-pill fw-medium text-body bg-success-subtle">@Model.Interval</span></h4>
+        }
+        <h4><span class="badge rounded-pill fw-medium text-light bg-success">@Model.SubCategoryName</span></h4>
+        <h4><span class="badge rounded-pill fw-medium text-light bg-success">@Model.AgeGrade</span></h4>
+        <h4><span class="badge rounded-pill fw-medium bg-success">評價： @Model.Rank.GetValueOrDefault(0).ToString("0.#") (@Model.RankCount)<i class="fa-solid fa-star text-warning"></i></span></h4>
+    </div>
+</section>
+<!-- ============================================================================================= -->
+
+<section class="container-warp">
+    <div class="cont-col col-12 start-0">
+        <!--左欄-->
+        <div class="rounded-2 shadow-2-soft">
+            <!-- ======= 導覽 Section======= -->
+            <div class="row">
+                <nav id="navMenu">
+                    <ul class="nav nav-pills nav-fill bg-body-tertiary">
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link fs-5">課程介紹</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#faq" class="nav-link fs-5">常問問題</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#comments" class="nav-link fs-5">評價</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#cancel" class="nav-link fs-5">取消更改政策</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#supplier" class="nav-link fs-5">關於廠商</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- ======= About Us (課程簡介) ======= -->
+            <div class="row p-4" id="about">
+                <h3 class="fw-bold text-center">
+                    <span class="border-bottom border-success border-2">課程介紹</span>
+                </h3>
+                <h5 class="my-3">@Model.Features</h5>
+                <div class="d-flex">
+                    <p class="w-75">@Model.ProductIntro</p>
+                    @{
+                        if (Model.ImagePath.Length > 0)
+                        {
+                                               <img src="~/img/product/@Model.ImagePath.FirstOrDefault()" class="ps-3 img-fluid rounded float-end product-photo">
+                        }
+                        else
+                        {
+                                                <img src="~/img/product/@Model.MainImage" class="ps-3 img-fluid rounded float-end product-photo">
+                        }
+                    }
+                </div>
+            </div>
+            <hr>
+            <!-- ======= Frequently Asked Questions (常問問題) ======= -->
+            <div class="row p-4" id="faq">
+                <div class="col-3">
+                    <h3 class="fw-bold">
+                        <span class="border-bottom border-success border-2">常見問題</span>
+                    </h3>
+                </div>
+                <div class="col-9">
+                    <div class="accordion accordion-flush bg-light rounded-3 shadow-2" id="faqlist" data-aos="fade-up" data-aos-delay="100">
+                        <!-- # Faq item-->
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-1">
+                                    <span class="text-success fw-bold me-2">1.</span>
+                                    <span class="fw-bold">沒有相關經驗可以報名嗎？</span>
+                                </button>
+                            </h3>
+                            <div id="faq-content-1" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                <div class="accordion-body">
+                                    FunShare提供的教學課程基本上適合全年齡，但還請衡量孩童自身狀況報名。若都符合課程適合年齡和狀況，僅需帶著一顆愉悅的心情來參與課程即可 : )
+                                </div>
+                            </div>
+                        </div>
+                        <!-- # Faq item-->
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-2">
+                                    <span class="text-success fw-bold me-2">2.</span>
+                                    <span class="fw-bold">請問上課前需要準備什麼嗎？</span>
+                                </button>
+                            </h3>
+                            <div id="faq-content-2" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                <div class="accordion-body">
+                                    依照不同的課程，可能會需要準備上課所需器材和設備，請報名前詳讀課程內容。若因未準備器材和設備，需要租借，費用請依教室報價為準。
+                                    @* 不需要，課程所需物品和教材我們都會準備好。 *@
+                                </div>
+                            </div>
+                        </div>
+                        <!-- # Faq item-->
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-3">
+                                    <span class="text-success fw-bold me-2">3.</span>
+                                    <span class="fw-bold">這個課程家長可以一起報名參與嗎？</span>
+                                </button>
+                            </h3>
+                            <div id="faq-content-3" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                <div class="accordion-body">
+                                    可以，請在結帳時填入家長和孩子資訊即可。若是僅能孩童參加課程，家長也可以在教室休息區等候。
+                                </div>
+                            </div>
+                        </div>
+                        <!-- # Faq item-->
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-4">
+                                    <span class="text-success fw-bold me-2">4.</span>
+                                    <span class="fw-bold">課程是否有學習紀錄？</span>
+                                </button>
+                            </h3>
+                            <div id="faq-content-4" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                <div class="accordion-body">
+                                    您可在會員資訊中，看到一張學習發展圖，代表孩子的學習履歷。</br>
+                                    只要在FunShare平台報名參與課程，發展圖即會隨之成長，記錄孩子的各學習領域。
+                                </div>
+                            </div>
+                        </div>
+                        <!-- # Faq item-->
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!-- ======= Testimonials Section(評價) ======= -->
+            <!--recipeCarousel-->
+            <div class="container text-center p-4" id="comments">
+                <h3 class="fw-bold text-center">
+                    <span class="border-bottom border-success border-2">好評推薦</span>
+                </h3>
+                <div class="row justify-content-center">
+                    <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" role="listbox" id="commentDiv">
+                        </div>
+                        <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </a>
+                        <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--recipeCarousel-->
+            <!-- The Comment Modal -->
+            <div id="commentModal" class="modal">
+                <!-- The Close Button -->
+                <span class="closeImg">&times;</span>
+                <!-- Modal Content (The Image) -->
+                <img class="commentModal-content" id="imgShow">
+            </div>
+            <hr>
+            <!-- ======= 取消&更改政策 Section======= -->
+
+            <div class="row p-4" id="cancel">
+                <h3 class="fw-bold text-center">
+                    <span class="border-bottom border-success border-2">取消&更改政策</span>
+                </h3>
+                <div class="my-3">
+                    <h5 class="fw-semibold">取消辦法</h5>
+                    <ul>
+                        <li>出發日前 7 日前（不含出發日）通知取消，可全額退費。</li>
+                        <li>出發日前 6 日至前 4 日內（不含出發日）通知取消，收取手續費 50％。</li>
+                        <li>出發日前 3 日（不含出發日）至當日內不接受取消，並不予退回款項。</li>
+                        <li>於活動中如因非可究責主辦單位之因素中止參與活動，將不予退回款項。</li>
+                        <li>如因天災等不可抗力因素，FunShare將主動聯繫延期或退款。</li>
+                        <li>上述時間以消費者進線客服人員表明要取消的時間點為準。</li>
+                        <li>取消收取手續費依四捨五入計算至元。</li>
+                    </ul>
+                    <br />
+                    <h5 class="fw-semibold">更改辦法</h5>
+                    <ul>
+                        <li>出發日前 4 日前（不含出發日）可更改日期一次。</li>
+                        <li>改期僅限於同一主辦單位、同價格之相同活動方案，且僅限更改至月曆表上已開放之可預訂時段。經改期後之活動恕不接受取消退費。</li>
+                        <li>出發日前 3 日至當日內不接受更改日期。</li>
+                        <li>如欲更改人數，須至少於出發日前 4 天詢問 FunShare。</li>
+                        <li>上述時間以消費者向客服提出申請訂單更改之時間點為準。</li>
+                    </ul>
+                </div>
+            </div>
+            <hr />
+            <!-- ======= 廠商介紹 Section======= -->
+
+            <div class="row p-4" id="supplier">
+                <h3 class="fw-bold text-center">
+                    <span class="border-bottom border-success border-2">廠商介紹</span>
+                </h3>
+                <div class="mt-4">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.SupplierImage)" class="img-fluid rounded-4 mb-4 supplierimage" alt="">
+                    <p>我們是 <a href="@Url.Action("Supplier","Product")/@Model.SupplierId">@Model.SupplierName</a></p>
+                    <p>@Model.SupplierIntro</p>
+                </div>
+            </div>
+
+
+        </div>
+        <!--左欄-->
+    </div>
+
+    <!--右欄-->
+    <div class="nav-col end-0">
+        <div class="w-100 bg-body-tertiary p-4 rounded-4 shadow-3 mb-4">
+            <h1> $  @Model.UnitPrice <span class="fs-5">起</span></h1>
+            <h5>上課地點:
+                @{
+                    foreach (var c in Model.CityName)
+                    {
+                                                                        <span class="badge bg-secondary">@c</span>
+                    }
+                }
+            </h5>
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-warning w-75" id="myPocket" data-id="@Model.ProductId">加入收藏</button>
+            </div>
+        </div>
+
+@*         <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" title="123">
+            <i class="fa-regular fa-circle-question"></i>  日曆選課說明
+        </button> *@
+
+        <!-- ======= 日曆======= -->
+        <div class="w-100 bg-body-tertiary p-2 rounded-4 shadow-3">
+            <div class="px-2">
+                <div class="row position-absolute end-0" data-toggle="tooltip" data-html="true" title="日曆選課說明<br>  1. 單日體驗: 一橘圈，表示體驗日期 <br>2. 長期課程: 一橘圈+多個黃圈，表示開課日期跟後續週期上課日期">
+                    <h5> <i class="fa-regular fa-circle-question"></i></h5>
+                </div>
+                <h1 class="text-success mb-0" id="calendar-year" align="center">Year</h1>
+                <h2 class="text-success fs-6 fw-bold" id="calendar-title" align="center">Month</h2>
+                <div class="d-flex justify-content-between">
+                <button type="button" id="prev" class="prev btn btn-success"><i class="fas fa-chevron-left"></i></button>
+                    <button type="button" id="backToToday" class="btn btn-secondary">回到今天</button>
+                <button type="button" id="next" class="next btn btn-success"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="w-100 px-2">
+                <div class="body-list ">
+                    <ul>                       
+                        <li class="day">日</li>
+                        <li class="day">一</li>
+                        <li class="day">二</li>
+                        <li class="day">三</li>
+                        <li class="day">四</li>
+                        <li class="day">五</li>           
+                        <li class="day">六</li>
+                    </ul>
+                </div>
+                <div class="darkgrey body-list col-12  text-center">
+                    <ul id="days">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="w-100">
+                <div class=" col col-12 bg-light shadow-3" id="addClass">
+                    @* 上面點日期，這裡顯示對應選項 *@
+                    @* 這裡藏ProductDetailId 跟txtCount要傳到結帳頁 *@
+                </div>
+                @* <input type="text" id="pId" hidden name="ProductDetailId" value="@Model.ProductId"/> *@
+            <form method="get" asp-action="Order">
+                <div class="col col-12 p-4 pb-0" id="addCountParent">
+                    <div class="row" id="addCount">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <input type="submit" value="立即預約" id="submit" class="btn btn-success btn-lg text-white  mt-2" disabled />
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--右欄-->
+</section>
+
+<section class="mt-5">
+<div class="row">
+    <h3 class="fw-bold text-center">
+        <span class="border-bottom border-success border-2">猜你喜歡</span>
+    </h3>
+        <div class="row g-4 mt-0" id="divLike">
+        </div>
+</div>
+</section>
+<!--BackToTop bottom-->
+<div class="top-bottom text-center">
+    <a href="#">
+        <button type="button" class="btn btn-primary btn-floating btn-lg">
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+    </a>
+</div>
+<!--BackToTop bottom-->
+
+@section Styles{
+    <style>
+        .tooltip-inner {
+            text-align: left;
+            width: 800px
+        }
+
+        #navMenu ul li a:hover {
+            background-color: var(--bs-success);
+            color: var(--bs-light);
+        }
+
+        .product-photo {
+            width: 380px;
+            height: 250px;
+            display: flex;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .container-warp {
+            display: grid;
+            grid-template-columns: 5fr 2fr;
+            gap: 36px;
+            align-items: start;
+            justify-items: start;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .nav-col {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: start;
+            border-radius: 10px;
+            position: sticky;
+            top: 80px;
+        }
+
+        .cont-col {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .calendar {
+            width: 100%;
+            /* height: 500px; */
+/*            background: #fff;
+            background-color: #D7FFEE;*/
+        }
+
+        .ctitle {
+            margin-block: 15px;
+        }
+
+        .body-list ul {
+            width: 100%;
+            font-family: arial;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+            .body-list ul li {
+                width: 14.28%;
+                height: 36px;
+                line-height: 36px;
+                list-style-type: none;
+                display: block;
+                box-sizing: border-box;
+                float: left;
+                text-align: center;
+            }
+
+        .lightgrey {
+            color: #a8a8a8; /*返灰*/
+            cursor: default;
+        }
+
+        .darkgrey {
+            color: #565656; /*深灰*/
+            cursor: default;
+        }
+
+        .green {
+            color: #6ac13c; /*綠色*/
+            cursor: default;
+        }
+
+        .greenbox {
+            border: 1px solid #6ac13c;
+            background: #e9f8df; /*淺綠色*/
+            cursor: default;
+        }
+
+        .avalible {
+            border-radius: 50%;
+            background:var(--bs-warning);
+            cursor: pointer;
+        }
+
+        .sub{
+            border-radius: 50%;
+            background-color: rgba( var(--bs-warning-rgb),0.5);
+            cursor: default;
+        }
+
+        .prev {
+            width: 80px;
+            height: 30px;
+            align: left;
+        }
+
+        .next {
+            width: 80px;
+            height: 30px;
+            float: right;
+        }
+
+        .day {
+            background-color: #14A44D;
+            color: white;
+            font-size: 20px;
+            font-weight: 1000;
+        }
+
+        .date-button {
+            width: 100%;
+            height: 34px;
+            background: #95CACA;
+            color: white;
+            border: 1px solid #00DDAA;
+            /* background-color: #00DD77; */
+        }
+
+            .date-button:hover {
+                background-color: #00AA55;
+                color: black;
+            }
+
+        .top-bottom {
+            position: fixed;
+            right: 45px; 
+            bottom: 10px;
+            z-index: 0;
+        }
+
+        .ellipsis3 {
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 3; /*行數*/
+            -webkit-box-orient: vertical;
+            white-space: normal;
+        }
+    </style>
+    <link href="~/css/MyMain.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script>
+        //如果沒登入，跳出登入視窗
+        $('#submit').on('click',function(event){
+            if ($('#myBtn').attr("hidden") != "hidden") {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: '請登入會員',
+                }).then(function () {
+                    var modal = document.getElementById("myModal");
+                    modal.style.display = "block";
+                    LoginBtn();
+                })
+            }
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            // 启用 HTML 渲染
+            $('[data-toggle="tooltip"]').tooltip({ html: true });
+        });
+
+        // 帶入評價
+        const commentDiv = document.querySelector('#commentDiv');
+        const prodId = @(Model.ProductId);
+        $.ajax({
+            'url': '@Url.Action("getCommentsByDate","Api")',
+            'type': 'get',
+            'dataType': 'json'
+        })
+            .done(function (datas) {
+                let first = 0;
+                $.each(datas, function (i, com) {
+                    if (com.productId == prodId) {
+                        let star = '';
+                        let active = '';
+                        let num = 0;
+                        let imgStr = '';
+                        while ((com.rank - num) > 0) {
+                            if ((com.rank - num) == 0.5)
+                                star += `<i class="fa-solid fa-star-half-stroke text-primary"></i>`
+                            else
+                                star += `<i class="fa fa-star text-primary"></i>`
+                            num++;
+                        }
+                        if (first == 0)
+                            active = 'active';
+
+                        if (com.imagePath != null) {
+                            imgStr = `<img src="@Url.Content("~/img/commentimg/")${com.imagePath}" class="commentImg" />`
+                        }
+                        first++;
+                        commentDiv.innerHTML += `<div class="carousel-item ${active}">
+                                                    <div class="col-lg-4 col-md-4 col-sm-6">
+                                                        <div class="card bg-secondary-subtle text-start">
+                                                            <div class="card-header border-0 px-3">
+                                                                <div class="row">
+                                                                    <div class="col-3">
+                                                                                                <img src="data:image/jpg; base64, ${com.icon}" class="commentLogo" />
+                                                                    </div>
+                                                                    <div class="col-9">
+                                                                        <div class="row">
+                                                                            <div class="col-12">
+                                                                                        ${com.name}
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-12">
+                                                                                               <p class="text-muted p-0 m-0"><small>${com.date}</small></p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body p-1">
+                                                                    <p class="p-0 m-0">
+                                                                                ${star}<span class="ms-2">${com.rank}</span>
+                                                                    </p>
+                                                                                    <div class="d-flex justify-content-between ">
+                                                                        <p class="p-0 mt-1 me-2 mb-0 ellipsis3">
+                                                                            <i class="fa-solid fa-quote-left fa-xs text-black-50 pe-2"></i>
+                                                                                            ${com.comment}
+                                                                            <i class="fa-solid fa-quote-right fa-xs text-black-50 ps-2"></i>
+                                                                        </p>
+                                                                                        ${imgStr}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>`;
+                    }
+                });
+
+                //如果沒抓到評價要顯示暫無評價
+                if(first ==0){
+                    commentDiv.innerHTML = `<span>暫無評價</span>`
+                }
+
+                /*JS for recipeCarousel*/
+                let items = document.querySelectorAll('#recipeCarousel .carousel-item')
+
+                items.forEach((el) => {
+                    const minPerSlide = 3
+                    let next = el.nextElementSibling
+                    for (var i = 1; i < minPerSlide; i++) {
+                        if (!next) {
+                            // wrap carousel by using first child
+                            next = items[0]
+                        }
+                        let cloneChild = next.cloneNode(true)
+                        el.appendChild(cloneChild.children[0])
+                        next = next.nextElementSibling
+                    }
+                })
+                /*JS for recipeCarousel*/
+
+                // Comment modal
+                const modalComment = document.getElementById("commentModal");
+                const imgShow = document.getElementById('imgShow');
+
+                $('.commentImg').on('click', function () {
+                    modalComment.style.display = "block";
+                    imgShow.src = this.src;
+                })
+
+                $('.closeImg').on('click', function () {
+                    modalComment.style.display = "none";
+                })
+            });
+
+        // 加入猜你喜歡
+        const divLike = document.querySelector('#divLike');
+        let q = 0;
+        const subName = `@(Model.SubCategoryName)`;
+        const categoryId = @(Model.CategoryId);
+        const title =  `@(Model.ProductName)`;
+
+        $.ajax({
+            'url': '@Url.Action("getProductsOnSale","Api")',
+            'type': 'get',
+            'dataType': 'json'
+        })
+            .done(function (datas) {
+                $.each(datas, function (i, prod) {
+                    const heart = prod.isPocketed ? "fa-solid" : "fa-regular";
+                    const intro = prod.features.substr(0, 50);
+                    const item = `<div class="col-lg-4 col-md-6">
+                                                                                                  <div class="card">
+                                                                                                           <div class="position-relative overflow-hidden">
+                                                                                                                <div class="bg-image hover-zoom">
+                                                                                                                                         <a href="@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                                                     <img class="card-img-top" src="@Url.Content("~/img/product/")${prod.imagePath}"/>
+                                                                                                                         </a>
+                                                                                                                </div>
+                                                                                                    <div class="position-absolute top-0 end-0 mt-1 me-1">
+                                                                                                                                     <button type="button" class="btn btn-white btn-floating shadow-0" data-id="${prod.productId}">
+                                                                                                                <i class="${heart} fa-heart fa-xl pe-none" ></i>
+                                                                                                                    </button>
+                                                                                                    </div>
+                                                                                             <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                                                                ${prod.subCategoryName}
+                                                                                             </div>
+                                                                                             </div>
+                                                                                            <div class="p-4 pb-0" >
+                                                                                                   <a class="d-block h5 mb-2" href = "@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                        ${prod.productName}
+                                                                                                        </a>
+                                                                                                                <p>${intro}</p>
+                                                                                                        <h5 class="text-end mb-3"> ${prod.unitPrice} <small>起</small> </h5>
+                                                                                            </div>
+                                                                                             <div class="d-flex border-top">
+                                                                                                      <small class="flex-fill text-center border-end py-2">
+                                                                                                       <i class="fa fa-map-marker-alt text-primary me-2"></i>${prod.cityName}
+                                                                                                        </small>
+                                                                                                         <small class="flex-fill text-center border-end py-2">
+                                                                                                          <i class="fa fa-star text-primary me-2"> </i>${prod.rank}
+                                                                                                         </small>
+                                                                                                        <small class="flex-fill text-center py-2">
+                                                                                                          <i class="fa-solid fa-calendar-days text-primary me-2"></i>${prod.isClass}
+                                                                                                           </small>
+                                                                                                    </div>
+                                                                                          </div>
+                                                                                 </div>
+                                                                                `;
+
+                    if (prod.subCategoryName == subName && q < 3 && prod.productName != title) {
+                        divLike.innerHTML += item;
+                        q++;
+                    }
+                    else if (prod.categoryId == categoryId && q < 3 && prod.productName != title) {
+                        divLike.innerHTML += item;
+                        q++;
+                    }
+                });
+
+            });
+
+        //加入收藏
+        const btnPocket = document.querySelector('#myPocket');
+
+        btnPocket.addEventListener('click', function () {
+            const selectedProductId = $(this).data('id');
+            // alert("請登入");
+            $.ajax({
+                'url': `@Url.Action("addToPocket","Api")?id=${selectedProductId}`,
+                'type': 'get',
+                'dataType': 'json'
+            })
+                .done(function (data) {
+                    if (data == '0') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '請登入會員',
+                        }).then(function () {
+                            var modal = document.getElementById("myModal");
+                            modal.style.display = "block";
+                            LoginBtn();
+                        })
+                    }
+                    if (data == '1') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '已移除收藏',
+                        });
+                        btn.children('i').toggleClass("fa-regular");
+                        btn.children('i').toggleClass("fa-solid");
+                    }
+                    if (data == '2') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '已加入收藏',
+                        });
+                        btn.children('i').toggleClass("fa-regular");
+                        btn.children('i').toggleClass("fa-solid");
+                    }
+                });
+        });
+
+        //抓出這個product ID裡的所有product detail
+        let getProductDetail = null;
+        let pdTimeArr = [];
+        let pdTimSubArr = [];
+        let uPdTimeArr = [];
+        let uPdTimSubArr = [];
+
+        $.ajax({
+            'url': `@Url.Action("getProductDetail","Api")?id=${prodId}`,
+            'type': 'get',
+            'dataType': 'json'
+        })
+            .done(function (datas) {
+                console.log(datas);  //在網頁上檢查是否有抓到這個product ID裡的所有product detail
+                getProductDetail = datas; //檢查有抓到，倒進一個全域變數，在月曆就可以使用
+                $.each(datas, function (i, pd) {
+                    if(pd.classId == null){
+                        pdTimeArr.push(pd.beginTime);
+                    }
+                    else{
+                        pdTimSubArr.push(pd.beginTime);
+                    }
+                });
+
+                uPdTimeArr = Array.from(new Set(pdTimeArr));
+                uPdTimeArr = uPdTimeArr.map((x)=>new Date(x));
+
+                if (pdTimSubArr != []) {
+                    uPdTimSubArr = Array.from(new Set(pdTimSubArr));
+                    uPdTimSubArr = uPdTimSubArr.map((x) => new Date(x));
+                }
+
+                refreshDate();
+            });
+
+        /*JS for 日曆l*/
+        var month_olympic = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var month_normal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var month_name = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+
+        var holder = document.getElementById("days");
+        var prev = document.getElementById("prev");
+        var next = document.getElementById("next");
+        var ctitle = document.getElementById("calendar-title");
+        var cyear = document.getElementById("calendar-year");
+
+        // 取得當前年月日
+        var my_date = new Date();
+        var my_year = my_date.getFullYear();
+        var my_month = my_date.getMonth();
+        var my_day = my_date.getDate();
+
+
+        // 讀取各月份的第一天是星期幾
+        function dayStart(month, year) {
+            var tmpDate = new Date(year, month, 1);
+            return (tmpDate.getDay());
+        }
+
+        // 計算每月有多少天 (辨別是普通年份還是閏年)
+        function daysMonth(month, year) {
+            var temp = year;
+            if (temp % 4 == 0 && temp % 100 !== 0 && temp % 400 === 0) {
+                return (month_olympic[month]);
+            } else {
+                return (month_normal[month]);
+            }
+        }
+
+        // 日曆轉換
+        function refreshDate() {
+            var str = "";
+            // 取得當月總天數
+            var totalDay = daysMonth(my_month, my_year);
+            // 取得當月第一天是星期幾
+            var firstDay = dayStart(my_month, my_year);
+            var myclass;
+            // 起始之前日期填空
+            for (var i = 0; i < firstDay; i++) {
+                str += `<li data-date="0"></li>`;
+            }
+            for (var i = 1; i <= totalDay; i++) {
+                if ((i < my_day && my_year == my_date.getFullYear() && my_month == my_date.getMonth()) || my_year < my_date.getFullYear() || (my_year == my_date.getFullYear() && my_month < my_date.getMonth())) {
+                    // 過去日期顯示反灰
+                    myclass = " class='lightgrey'";
+                }
+                else if (i == my_day && my_year == my_date.getFullYear() && my_month == my_date.getMonth()) {
+                    // 當日以綠色呈現
+                    myclass = " class='green greenbox'";
+                }
+                else {
+                    // 未來日期以深灰色呈現
+                    myclass = " class='darkgrey'";
+                }
+
+                // 建立日期焦點
+                str += `<li ${myclass} data-date="${my_year}-${my_month + 1}-${i}">${i}</li>`;
+            }
+            // 設定日期顯示
+            holder.innerHTML = str;
+            // 顯示月份
+            ctitle.innerHTML = month_name[my_month];
+            // 顯示年份
+            cyear.innerHTML = my_year;
+
+            $('#days li').each(function () {
+                let dayLi = $(this)
+                let dataDate = this.dataset.date;
+                //主課程
+                    $.each(uPdTimeArr, function(index,time){
+                    let timeStr = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()}`;
+                    if (timeStr == dataDate) {
+                        dayLi.addClass('avalible');
+                        dayLi.on('click', selectDate)
+                        }
+                    })
+                //後續堂數
+                if (pdTimSubArr != []) {
+                    $.each(pdTimSubArr, function (j, sub) {
+                        sub = new Date(sub);
+                        let subStr = `${sub.getFullYear()}-${sub.getMonth() + 1}-${sub.getDate()}`;
+                        if (subStr == dataDate) {
+                            dayLi.addClass('sub');
+                        }
+                    })
+                }
+            });
+        }
+
+        const IsClass = `@(Model.IsClass)`;
+
+        function selectDate() {
+            const thisDate = new Date(this.dataset.date);
+            const year = thisDate.getFullYear();
+            const month = thisDate.getMonth() + 1;
+            const day = thisDate.getDate();
+            const addClass = document.querySelector('#addClass')
+            addClass.innerHTML = "";
+
+            for (var i = 0; i < getProductDetail.length; i++) {
+                let disabled = '';
+                let stockStr = '';
+                const prodetail = new Date(getProductDetail[i].beginTime);
+                const validClass = getProductDetail[i];
+
+                const thisBeginTime = new Date(validClass.beginTime);
+                const thisEndTime = new Date(validClass.endTime);
+                let shortBeginTime = thisBeginTime;
+                let shortEndTime = thisEndTime;
+                let interval ='';
+
+                 if (IsClass == "多日體驗") 
+                 {
+                    shortBeginTime = `${thisBeginTime.getMonth() + 1}/${thisBeginTime.getDate()} ${thisBeginTime.getHours().toString().padStart(2, '0')}:${thisBeginTime.getMinutes().toString().padStart(2, '0')}`
+                    shortEndTime = `${thisEndTime.getMonth() + 1}/${thisEndTime.getDate()} ${thisEndTime.getHours().toString().padStart(2, '0')}:${thisEndTime.getMinutes().toString().padStart(2, '0')} `
+                 }
+                else if (IsClass == "單日體驗")
+                {
+                    shortBeginTime = `${thisBeginTime.getHours().toString().padStart(2, '0')}:${thisBeginTime.getMinutes().toString().padStart(2, '0')}`
+                    shortEndTime = `${thisEndTime.getHours().toString().padStart(2, '0')}:${thisEndTime.getMinutes().toString().padStart(2, '0')}`
+                }
+                else //長期課程
+                {
+                    shortBeginTime = `${thisBeginTime.getHours().toString().padStart(2, '0')}:${thisBeginTime.getMinutes().toString().padStart(2, '0')}`
+                    shortEndTime = `${thisEndTime.getHours().toString().padStart(2, '0')}:${thisEndTime.getMinutes().toString().padStart(2, '0')}`
+                    interval = `<div>@(Model.Interval)，共@(Model.Times)堂</div>`
+                }
+
+                //點下去的日曆年/月/日=抓出的資料年/月/日，庫存>0，狀態準時開課
+                if (year == prodetail.getFullYear() && month == (prodetail.getMonth() + 1) && day == prodetail.getDate() && getProductDetail[i].statusId == 9) {
+                    if (validClass.stockNow < 0) {
+                        disabled = 'disabled';
+                        stockStr = `<div class="text-danger">已額滿</div>`;
+                    }
+                    else if (thisDate < (new Date()) || (validClass.dealine === null ? false : (new Date(validClass.dealine) < new Date()))) {
+                        disabled = 'disabled';
+                        stockStr = `<div class="text-danger">報名已截止</div>`;
+                    }
+                    else {
+                        stockStr = `<div>剩餘名額: ${validClass.stockNow}</div>`;
+                    }
+                    addClass.innerHTML += `<hr/><div class="row p-2">
+                                            <div class=" col col-2 d-flex align-items-center justify-content-center">
+                                                     <input type="radio" name="radio" data-id="${validClass.productDetailId}" data-stock=${validClass.stockNow} ${disabled} />
+                                            </div>
+                                            <div class=" col col-10 d-flex align-items-center justify-content-center">
+                                                <div class="row">
+                                                                                         <div >${shortBeginTime} - ${shortEndTime} </div>
+                                                                                         ${interval}
+                                                                                                 <div >上課地點: ${validClass.cityName}${validClass.districtName}${validClass.address}</div>
+                                                                                                         <div>$ ${validClass.unitPriceString} /人</div>
+                                                                                            ${stockStr}
+                                                </div>
+                                            </div>
+                                        </div>`
+                }
+            }
+
+            const radios = document.querySelectorAll('input[name="radio"]');
+
+            $('input[name="radio"]').change(function () {
+                $('#submit').attr('disabled', false);
+                const pdId = this.dataset.id;
+                const stock = this.dataset.stock;
+
+                formDiv.classList.add("bg-success-subtle");
+                formDiv.classList.add("shadow-3");
+
+                formCount.innerHTML = `                        <div class="col-6">
+                                    <p>請選擇人數</p>
+                                </div>
+                                <div class="col-2">
+                                    <button class="bg-transparent border-0 minus" type="button" data-max="${stock}"><i class="fa-solid fa-circle-minus fa-xl"></i></button>
+                                </div>
+                                <div class="col-1">
+                                    <label class="txtCountLabel text-center" name="txtCountLabel">1</label>
+                                </div>
+                                <div class="col-2">
+                                    <button class="bg-transparent border-0 plus" type="button" data-max="${stock}"><i class="fa-solid fa-circle-plus fa-xl"></i></button>
+                                </div>
+                                <!-- ======= 數量/productDetailId要傳到結帳頁，藏在這裡 的<input>======= -->
+                                <input type="hidden" class="txtCount" name="txtCount" value="1">
+                                <input type="hidden" id="${pdId}" name="ProductDetailId" value="${pdId}">`
+
+                var minusButton = document.querySelector('.minus');
+                var plusButton = document.querySelector('.plus');
+                minusButton.addEventListener('click', minusClick);
+                plusButton.addEventListener('click', plusClick);
+            });
+
+        }
+
+        function minusClick() {
+            var min = 1;
+            var max = this.dataset.max;   //取出藏在button裡的data-max="${validClass.stockNow}"
+            var current = parseInt($('.txtCount').val())
+            if (current > min) {
+                $('.txtCount').val(current - 1);
+                $('.txtCountLabel').text(current - 1);
+            }
+        };
+
+        function plusClick() {
+            var min = 1;
+            var max = this.dataset.max;
+            var current = parseInt($('.txtCount').val())
+            if (current < max) {
+                $('.txtCount').val(current + 1);
+                $('.txtCountLabel').text(current + 1);
+            }
+        };
+
+        const formCount = document.querySelector('#addCount');
+        const formDiv = document.querySelector('#addCountParent')
+
+        //回到今天
+        $('#backToToday').on('click',function(){
+            my_year = my_date.getFullYear();
+            my_month = my_date.getMonth();
+
+            refreshDate();
+
+            //清空已點選的日期、數量
+            addClass.innerHTML = "";
+            formDiv.classList.remove("bg-success-subtle");
+            formDiv.classList.remove("shadow-3");
+            formCount.innerHTML = "";
+            $('#submit').attr('disabled', true);
+        })
+
+        prev.onclick = function (e) {
+            e.preventDefault();
+            my_month--;
+            if (my_month < 0) {
+                my_year--;
+                my_month = 11;
+            }
+            
+            refreshDate();
+
+            //清空已點選的日期、數量
+            addClass.innerHTML = "";
+            formDiv.classList.remove("bg-success-subtle");
+            formDiv.classList.remove("shadow-3");
+            formCount.innerHTML = "";
+            $('#submit').attr('disabled', true);
+        }
+        next.onclick = function (e) {
+            e.preventDefault();
+            my_month++;
+            if (my_month > 11) {
+                my_year++;
+                my_month = 0;
+            }
+
+            refreshDate();
+
+            //清空已點選的日期、數量
+            addClass.innerHTML = "";
+            formDiv.classList.remove("bg-success-subtle");
+            formDiv.classList.remove("shadow-3");
+            formCount.innerHTML = "";
+            $('#submit').attr('disabled', true);
+        }
+        $('.top-bottom').hide();
+        // BackToTop button
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 300) {
+                $('.top-bottom').fadeIn('slow');
+            } else {
+                $('.top-bottom').fadeOut('slow');
+            }
+        });
+    </script>
+}

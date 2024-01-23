@@ -1,0 +1,858 @@
+﻿@model prjFunShare_Core.ViewModels.CProductSearchViewModel
+
+@{
+    ViewData["Title"] = @ViewBag.Keyword + "相關體驗/課程";
+}
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <form name="searchForm" enctype="multipart/form-data">
+        <input type="text" id="keywordInput" name="Keyword" value="@ViewBag.Keyword" hidden />
+        <nav id="sidebar" class="bg-light rounded-8 shadow-sm ">
+            <div class="sidebar-header mb-0">
+                <div class="row d-flex gap-2 justify-content-center" id="searchBadges">
+                    <div class="col-4">
+                    <h5>
+                        <span class="badge p-2 align-items-center rounded-pill bg-danger">
+                            <span class="px-1">
+                                    <a class="text-white" href="#" onclick="searchByWeekend()">周末出發</a>
+                                </span>
+                        </span>
+                        </h5>
+                    </div>
+                    <div class="col-4">
+                    <h5>
+                        <span class="badge p-2 align-items-center rounded-pill bg-danger">
+                            <span class="px-1">
+                                <a class="text-white" href="#" onclick="searchByCity()">台北市</a>
+                            </span>
+                        </span>
+                    </h5>
+                    </div>
+                    @{
+                        if (ViewBag.Keyword != null)
+                        {
+                                                                                                        <div class="col-4">
+                                                                                                                     <h5 id="keywordBadge">
+                                                                                                                            <span class="badge p-2 align-items-center rounded-pill text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle">
+                                                                                                                        <span class="px-1">@ViewBag.Keyword</span>
+                                                                                                                            <a href="#" onclick="clearKeyword()"><i class="fa-solid fa-xmark"></i></a>
+                                                                                                                        </span>
+                                                                                                                    </h5>
+                                                                                                        </div>
+                        }
+                    }
+                </div>
+            </div>
+            <ul class="accordion list-unstyled m-2 ">
+                <li class="accordion-item">
+                    <div class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryMenu" aria-expanded="true" aria-controls="categoryMenu">
+                            分類
+                        </button>
+                    </div>
+                    <div class="accordion-collapse collapse  show" id="categoryMenu">
+                        <ul class="accordion-body list-unstyled">
+                            <li class="list-group-item p-1">
+                                <input class="form-check-input me-1" type="checkbox" value="0" id="allCategoryCheckbox" name="CategoryCheckbox">
+                                <label class="form-check-label stretched-link" for="allCategoryCheckbox">全選</label>
+                            </li>
+                            @{
+                                int count = 1;
+                                string id = "";
+                                foreach(var item in Model.Categories){
+                                    id = "CategoryCheckbox" + count;
+                                                                                                                <li class="list-group-item p-1">
+                                                                                                                    <input class="form-check-input me-1" type="checkbox" value="@item.CategoryId" id="@id" name="CategoryCheckbox">
+                                                                                                                    <label class="form-check-label stretched-link" for="@id">@item.CategoryName</label>
+                                                                                                                </li>
+                                    count++;
+                                }
+                            }
+                        </ul>
+                    </div>
+                </li>
+                <li class="accordion-item">
+                    <div class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#regionMenu" aria-expanded="true" aria-controls="regionMenu">
+                            地區
+                        </button>
+                    </div>
+                    <div class="accordion-collapse collapse" id="regionMenu">
+                        <ul class="accordion-body list-unstyled">
+                            <li class="list-group-item p-1">
+                                <input class="form-check-input me-1" type="checkbox" value="0" id="allRegionCheckbox" name="RegionCheckbox">
+                                <label class="form-check-label stretched-link" for="allRegionCheckbox">全選</label>
+                            </li>
+                            @{
+                                int regionCount = 1;
+                                string regionId = "";
+                                foreach(var item in Model.Regions)
+                                {
+                                    regionId = "RegionCheckbox" + regionCount;
+                                                                                                                <li class="list-group-item p-1">
+                                                                                                                    <input class="form-check-input me-1" type="checkbox" value="@item.RegionId" id="@regionId" name="RegionCheckbox">
+                                                                                                                    <label class="form-check-label stretched-link" for="@regionId">@item.RegionName</label>
+                                                                                                                </li>
+                                    regionCount++;
+                                }
+                            }
+                        </ul>
+                    </div>
+                </li>
+                <li class="accordion-item">
+                    <div class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#ageMenu" aria-expanded="true" aria-controls="ageMenu">
+                            適合年齡
+                        </button>
+                    </div>
+                    <div class="accordion-collapse collapse" id="ageMenu">
+                        <ul class="accordion-body list-unstyled">
+                            <li class="list-group-item p-1">
+                                <input class="form-check-input me-1" type="checkbox" value="0" id="allAgeCheckbox" name="AgeCheckbox">
+                                <label class="form-check-label stretched-link" for="allAgeCheckbox">全選</label>
+                            </li>
+                            @{
+                                int ageCount = 1;
+                                string ageId = "";
+                                foreach (var item in Model.Ages)
+                                {
+                                    ageId = "AgeCheckbox" + ageCount;
+                                                                                                                <li class="list-group-item p-1">
+                                                                                                                    <input class="form-check-input me-1" type="checkbox" value="@item.AgeId" id="@ageId" name="AgeCheckbox">
+                                                                                                                    <label class="form-check-label stretched-link" for="@ageId">@item.Grade</label>
+                                                                                                                </li>
+                                    ageCount++;
+                                }
+                            }
+                        </ul>
+                    </div>
+                </li>
+                <li class="accordion-item">
+                    <div class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#priceMenu" aria-expanded="true" aria-controls="priceMenu">
+                            價格區間
+                       </button>
+                    </div>
+                    <div class="accordion-collapse collapse mt-4 mb-4 p-0" id="priceMenu">
+                            <div class="row mb-2">
+                                <div class="col-12 text-center" id="priceDiv"></div>
+                            </div>
+                            <div class="row  justify-content-center d-flex">
+                                <div class="col-12 middle">
+                                    <div class="multi-range-slider">
+                                        <input type="range" id="input-left" min="1" max="@Model.PriceMax" value="1" name="PriceMin">
+                                    <input type="range" id="input-right" min="1" max="@Model.PriceMax" value="@Model.PriceMax" name="PriceMax">
+                                        <div class="slider">
+                                            <div class="track"></div>
+                                            <div class="range"></div>
+                                            <div class="thumb left"></div>
+                                            <div class="thumb right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </li>
+                <li class="accordion-item">
+                    <div class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#dateMenu" aria-expanded="true" aria-controls="dateMenu">
+                            日期
+                        </button>
+                       </div>
+                    <ul class="accordion-collapse collapse list-unstyled mt-4 mb-4" id="dateMenu">
+                        <li class="justify-content-center d-flex p-1">
+                        @*<div class="row">
+                            <div class="col-1 me-2">起</div>
+                            <input id='input' class='input col-8' />
+                            </div> *@
+                            起 <input type="date" name="dateStart" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </li>
+                        <li class="justify-content-center d-flex p-1">
+                            迄 <input type="date" name="dateEnd" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="list-group m-2">
+                <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="lsClassRadio" value="0" id="firstRadio">
+                    <label class="form-check-label" for="firstRadio">單日體驗</label>
+                </li>
+                <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="lsClassRadio" value="1" id="secondRadio">
+                    <label class="form-check-label" for="secondRadio">多日體驗</label>
+                </li>
+                <li class="list-group-item">
+                    <input class="form-check-input me-1" type="radio" name="lsClassRadio" value="2" id="thirdRadio">
+                    <label class="form-check-label" for="thirdRadio">長期課程</label>
+                </li>
+            </ul>
+            
+            <ul class="list-unstyled CTAs text-center">
+                <li>
+                    <input type="button" class="btn btn-secondary btn-lg mb-1" value="清除條件" onclick="clearAll()" />
+                </li>
+                <li>
+                    <input type="submit" class="btn btn-primary btn-lg" value="重新搜尋" id="search" />
+                </li>
+            </ul>
+        </nav>
+    </form>
+
+    <!-- Page Content  -->
+    <div id="content" class="pt-0">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-8 shadow-sm mb-3">
+            <div class="container-fluid">
+                <div class="col-3">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fa-solid fa-filter"></i>
+                        <span>篩選</span>
+                    </button>
+                </div>
+
+                <div class="col-3 ml-auto text-end">
+                    <!-- Toggle button -->
+                    <button class="btn btn-dark d-inline-block d-lg-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                            aria-expanded="false" aria-controls="navbarSupportedContent">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <!-- Collapsible wrapper -->
+                    <div class="collapse navbar-collapse ml-auto text-end" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav text-end">
+@*                             <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fa-solid fa-grip fa-lg"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fa-solid fa-table-list fa-lg"></i></a>
+                            </li> *@
+                            <li class="nav-item">
+                                <a class="nav-link" onclick="sortByPrice()" style="cursor:pointer">價格低至高</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" onclick="sortByReleaseTime()" style="cursor:pointer">最新上架</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" onclick="sortBySales()" style="cursor:pointer">最熱銷</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- 搜尋結果 -->
+        <div class="container-fluid">
+            <p class="text-muted" id="countText"></p>
+            <!-- loading效果 -->
+            <div id="spinner" class="row g-4" style="display:inline">
+                <div class="text-center text-primary">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <!-- loading效果 -->
+            <div id="result" class="row g-4">
+                <!--cards-->
+
+
+            </div>
+            <!-- 搜尋結果 -->
+            <!--頁碼-->
+@*              <div class="row justify-content-center mt-4">
+            <div class="col-6">
+            <nav aria-label="...">
+            <ul class="pagination pagination-lg justify-content-center">
+            <li class="page-item">
+            <a class="page-link" href="#">&laquo;</a>
+            </li>
+            <li class="page-item active" aria-current="page">
+            <span class="page-link">
+            1
+            <span class="visually-hidden">(current)</span>
+            </span>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+            <a class="page-link" href="#">&raquo;</a>
+            </li>
+            </ul>
+            </nav>
+            </div>
+            </div>
+ *@        </div>
+
+
+    </div>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/search.css" />
+    <link rel="stylesheet" href="~/css/rome.css">
+    <style>
+        .input-group-append {
+            cursor: pointer;
+        }
+
+        .middle {
+            position: relative;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .slider {
+            position: relative;
+            z-index: 1;
+            height: 10px;
+            margin: 0 15px;
+        }
+
+            .slider > .track {
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                border-radius: 5px;
+                background-color: var(--mdb-secondary);
+            }
+
+            .slider > .range {
+                position: absolute;
+                z-index: 2;
+                left: 25%;
+                right: 25%;
+                top: 0;
+                bottom: 0;
+                border-radius: 5px;
+                background-color: var(--mdb-primary);
+            }
+
+            .slider > .thumb {
+                position: absolute;
+                z-index: 3;
+                top: 4px;
+                width: 20px;
+                height: 20px;
+                background-color: #FFFFFF;
+                box-shadow: 0 0 0 2.5px var(--mdb-primary);
+                border-radius: 50%;
+                transition: box-shadow .3s ease-in-out;
+            }
+
+                .slider > .thumb.left {
+                    left: 25%;
+                    transform: translate(-15px, -10px);
+                }
+
+                .slider > .thumb.right {
+                    right: 25%;
+                    transform: translate(15px, -10px);
+                }
+
+                .slider > .thumb.hover {
+                    box-shadow: 0 0 0 4px rgba(0,0,0,.3);
+                }
+
+                .slider > .thumb.active {
+                    box-shadow: 0 0 0 6px rgba(0,0,0,.2);
+                }
+
+        input[type=range] {
+            position: absolute;
+            pointer-events: none;
+            -webkit-appearance: none;
+            z-index: 2;
+            height: 10px;
+            width: 100%;
+            opacity: 0;
+        }
+
+            input[type=range]::-webkit-slider-thumb {
+                pointer-events: all;
+                width: 30px;
+                height: 30px;
+                border-radius: 0;
+                border: 0 none;
+                background-color: red;
+                -webkit-appearance: none;
+            }
+
+        .ellipsis2 {
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 2; /*行數*/
+            -webkit-box-orient: vertical;
+            white-space: normal;
+        }
+    </style>
+}
+
+@section Scripts{
+@*     <script src="~/js/rome.js"></script> *@
+    <script>
+        // $(function () {
+        //     rome(input, { time: false });
+        // });
+
+        let gotDatas= null;
+
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+            getProductSummary()
+        });
+
+        // slider相關-------------------------------------------------------------------------------
+        var inputLeft = document.getElementById("input-left");
+        var inputRight = document.getElementById("input-right");
+
+        var thumbLeft = document.querySelector(".slider > .thumb.left");
+        var thumbRight = document.querySelector(".slider > .thumb.right");
+        var range = document.querySelector(".slider > .range");
+
+        setLeftValue();
+        setRightValue();
+
+        function setLeftValue() {
+            var _this = inputLeft,
+                min = parseInt(_this.min),
+                max = parseInt(_this.max);
+
+            _this.value = Math.min(parseInt(_this.value), parseInt(inputRight.value) - 1);
+            var percent = ((_this.value - min) / (max - min)) * 100;
+
+            thumbLeft.style.left = percent + "%";
+            range.style.left = percent + "%";
+            $('#priceDiv').html(`NT$${inputLeft.value} - NT$${inputRight.value}`);
+        }
+
+        function setRightValue() {
+            var _this = inputRight,
+                min = parseInt(_this.min),
+                max = parseInt(_this.max);
+
+            _this.value = Math.max(parseInt(_this.value), parseInt(inputLeft.value) + 1);
+
+            var percent = ((_this.value - min) / (max - min)) * 100;
+
+            thumbRight.style.right = (100 - percent) + "%";
+            range.style.right = (100 - percent) + "%";
+            $('#priceDiv').html(`NT$${inputLeft.value} - NT$${inputRight.value}`);
+        }
+
+        inputLeft.addEventListener("input", setLeftValue);
+        inputRight.addEventListener("input", setRightValue);
+
+        inputLeft.addEventListener("mouseover", function () {
+            thumbLeft.classList.add("hover");
+        });
+        inputLeft.addEventListener("mouseout", function () {
+            thumbLeft.classList.remove("hover");
+        });
+        inputLeft.addEventListener("mousedown", function () {
+            thumbLeft.classList.add("active");
+        });
+        inputLeft.addEventListener("mouseup", function () {
+            thumbLeft.classList.remove("active");
+        });
+
+        inputRight.addEventListener("mouseover", function () {
+            thumbRight.classList.add("hover");
+        });
+        inputRight.addEventListener("mouseout", function () {
+            thumbRight.classList.remove("hover");
+        });
+        inputRight.addEventListener("mousedown", function () {
+            thumbRight.classList.add("active");
+        });
+        inputRight.addEventListener("mouseup", function () {
+            thumbRight.classList.remove("active");
+        });
+        // 搜尋相關-------------------------------------------------------------------------------
+        const search = document.querySelector('#search');
+        const result = document.querySelector('#result');
+        const spinner = document.querySelector('#spinner');
+        let keywordInput = $('#keywordInput').val();
+        let count = 0;
+
+        // 一進入搜尋頁，先搜尋關鍵字
+        $.ajax({
+            'url': `@Url.Action("getProductsOnSale","Api")`,
+            'type': 'get',
+            'dataType': 'json'
+        })
+            .done(function (datas) {
+                const datasByKeyword = datas.filter(function (value, index, array) {
+                    return value.productName.includes(keywordInput)
+                })
+                gotDatas = datasByKeyword;
+                spinner.style.display = 'none';
+
+                showProductCards(datasByKeyword);
+            });
+
+        // 台北市快速搜尋
+        async function searchByCity() {
+            spinner.style.display = 'inline';
+            $.ajax({
+                'url': `@Url.Action("getProductsOnSale","Api")`,
+                'type': 'get',
+                'dataType': 'json'
+            })
+                .done(function (datas) {
+                    const datasByCity = datas.filter(function (value, index, array) {
+                        return value.cityName == '台北市'
+                    })
+                    gotDatas = datasByCity;
+                    spinner.style.display = 'none';
+
+                    showProductCards(datasByCity);
+                });
+        }
+
+        // 周末出發
+        async function searchByWeekend() {
+            //計算本周末的日期
+            const today = new Date();
+            const nowYear = today.getFullYear();
+            const nowMonth = today.getMonth() + 1;
+            const nowDate = today.getDate();
+            let thisWeekend = '';
+
+            if (today.getDay() == 6) {
+                thisWeekend = today
+            }
+            else {
+                thisWeekend = new Date(nowYear, nowMonth - 1, nowDate)
+                for (let i = 0; thisWeekend.getDay() != 6; i++) {
+                    thisWeekend = new Date(nowYear, nowMonth - 1, nowDate + i)
+                }
+            }
+            
+            spinner.style.display = 'inline';
+            $.ajax({
+                'url': `@Url.Action("getProductsOnSale","Api")`,
+                'type': 'get',
+                'dataType': 'json'
+            })
+                .done(function (datas) {
+                    
+                    const datasByWeekend = datas.filter(function (value, index, array) {
+                        //轉換成JS的Date格式
+                        const dateArr = value.fDates.map(x => new Date(x));
+                        let WeekendArr = []
+                        let thisSunday = thisWeekend.getDate() + 1;
+                        thisSunday = new Date(thisWeekend.getFullYear(), thisWeekend.getMonth(), thisSunday)
+
+                        for (let i = 0; i < dateArr.length; i++) 
+                        {
+                            if ((dateArr[i].getMonth() == thisWeekend.getMonth() && dateArr[i].getDate() == thisWeekend.getDate())
+                                || (dateArr[i].getMonth() == thisSunday.getMonth() && dateArr[i].getDate() == thisSunday.getDate())) 
+                            {
+                                WeekendArr.push(dateArr[i])
+                            }
+                        }
+
+                     return WeekendArr.length > 0;
+                    })
+                    gotDatas = datasByWeekend;
+                    spinner.style.display = 'none';
+
+                    showProductCards(datasByWeekend);
+                });
+        }
+
+        // 進階搜尋功能
+        search.addEventListener('click', event => {
+            event.preventDefault();
+            search.disabled = true;
+            search.value = '搜尋中...';
+            spinner.style.display = 'inline';
+            result.innerHTML = null;
+            $('#countText').html(null);
+
+            // 建立FormData物件
+            const formData = new FormData(document.searchForm);
+            fetch('@Url.Action("getProductsSearch", "Api")', {
+                body: formData,
+                method: "POST"
+            })
+                .then(response => response.json())
+                .then(datas => {
+                    gotDatas = datas;
+                    showProductCards(datas)
+                    search.disabled = false;
+                    search.value = '重新搜尋';
+                    spinner.style.display = 'none';
+                })
+        });
+
+        // 清除關鍵字
+        function clearKeyword() {
+            $('#keywordInput').val(null);
+            $('#keywordBadge').hide();
+        }
+        // 清除所有篩選條件
+        function clearAll(){
+            clearKeyword();
+
+            $('input[type=checkbox]').each(function () {
+                this.checked = false;
+            });
+            $('input[type=radio]').each(function () {
+                this.checked = false;
+            });
+            $('input[type=date]').val(null);
+
+            inputRight.value=@Model.PriceMax;
+            inputLeft.value = 1;
+            setLeftValue();
+            setRightValue();
+        }
+
+        //全選設定
+        const allCategory = document.querySelector('#allCategoryCheckbox');
+        const allRegion = document.querySelector('#allRegionCheckbox');
+        const allAge = document.querySelector('#allAgeCheckbox');
+        //類別
+        $('#allCategoryCheckbox').on('input', function () {
+            if (this.checked) {
+                // Iterate each checkbox
+                $('#categoryMenu ul li input').each(function () {
+                    this.checked = true;
+                });
+            } 
+            else {
+                $('#categoryMenu ul li input').each(function () {
+                    this.checked = false;
+                });
+            }
+        })
+
+        $('#categoryMenu ul li input').on('input', function () {
+            if (!this.checked) {
+                allCategory.checked = false;
+            }
+
+            if ($('#categoryMenu ul li input')[1].checked && $('#categoryMenu ul li input')[2].checked
+                && $('#categoryMenu ul li input')[3].checked && $('#categoryMenu ul li input')[4].checked) {
+                allCategory.checked = true;
+            }
+        })
+        //地區
+        $('#allRegionCheckbox').on('input', function(){
+            if (this.checked) {
+                // Iterate each checkbox
+                $('#regionMenu ul li input').each(function () {
+                    this.checked = true;
+                });
+            }
+            else {
+                $('#regionMenu ul li input').each(function () {
+                    this.checked = false;
+                });
+            }
+        })
+
+        $('#regionMenu ul li input').on('input',function(){
+            if (!this.checked) {
+                allRegion.checked = false;
+            }
+        })
+        //分齡
+        $('#allAgeCheckbox').on('input', function () {
+            if (this.checked) {
+                // Iterate each checkbox
+                $('#ageMenu ul li input').each(function () {
+                    this.checked = true;
+                });
+            }
+            else {
+                $('#ageMenu ul li input').each(function () {
+                    this.checked = false;
+                });
+            }
+        })
+
+        $('#ageMenu ul li input').on('input', function () {
+            if (!this.checked) {
+                allAge.checked = false;
+            }
+        })
+
+        //統計數字至搜尋列
+        async function getProductSummary(){
+            $.ajax({
+                'url': "@Url.Action("getProductSummary","Api")",
+                'type': 'get',
+                'dataType': 'json'
+            })
+                .done(function (data) {
+                    for (let i = 0; i < data.categoriesCount.length;i++)
+                    {
+                        let j = i+1;
+                        let category = document.querySelector(`#CategoryCheckbox${j}+label`)
+                        category.innerHTML += `<span class="text-muted">(${data.categoriesCount[i]})</span>`
+                    }
+                    for (let i = 0; i < data.regionsCount.length; i++) {
+                        let j = i + 1;
+                        let region = document.querySelector(`#RegionCheckbox${j}+label`)
+                        region.innerHTML += `<span class="text-muted">(${data.regionsCount[i]})</span>`
+                    }
+                    for (let i = 0; i < data.agesCount.length; i++) {
+                        let j = i + 1;
+                        let age = document.querySelector(`#AgeCheckbox${j}+label`)
+                        age.innerHTML += `<span class="text-muted">(${data.agesCount[i]})</span>`
+                    }
+                });
+        }
+
+        function compareByPrice(a, b) {
+            let aPrice = Number(a.unitPrice.replace(',', ''));
+            let bPrice = Number(b.unitPrice.replace(',', ''));
+            if (aPrice < bPrice) {
+                return -1;
+            }
+            if (aPrice > bPrice) {
+                return 1;
+            }
+            return 0;
+        }
+
+        function sortByPrice(){
+            let sorted = [...gotDatas].sort(compareByPrice);
+
+            showProductCards(sorted);
+        }
+
+        function sortBySales(){
+            let sorted = [...gotDatas].sort((a, b) => {
+                let aCount = Number(a.orderCount);
+                let bCount = Number(b.orderCount);
+                if (aCount > bCount) {
+                    return -1;
+                }
+                if (aCount < aCount) {
+                    return 1;
+                }
+                return 0;
+            });
+            console.log(sorted)
+            showProductCards(sorted);
+        }
+
+        function sortByReleaseTime(){
+            showProductCards(gotDatas);
+        }
+
+        function showProductCards(array){
+            result.innerHTML = "";
+            count = 0;
+            $.each(array, function (i, prod) {
+                const heart = prod.isPocketed ? "fa-solid" : "fa-regular";
+                const intro = prod.features.substr(0, 50);
+                const item = `<div class="col-lg-4 col-md-6">
+                                                                                                  <div class="card">
+                                                                                                           <div class="position-relative overflow-hidden">
+                                                                                                                <div class="bg-image hover-zoom">
+                                                                                                                                 <a href="@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                                                     <img class="card-img-top" src="@Url.Content("~/img/product/")${prod.imagePath}"/>
+                                                                                                                         </a>
+                                                                                                                </div>
+                                                                                                    <div class="position-absolute top-0 end-0 mt-1 me-1">
+                                                                                                            <button type="button" class="btn btn-white btn-floating shadow-0" data-id="${prod.productId}">
+                                                                                                                <i class="${heart} fa-heart fa-xl pe-none" ></i>
+                                                                                                            </button>
+                                                                                                    </div>
+                                                                                             <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                                                                ${prod.subCategoryName}
+                                                                                             </div>
+                                                                                             </div>
+                                                                                            <div class="p-4 pb-0" >
+                                                                                                                <a class="d-block h5 mb-2" href = "@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                        ${prod.productName}
+                                                                                                        </a>
+                                                                                                                        <p class="ellipsis2">${intro}</p>
+                                                                                                        <h5 class="text-end mb-3"> ${prod.unitPrice} <small>起</small> </h5>
+                                                                                            </div>
+                                                                                             <div class="d-flex border-top">
+                                                                                                      <small class="flex-fill text-center border-end py-2">
+                                                                                                       <i class="fa fa-map-marker-alt text-primary me-2"></i>${prod.cityName}
+                                                                                                        </small>
+                                                                                                         <small class="flex-fill text-center border-end py-2">
+                                                                                                          <i class="fa fa-star text-primary me-2"> </i>${prod.rank}
+                                                                                                         </small>
+                                                                                                        <small class="flex-fill text-center py-2">
+                                                                                                          <i class="fa-solid fa-calendar-days text-primary me-2"></i>${prod.isClass}
+                                                                                                           </small>
+                                                                                                    </div>
+                                                                                          </div>
+                                                                                 </div>
+                                                                                `;
+                result.innerHTML += item;
+                count++;
+            })
+            btnPocket = $('.btn.btn-white.btn-floating.shadow-0');
+            $('#countText').html(`共${count}項相關課程`);
+
+            btnPocket.on({
+                mouseenter: function () {
+                    $(this).children('i').addClass("fa-beat");
+                    $(this).children('i').addClass("text-danger")
+                },
+                mouseleave: function () {
+                    $(this).children('i').removeClass("fa-beat");
+                    $(this).children('i').removeClass("text-danger");
+                }
+            })
+            // 收藏功能
+            btnPocket.on('click', function () {
+                const selectedProductId = $(this).data('id');
+                const btn = $(this);
+
+                $.ajax({
+                    'url': `@Url.Action("addToPocket","Api")?id=${selectedProductId}`,
+                    'type': 'get',
+                    'dataType': 'json'
+                })
+                    .done(function (data) {
+                        if (data == '0') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '請登入會員',
+                            }).then(function () {
+                                var modal = document.getElementById("myModal");
+                                modal.style.display = "block";
+                                LoginBtn();
+                            })
+                        }
+                        if (data == '1') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '已移除收藏',
+                            });
+                            btn.children('i').toggleClass("fa-regular");
+                            btn.children('i').toggleClass("fa-solid");
+                        }
+                        if (data == '2') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '已加入收藏',
+                            });
+                            btn.children('i').toggleClass("fa-regular");
+                            btn.children('i').toggleClass("fa-solid");
+                        }
+                    });
+            })
+        }
+    </script>
+}

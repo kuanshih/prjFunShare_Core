@@ -1,0 +1,125 @@
+﻿@model IEnumerable<prjFunShare_Core.ViewModels.CProductCardViewModel>
+@{
+    ViewData["Title"] = @Model.First().Supplier.SupplierName;
+}
+
+<section>
+    <div class="p-5 bg-body-tertiary rounded-3 display-5 fw-bold">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-3">
+                    <img src="data:image/jpg;base64,@Convert.ToBase64String(Model.First().Supplier.LogoImage)" class="img-fluid" />
+                </div>
+                <div class="col-9">
+                    <h1 class="text-body-emphasis">@Model.First().Supplier.SupplierName</h1>
+                    <p class=" mx-auto lead">
+                        @Model.First().Supplier.Description
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<section>
+    <div class="row g-4 my-2">
+        @{
+            foreach (var prod in Model)
+            {
+                string heart = prod.IsPocketed ? "fa-solid" : "fa-regular";
+                string text = prod.Features.Length > 50 ? (prod.Features.Substring(0, 49) + " ...") : prod.Features;
+                <div class="col-lg-4 col-md-6">
+                    <div class="card">
+                        <div class="position-relative overflow-hidden">
+                            <div class="bg-image hover-zoom">
+                                <a href="@Url.Action("List","Product",new{id=prod.ProductId})">
+                                    <img class="card-img-top" src="~/img/product/@prod.ImagePath">
+                                </a>
+                            </div>
+                            <div class="position-absolute top-0 end-0 mt-1 me-1">
+                                <button type="button" class="btn btn-white btn-floating shadow-0" data-id="@prod.ProductId">
+                                    <i class="@heart fa-heart fa-xl pe-none"></i>
+                                </button>
+                            </div>
+                            <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                @prod.SubCategoryName
+                            </div>
+                        </div>
+                        <div class="p-4 pb-0">
+                            <a class="d-block h5 mb-2" href="@Url.Action("List","Product",new{id=prod.ProductId})">@prod.ProductName</a>
+                            <p>@text</p>
+                            <h5 class="text-end mb-3">@prod.UnitPrice 起</h5>
+                        </div>
+                        <div class="d-flex border-top">
+                            <small class="flex-fill text-center border-end py-2">
+                                <i class="fa fa-map-marker-alt text-primary me-2"></i>@prod.CityName
+                            </small>
+                            <small class="flex-fill text-center border-end py-2">
+                                <i class="fa fa-star text-primary me-2"></i>@prod.Rank
+                            </small>
+                            <small class="flex-fill text-center py-2">
+                                <i class="fa-solid fa-calendar-days text-primary me-2"></i>@prod.IsClass
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        btnPocket = $('.btn.btn-white.btn-floating.shadow-0');
+
+        btnPocket.on({
+            mouseenter: function () {
+                $(this).children('i').addClass("fa-beat");
+                $(this).children('i').addClass("text-danger")
+            },
+            mouseleave: function () {
+                $(this).children('i').removeClass("fa-beat");
+                $(this).children('i').removeClass("text-danger");
+            }
+        })
+
+        btnPocket.on('click', function () {
+            const selectedProductId = $(this).data('id');
+            const btn = $(this);
+
+            $.ajax({
+                'url': `@Url.Action("addToPocket","Api")?id=${selectedProductId}`,
+                'type': 'get',
+                'dataType': 'json'
+            })
+                .done(function (data) {
+                    if (data == '0') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '請登入會員',
+                        }).then(function () {
+                            var modal = document.getElementById("myModal");
+                            modal.style.display = "block";
+                            LoginBtn();
+                        })
+                    }
+                    if (data == '1') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '已移除收藏',
+                        });
+                        btn.children('i').toggleClass("fa-regular");
+                        btn.children('i').toggleClass("fa-solid");
+                    }
+                    if (data == '2') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '已加入收藏',
+                        });
+                        btn.children('i').toggleClass("fa-regular");
+                        btn.children('i').toggleClass("fa-solid");
+                    }
+                });
+        })
+    </script>
+}

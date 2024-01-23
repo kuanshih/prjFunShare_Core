@@ -1,0 +1,841 @@
+﻿@{
+    ViewData["Title"] = "我的訂單明細";
+}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>calendar</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    @* map *@
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+</head>
+<div id="orderDetailContent">
+    <!-- Carousel wrapper -->
+    <div id="carouselBasicExample" class="carousel slide carousel-fade" data-mdb-ride="carousel"  style="z-index: 0">
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button"
+                    data-mdb-target="#carouselBasicExample"
+                    data-mdb-slide-to="0"
+                    class="active"
+                    aria-current="true"
+                    aria-label="Slide 1"></button>
+            <button type="button"
+                    data-mdb-target="#carouselBasicExample"
+                    data-mdb-slide-to="1"
+                    aria-label="Slide 2"></button>
+            <button type="button"
+                    data-mdb-target="#carouselBasicExample"
+                    data-mdb-slide-to="2"
+                    aria-label="Slide 2"></button>
+        </div>
+
+        <!-- Inner -->
+        <div class="carousel-inner">
+            <!-- Single item -->
+            <div id="img1" class="carousel-item active">
+
+                @*                 <div class="carousel-caption d-none d-md-block">
+                <h5>First slide label</h5>
+                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                </div> *@
+            </div>
+
+            <!-- Single item -->
+            <div class="img1">
+  @*               <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(22).webp" class="d-block w-100" alt="Canyon at Nigh" />
+                <div class="carousel-caption d-none d-md-block">
+                    <h5></h5>
+                    <p></p>
+                </div> *@
+            </div>
+
+            <!-- Single item -->
+            <div class="img1">
+   @*              <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(23).webp" class="d-block w-100" alt="Cliff Above a Stormy Sea" />
+                <div class="carousel-caption d-none d-md-block"> *@
+                    <h5></h5>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <!-- Inner -->
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-mdb-target="#carouselBasicExample" data-mdb-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-mdb-target="#carouselBasicExample" data-mdb-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- Carousel wrapper -->
+
+    <br />
+    <div class="container">
+        <h1 id="title" class="h-100 d-flex justify-content-center align-items-center"></h1>
+        <p id="status" class="h-100 d-flex justify-content-center align-items-center"></p>
+        <!-- Stepper -->
+        <div class="wrapper option-1 option-1-1">
+            <ol class="c-stepper">
+                <li id="c-stepper__item1" class="c-stepper__item c-stepper__item1">
+                    <h3 class="c-stepper__title">報名付款</h3>
+                    <p class="c-stepper__desc">報名狀態</p>
+                </li>
+                <li id="c-stepper__item2" class="c-stepper__item c-stepper__item2">
+                    <h3 class="c-stepper__title">報到參與體驗</h3>
+                    
+                        <button type="button" id="myQrCode"  class="btn btn-secondary c-stepper__desc" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+                            產生QRcode
+                        </button>
+                    
+                </li>
+                <li id="c-stepper__item3" class="c-stepper__item c-stepper__item3">
+                    <h3 class="c-stepper__title">回饋</h3>
+                    <p class="c-stepper__desc">留言</p>
+                </li>
+            </ol>
+        </div>
+        <!-- Stepper -->
+        <br>
+        <nav>
+            <ul class="menu d-flex justify-content-between">
+                <li><a href="#about">課程介紹</a></li>
+                <li><a href="#order">訂單資訊</a></li>
+                <li><a href="#cancel">取消更改政策</a></li>
+                <li><a href="#location">位置</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container space1">
+        <div class="d-flex align-items-start  bg-light  row mb-3">
+            <!--左側-->
+            <div class="col-8">
+                <h2 id="about">簡介</h2>
+                <div id="div1"></div>
+                <br>
+                <div class="flip"><span class="1"><h2 class="fa-solid fa-caret-down" id="cancel">取消與更改</h2></span></div>
+                <div class="panel">
+                    <br>
+                    <h5 style="font-size:20px">取消辦法</h5>
+                    <ul>
+
+
+                        <li>出發日前 7 日前（不含出發日）通知取消，可全額退費。</li>
+                        <li>出發日前 6 日至前 4 日內（不含出發日）通知取消，收取手續費 50％。</li>
+                        <li>出發日前 3 日（不含出發日）至當日內不接受取消，並不予退回款項。</li>
+                        <li>於活動中如因非可究責主辦單位之因素中止參與活動，將不予退回款項。</li>
+                        <li>如因天災等不可抗力因素，FUNShare 將主動聯繫延期或退款。</li>
+                        <li>上述時間以消費者進線客服人員表明要取消的時間點為準。</li>
+                        <li>取消收取手續費依四捨五入計算至元。</li>
+                    </ul>
+                    <h5 style="font-size:20px">更改辦法</h5>
+                    <ul>
+                        <li>出發日前 4 日前（不含出發日）可更改日期一次。</li>
+                        <li>改期僅限於同一主辦單位、同價格之相同活動方案，且僅限更改至月曆表上已開放之可預訂時段。經改期後之活動恕不接受取消退費。</li>
+                        <li>出發日前 3 日至當日內不接受更改日期。</li>
+                        <li>如欲更改人數，須至少於出發日前 4 天詢問 FUNShare。</li>
+                        <li>上述時間以消費者向客服提出申請訂單更改之時間點為準。</li>
+                    </ul>
+                    <br>
+                </div>
+                <div>
+                    <br>
+                    <h2 id="location" class="location">位置</h2>
+                    <div id="map" class="col-md-12">
+                        <div id="map"></div>
+                    </div>
+                    <br>
+                </div>
+
+                <div id="review" class="review">
+                </div>
+
+            </div>
+            <!--左側-->
+            <!--右側-->
+            <div class="col-md-4" style="padding-left:15px;">
+            <div>
+                <h2>與廠商聊天</h2>
+                <ul id="chat"></ul>
+            </div>
+                <div>
+                    <h2>報名狀況</h2>
+                    <ul class="far fa-circle-check" id="signpStatus">  </ul>
+                </div>
+                <div>
+                    <br>
+                    <h2>繳費狀況</h2>
+                    <ul class="far fa-credit-card" id="paymentStatus"></ul>
+                </div>
+                @*      todo...要想訂單編號邏輯 *@
+                <div>
+                    <br>
+                    <h2 id="order">訂單</h2>
+                    <ul>
+                        <p id="bookCode"></p>
+                        <p id="person"></p>
+                    </ul>
+                </div>
+                <div>
+                    <br>
+                    <h2>帳單</h2>
+                    <ul>
+                        <p id="ordertime"></p>
+                        <p id="orderPrice"></p>
+                        <p id="finalPrice"></p>
+                        <p id="Bonus"></p>
+                    </ul>
+                </div>
+                <div>
+                    <br>
+                    <h2>課程體驗時間</h2>
+                    <ul id="eventTime"></ul>
+
+                </div>
+                <div>
+                    <br>
+                    <h2>主辦廠商</h2>
+                    <ul id="supplier"></ul>
+                </div>
+            </div>
+            <!--右側-->
+        </div>
+    </div>
+</div>
+<br />
+<!-- Comment -->
+<div class="modal top fade" id="CommentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-backdrop="true" data-mdb-keyboard="false">
+    <div class="modal-dialog modal-lg  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">留下您的體驗課程評價吧</h5>
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md ">
+                        <form id="comment" mothed="post" class="h-100 d-flex flex-column justify-content-center ">
+
+                            @*  <div class="form-group">
+                            <label asp-for="CommentId" class="control-label"></label>
+                            <input asp-for="CommentId" class="form-control" />
+                            <span asp-validation-for="CommentId" class="text-danger"></span>
+                            </div> *@
+                            <div class="form-group" hidden>
+                                <label for="UserName" class="form-label">OrderId</label>
+                                <input type="number" class="form-control" id="OrderId" name="OrderId">
+                            </div>
+                            <div class="form-group" hidden>
+                                <label for="UserEmail" class="form-label">MemberId</label>
+                                <input type="number" class="form-control" id="MemberId" rows="3" name="MemberId" />
+                            </div>
+                            <div class="form-group">
+                                <label for="UserAge" class="form-label">您的評價</label>
+                                <span class="message-input__count">0/50</span>
+                                <br />
+                                <textarea type="text" class="form-control" id="Review" rows="3" name="Review" maxlength="50" placeholder="請輸入訊息內容" oninput="countCharacters(this)" ></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">照片</label>
+                                <input class="form-control" type="file" id="formFile" name="file">
+                                <img id="preview" class="img-thumbnail w-25" style="display:none;" />
+                            </div>
+                            <div class="form-group">
+                                <label for="UserAge" class="form-label">評分</label>
+                                <input type="number" class="form-control" id="Rank" rows="3" name="Rank" hidden></input>
+                                <div id="full-stars-example-two">
+                                    <div class="rating-group">
+                                        <input disabled checked class="rating__input rating__input--none" name="rating3" id="rating3-none" value="0" type="radio">
+                                        <label aria-label="1 star" class="rating__label" for="rating3-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="rating3" id="rating3-1" value="1" type="radio">
+                                        <label aria-label="2 stars" class="rating__label" for="rating3-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="rating3" id="rating3-2" value="2" type="radio">
+                                        <label aria-label="3 stars" class="rating__label" for="rating3-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="rating3" id="rating3-3" value="3" type="radio">
+                                        <label aria-label="4 stars" class="rating__label" for="rating3-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="rating3" id="rating3-4" value="4" type="radio">
+                                        <label aria-label="5 stars" class="rating__label" for="rating3-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="rating3" id="rating3-5" value="5" type="radio">
+                                    </div>
+                                    @*         <p class="desc" style="font-family: sans-serif; font-size:0.9rem">
+                                    Full stars<br />
+                                    Must select a star value
+                                    </p> *@
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sencondary" onclick="setText1()">Demo1</button>
+                            <div class="form-group" hidden>
+                                <label for="UserAge" class="form-label">Date</label>
+                                <input type="text" class="form-control" id="Date" rows="3" name="Date"></input>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                    下次再留
+                </button>
+                <input type="submit" value="送出" class="btn btn-primary" data-mdb-dismiss="comment" id="button1" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Comment -->
+<!-- popup qrcode -->
+<div class="modal top fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-backdrop="true" data-mdb-keyboard="true">
+    <div class="modal-dialog  ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">報到Qrcode</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><img id="qrcode" class="img-thumbnail" /></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                    關閉
+                </button>
+                @* <button type="button" class="btn btn-primary">Save changes</button> *@
+            </div>
+        </div>
+    </div>
+</div>
+<!-- popup qrcode -->
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- 引入 SweetAlert 的 CDN -->
+    <script>
+        //導入參數orderId
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+
+        // const urlParams2 = new URLSearchParams(window.location.search);
+        // const processStatus = urlParams2.get('processStatus');
+        // let forcode = 0;
+
+        //const title = document.querySelector('title')
+        //const div1 = document.querySelector('#div1')
+
+        // 計算留言字數
+        function countCharacters(textarea) {
+            const maxLength = 50;
+            const currentLength = textarea.value.length;
+            const countElement = textarea.parentElement.querySelector('.message-input__count');
+            countElement.textContent = `${currentLength}/${maxLength}`;
+        }
+
+        //fetch 帶入資料
+
+        async function orderDetail() {
+            const response = await fetch(`@Url.Content("~/api/getmyOrderDetail?orderId=")${orderId}`)//todo...
+            const datas = await response.json();
+            // console.log(datas)
+            //時間格式化
+            const beginTime = new Date(datas[0].beginTime);
+            const endTime = new Date(datas[0].endTime);
+            const ordertime = new Date(datas[0].orderTime);
+            const place = datas[0].cityName + datas[0].districtName
+            const isattend = datas[0].isAttend;//todo...
+            // console.log(isattend)
+
+
+            // status
+            //取消
+            if (datas[0].orderStatus === "取消") {
+                // document.querySelector("#status").innerHTML = datas[0].orderStatus
+                //$("#c-stepper__item1").css({ "background-color": "pink" , "font-size": "200%"});
+            }
+            //未付款
+            //報名成功已付款
+            else if (datas[0].orderStatus !== "未付款" && datas[0].orderDetailStatus === "報名成功" && !datas[0].isAttend) {
+                // document.querySelector("#status").innerHTML = datas[0].orderStatus + datas[0].orderDetailStatus + datas[0].isAttend
+
+            }
+            //報名成功但未參加
+            else if (datas[0].orderStatus === "已付款" && datas[0].orderDetailStatus === "報名後未參加") {
+                // document.querySelector("#status").innerHTML = datas[0].orderStatus + datas[0].orderDetailStatus + datas[0].isAttend
+
+            }
+            //報名成功有參加未留言
+            else if (datas[0].orderStatus === "已付款" && datas[0].orderDetailStatus === "報名成功" && datas[0].isAttend) {
+                // document.querySelector("#status").innerHTML = datas[0].orderStatus + datas[0].orderDetailStatus + datas[0].isAttend
+                document.querySelector("#review").innerHTML = `          <h2>體驗回饋</h2>
+                                                            <button data-mdb-toggle="modal" class="btn btn-secondary" data-mdb-target="#CommentModal">留下您寶貴的意見:</button>`
+            }
+            //報名成功有參加已留言
+            else if (datas[0].orderStatus === "已付款" && datas[0].orderDetailStatus === "報名後參加且留言" && datas[0].isAttend) {
+                // document.querySelector("#status").innerHTML = "已留言囉"
+            }
+            // status
+            let orderPrice = datas[0].count * datas[0].unitPrice
+            let bonus = orderPrice / 200
+            let time = new Date().toISOString()
+            let code = datas[0].orderTime.toString("yyyy-MM-dd").replace(/[-T:]/g, '').slice(0, 8);
+            
+            
+            $('#Date').val(time);
+            $("#OrderId").val(datas[0].orderId);
+            $("#MemberId").val(datas[0].memberId);
+            forcode = datas[0].orderDetailId;//todo...
+            //測試
+            document.querySelector("#title").innerHTML = datas[0].productName
+            document.querySelector("#div1").innerHTML = datas[0].features
+            document.querySelector("#img1").innerHTML = `<img src="../img/product/${datas[0].imagePath}"class="d-block w-100" alt="First img" />`
+            document.querySelector("#signpStatus").innerHTML = `    ${datas[0].orderDetailStatus}`//todo...
+            document.querySelector("#paymentStatus").innerHTML = `    ${datas[0].orderStatus}`
+            document.querySelector("#chat").innerHTML = `<a class="btn  mt-2" style="background-color: 		#E0E0E0;" onclick="toChat(${datas[0].supplierId})">聊天</a>`
+            document.querySelector('#bookCode').innerHTML = ` 訂購編號: OD${code}${forcode}`//todo...
+            document.querySelector("#person").innerHTML = `   人數:  ${datas[0].count} 人`
+            document.querySelector("#orderPrice").innerHTML = `   訂購金額:  ${orderPrice} TWD`
+            document.querySelector("#finalPrice").innerHTML = `   結帳金額:  ${orderPrice} TWD`
+            document.querySelector("#Bonus").innerHTML = `   紅利回饋:  ${bonus} 點`
+            document.querySelector("#ordertime").innerHTML = `訂購時間: ${ordertime.getFullYear()} -${(ordertime.getMonth() + 1).toString().padStart(2, '0')} -${ordertime.getDate().toString().padStart(2, '0')} ${ordertime.getHours().toString().padStart(2, '0')}:${ordertime.getMinutes().toString().padStart(2, '0')}`
+            document.querySelector("#eventTime").innerHTML = `<P> ${beginTime.getFullYear()} -${(beginTime.getMonth() + 1).toString().padStart(2, '0')} -${beginTime.getDate().toString().padStart(2, '0')} ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')}</P>
+                                                                        <p class="justify-content-center">至</p>
+                                                                      <p>${endTime.getFullYear()} -${(endTime.getMonth() + 1).toString().padStart(2, '0')} -${endTime.getDate().toString().padStart(2, '0')} ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}</p>`
+            document.querySelector("#supplier").innerHTML = `    ${datas[0].supplierName}`
+
+            document.querySelector("#location").innerHTML = `<div>${datas[0].cityName}${datas[0].districtName}${datas[0].address}</div>`;
+
+            
+        
+
+            //QRCode
+            console.log(forcode)//todo...
+            $("#myQrCode").on("click", function () {
+                $("#qrcode").attr("src", "@Url.Action("getQrCodeImage","Order")?id=" + forcode);
+            });
+           
+
+          //新增評價
+          const btn = document.querySelector('#button1')
+            btn.addEventListener('click', event => {
+                reviewText(() => {
+                    event.preventDefault();
+                    const formdata = new FormData(document.querySelector('#comment'));
+                    fetch('@Url.Content("~/api/createComment")', {
+                        body: formdata,
+                        method: 'POST'
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // alert("新增成功")
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: '留言成功',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(function () {
+                                    location.href = '@Url.Content("/Customer/myOrderList")'
+                                })
+                                
+                            }
+                            else
+                                alert("新增失敗")
+                        })
+                })
+            })
+          
+            // 翻譯後進行文字仲裁
+
+
+            function reviewText(callback) {
+                const inputContent = document.getElementById("Review").value;
+                var params = {
+                    "autocorrect": true,
+                    "PII": true,
+                    "classify": true,
+                    "language": "eng",
+                };
+                $.ajax({
+                    url: "https://msit150team04contentmoderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen?" + $.param(params),
+                    beforeSend: function (xhrObj) {
+                        // Request headers
+                        xhrObj.setRequestHeader("Content-Type", "text/plain");
+                        xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "52b9f75aaced496eb5fedd064400a63b");
+                    },
+                    type: "POST",
+                    // Request body
+                    data: inputContent, // 使用翻譯後的文字進行仲裁 translatedText
+                }).done(function (data) {
+                    // alert(JSON.stringify(data));  //可以自行處理仲裁結果
+
+                    // 製作爬蟲分析仲裁結果 數據1: 成人內容 數據2: 性暗示 數據3:冒犯性
+                    // 數據1 ： 成人內容
+                    var Category1 = data['Classification']['Category1']['Score'];
+                    // 數據2 ： 性暗示
+                    var Category2 = data['Classification']['Category2']['Score'];
+                    // 數據3 ： 冒犯性
+                    var Category3 = data['Classification']['Category3']['Score'];
+
+                    // 顯示在alert上的文案
+                    var message = "";
+                    var message1 = "";
+                    var message2 = "";
+                    var message3 = "";
+
+
+                    // alert(`內容:${text}, 信心指數:${(confidence*100).toFixed(2)}%`);
+
+                    if (Category1 > 0.6 || Category2 > 0.6 || Category3 > 0.6) {
+
+                        if (Category1 > 0.6) {
+
+                            message1 = `<span style="color:red">成人內容：${(Category1 * 100).toFixed(2)}%,</span>`
+
+                        }
+                        if (Category2 > 0.6) {
+
+                            message2 = `<span style="color:red">性暗示：${(Category2 * 100).toFixed(2)}%,</span>`
+
+                        }
+                        if (Category3 > 0.6) {
+
+                            message3 = `<span style="color:red" >冒犯性：${(Category3 * 100).toFixed(2)}% </span>`
+
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: '這樣太兇了喔!!',
+                            html: `${message1} ${message2} ${message3},
+                                        部分指數過高，請修正！`
+                        })
+                    } else {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '訊息已發送',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        callback();
+                    }
+                    // alert(`Category1：${Category1},Category2：${Category2},Category3：${Category3}`);
+                    // console.log(Category1);
+                }).fail(function (err) {
+                    alert(err.statusText);
+                });
+            }
+
+            //照片預覽功能
+            $("#formFile").change(function () {
+                $("#preview").show()
+                readURL(this);
+            });
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#preview").attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#full-stars-example-two input").click(function () {
+                $("#Rank").val($(this).val())
+
+            });
+   
+            //地圖function
+            let map;
+            async function initMap() {
+                // The location of Uluru
+                const position = { lat: -25.344, lng: 131.031 };
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+                let testposition = "";
+
+                function geocode() {
+                    var location = place;
+                    axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+                        params: {
+                            address: location,
+                            key: 'AIzaSyDdEXjwGZSJgCYTBhl7Pmp4KWaJhGJAmwU'
+                        }
+                    })
+                        .then(function (response) {
+                            console.log(response)
+
+                            var getlat = response.data.results[0].geometry.location.lat;
+                            var getlng = response.data.results[0].geometry.location.lng;
+                            var output = `{lat:${getlat},lng:${getlng}}`;
+                            position.lat = getlat;
+                            position.lng = getlng;
+
+                            // The map, centered at Uluru
+                            map = new Map(document.getElementById("map"), {
+                                zoom: 13,
+                                center: position,
+                                mapId: "DEMO_MAP_ID",
+                            });
+
+                            // The marker, positioned at Uluru
+                            const marker = new AdvancedMarkerView({
+                                map: map,
+                                position: position,
+                                title: "Uluru",
+                            });
+
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                }
+                geocode()
+            }
+
+            initMap();
+        }
+
+        orderDetail();
+    </script>
+    <script>
+        //收合script
+        $(function () {
+            $(".flip").click(function () {
+                $(".panel").slideToggle("slow");
+                // $(".xs1").toggle();
+                // $(".xs2").toggle();
+            });
+        });
+        //聊天
+        function toChat(supplierId) {
+            window.location.href = `@Url.Content("~/Home/ChatWindow?receiverId=S")` + supplierId;
+        }
+
+        //demo
+        function setText1() {
+            $("#Review").val("活動真的很有趣，適合帶家人一同參與")
+        }
+       
+    </script>
+
+    <script>
+        (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+            ({ key: "AIzaSyDdEXjwGZSJgCYTBhl7Pmp4KWaJhGJAmwU", v: "beta" });</script>
+}
+@section Styles{
+    <style>
+        /*         container設計 */
+        .space1 {
+            border: groove;
+            border-color: #F0F0F0;
+            border-radius: 10px;
+            padding: 40px;
+        }
+
+        /*         stepper 設定 */
+        :root {
+            --circle-size: clamp(1.5rem, 5vw, 3rem);
+            --spacing: clamp(0.25rem, 2vw, 0.5rem);
+        }
+
+        .c-stepper {
+            display: flex;
+        }
+
+        .c-stepper__item {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            text-align: center;
+            &:before
+
+        {
+            --size: 3rem;
+            content: "";
+            display: block;
+            width: var(--circle-size);
+            height: var(--circle-size);
+            border-radius: 50%;
+            background-color: lightgrey;
+            background-color: #D1E9E9;
+            opacity: 0.5;
+            margin: 0 auto 1rem;
+        }
+
+        &:not(:last-child) {
+            &:after
+
+        {
+            content: "";
+            position: relative;
+            top: calc(var(--circle-size) / 2);
+            width: calc(100% - var(--circle-size) - calc(var(--spacing) * 2));
+            left: calc(50% + calc(var(--circle-size) / 2 + var(--spacing)));
+            height: 2px;
+            background-color: #e0e0e0;
+            order: -1;
+        }
+
+        }
+        }
+
+        .c-stepper__title {
+            font-weight: bold;
+            font-size: clamp(1rem, 4vw, 1.25rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .c-stepper__desc {
+            color: grey;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            padding-left: var(--spacing);
+            padding-right: var(--spacing);
+        }
+
+        /*** Non-demo CSS ***/
+
+        .wrapper {
+            max-width: 1000px;
+            margin: 2rem auto 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            padding: 1rem;
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+        /*         stepper 設定 */
+
+        /*         標題下目錄頁 */
+        .menu {
+            width: 100%;
+            overflow: auto;
+            background-color: #F0F0F0;
+            border-radius: 5px;
+            list-style-type: none;
+        }
+
+            .menu li {
+                width: 10em;
+                line-height: 4em;
+                float: left;
+            }
+
+                .menu li a {
+                    display: block;
+                    text-align: center;
+                    color: #000000;
+                    font-size: 20px;
+                }
+
+                    .menu li a:link {
+                        text-decoration: none;
+                    }
+
+                    .menu li a:hover {
+                        background-color: #eaeaea;
+                        color: #121212;
+                        border-radius: 5px;
+                    }
+        /*                     收合 */
+        .flip {
+            margin: 0px;
+            padding: 5px;
+            /*             text-align: center; */
+            /*            border:dashed;
+                    border-block-color:black;
+                    border-width:thin; */
+            cursor: pointer;
+        }
+
+        .panel {
+            margin: 0px;
+            padding: 5px;
+            /*       border: dashed;
+                    border-block-color: black;
+                    border-width: thin; */
+            /*       text-align: center; */
+            display: none;
+        }
+
+        /*         地圖 */
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+
+        .location {
+        }
+        /*        星星 */
+
+
+        #full-stars-example-two {
+            /* use display:inline-flex to prevent whitespace issues. alternatively, you can put all the children of .rating-group on a single line */
+            .rating-group
+
+        {
+            display: inline-flex;
+        }
+
+        /* make hover effect work properly in IE */
+        .rating__icon {
+            pointer-events: none;
+        }
+
+        /* hide radio inputs */
+        .rating__input {
+            position: absolute !important;
+            left: -9999px !important;
+        }
+
+        /* hide 'none' input from screenreaders */
+        .rating__input--none {
+            display: none
+        }
+
+        /* set icon padding and size */
+        .rating__label {
+            cursor: pointer;
+            padding: 0 0.1em;
+            font-size: 2rem;
+        }
+
+        /* set default star color */
+        .rating__icon--star {
+            color: orange;
+        }
+
+        /* if any input is checked, make its following siblings grey */
+        .rating__input:checked ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
+
+        /* make all stars orange on rating group hover */
+        .rating-group:hover .rating__label .rating__icon--star {
+            color: orange;
+        }
+
+        /* make hovered input's following siblings grey on hover */
+        .rating__input:hover ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
+
+        }
+    </style>
+
+
+}
+
+

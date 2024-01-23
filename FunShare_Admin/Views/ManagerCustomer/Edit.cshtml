@@ -1,0 +1,178 @@
+﻿@model FunShare_Admin.Models.CustomerInfomationWrap
+
+@{
+    ViewData["Title"] = "會員資料編輯";
+}
+
+<h1>會員資料編輯</h1>
+<p align="right">
+   @*  <a class="btn btn-outline-danger" type="button" asp-action="ChangeStatus">客戶停權</a> *@
+    <a class="btn btn-outline-primary" type="button" asp-action="Create">新增客戶</a>
+    <a class="btn btn-outline-primary" type="button" asp-action="List">回上一頁</a>
+</p>
+
+<h4>會員資料</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit" id="formEdit" method="POST" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="MemberID" value="@Model.MemberId" />
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="Photo" class="control-label"></label>
+                        <input asp-for="Photo" class="form-control" id="Photo" type="file" accept="image/*" name="file" multiple/>
+                        <span asp-validation-for="Photo" class="text-danger"></span>
+                        <br />
+                        @if (Model.Photo != null)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Photo)" id="imgPreview" style="width:160px" />
+                        }
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col">
+                            <label asp-for="BirthDate" class="control-label"></label>
+                            <input asp-for="BirthDate" class="form-control" />
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label asp-for="Gender" class="control-label"></label>
+                            <input asp-for="Gender" class="form-control" />
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col">
+                            <label asp-for="ResidentId" class="control-label"></label>
+                            <input asp-for="ResidentId" class="form-control" />
+                            <span asp-validation-for="ResidentId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber" class="control-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label asp-for="StatusId" class="control-label">狀態</label>
+                            <select asp-for="StatusId" class="form-control" asp-items="ViewBag.StatusId"></select>
+                            <span asp-validation-for="StatusId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col">
+                            <label asp-for="SuspensionReason" class="control-label"></label>
+                            <input asp-for="SuspensionReason" class="form-control" />
+                            <span asp-validation-for="SuspensionReason" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="form-group col">
+                            <label asp-for="Nickname" class="control-label"></label>
+                            <input asp-for="Nickname" class="form-control" />
+                            <span asp-validation-for="Nickname" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col">
+                            <label asp-for="ParentId" class="control-label">家長姓名</label>
+                            <input asp-for="ParentId" class="form-control" />
+                            <span asp-validation-for="ParentId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DistrictId" class="control-label">行政區</label>
+                        <select asp-for="DistrictId" class="form-control" asp-items="ViewBag.DisctrictId"></select>
+                        <span asp-validation-for="DistrictId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group form-check col-2">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IsAllergy" /> @Html.DisplayNameFor(model => model.IsAllergy)
+                            </label>
+                        </div>
+                        <div class="form-group col-10">
+                            <label asp-for="AllergyDescription" class="control-label"></label>
+                            <input asp-for="AllergyDescription" class="form-control" />
+                            <span asp-validation-for="AllergyDescription" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Note" class="control-label"></label>
+                        <textarea asp-for="Note" class="form-control"></textarea>
+                        <span asp-validation-for="Note" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="更新並儲存" id="btnEdit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="List">回上頁</a>
+</div>
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+@section Scripts {
+    @*  <script type="text/javascript">
+        var arrayBuffer = null;
+        $("#Photo").on("change", function () {
+            var file = this.files[0];
+            var allowFileType = "image.*"
+            if (file.type.match(allowFileType)) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    arrayBuffer = this.result;
+                    var blob = new Blob([arrayBuffer], { type: "image/jpeg" });
+                    //preview
+                    var urlCreator = window.URL || window.webkitURL;
+                    var objectUrl = urlCreator.createObjectURL(blob);
+                    $("#imgPreview").attr("src", objectUrl);
+                };
+            } else {
+                alert("檔案格式錯誤!")
+            }
+
+        });
+    </script> *@
+
+    <script>
+
+        const FormData = require('form-data');
+        const btn = document.querySelector("#btnEdit")
+        btn.addEventListener('click', event => {
+            event.preventDefault();
+
+            const formDada = new FormData(document.querySelector("#formEdit"));
+            fetch('@Url.Content("~/ManagerCustomer/Edit")', {
+                body: formData,
+                method: 'POST'
+            })
+        })
+    </script>
+}
+

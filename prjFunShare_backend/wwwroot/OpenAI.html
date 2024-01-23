@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>文案產生器(OpenAI)</title>
+</head>
+<body>
+    <!--<div class="form-group">
+        <label for="inputTextContent">需求文案簡介</label>
+        <span class="message-input__count1">0/200</span>
+        <br />
+        <textarea class="form-control" id="inputTextContent" rows="4" maxlength="200" placeholder="請輸入訊息內容" oninput="countCharacters1(this)"></textarea>
+    </div>-->
+    <div class="ai-function">
+        <button id="closeButton" class="btn-close">關閉AI文案小編</button> <br />
+        <div class="form-floating">
+            <label for="ShortDescription" class="inputTextContent">請簡短提供3組關鍵字</label>
+            <br />
+            <span class="message-input__count1">0/30</span><br />
+            <textarea asp-for="ShortDescription" class="form-floating mb-3" width="200" height="300" id="inputTextContent1" cols="30" rows="1" maxlength="30" minlength="3" placeholder="關鍵字1" oninput="countCharacters1(this)" required></textarea>
+            <br />
+            <span class="message-input__count2">0/30</span><br />
+            <textarea asp-for="ShortDescription" class="form-floating mb-3" width="200" height="300" id="inputTextContent2" cols="30" rows="1" maxlength="30" minlength="3" placeholder="關鍵字2" oninput="countCharacters2(this)" required></textarea>
+            <br />
+            <span class="message-input__count3">0/30</span><br />
+            <textarea asp-for="ShortDescription" class="form-floating mb-3" width="200" height="300" id="inputTextContent3" cols="30" rows="1" maxlength="30" minlength="3" placeholder="關鍵字3" oninput="countCharacters3(this)" required></textarea>
+            <br />
+            <button class="btn btn-outline-primary" id="btn-AiSuggest" type="button">AI自動生成</button>
+            <button type="button" class="btn btn-outline-danger float-right" id="btnAIDemo">AIDemo鍵</button>
+        </div>
+        <br />
+        <div class="load-wrapp" id="loadingPic" hidden>
+            <div class="load-4">
+                <div class="ring-1"></div>
+            </div>
+        </div>
+        <div class="form-floating">
+            <label for="outputTextContent">文案產出結果</label>
+            <span class="message-input__count2">0/500</span>
+            <br />
+            <textarea class="form-control" width="200" height="300" id="AITextContent" cols="30" rows="10 " maxlength="500" placeholder="文案產生結果" oninput="countCharacters2(this) disable"></textarea>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<styles>
+
+</styles>
+
+
+
+<script>
+        
+
+    document.getElementById("closeButton").addEventListener("click", function () {
+        parent.postMessage("closeIframe", "*");
+    });
+
+    function countCharacters1(textarea) {
+    const maxLength = 30;
+    const currentLength = textarea.value.length;
+    const countElement = textarea.parentElement.querySelector('.message-input__count1');
+    countElement.textContent = `${currentLength}/${maxLength}`;
+}
+
+    function countCharacters2(textarea) {
+        const maxLength = 30;
+        const currentLength = textarea.value.length;
+        const countElement = textarea.parentElement.querySelector('.message-input__count2');
+        countElement.textContent = `${currentLength}/${maxLength}`;
+    }
+
+    function countCharacters3(textarea) {
+        const maxLength = 30;
+        const currentLength = textarea.value.length;
+        const countElement = textarea.parentElement.querySelector('.message-input__count3');
+        countElement.textContent = `${currentLength}/${maxLength}`;
+    }
+
+    // Demo鍵
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var demoButton = document.getElementById("btnAIDemo");
+        var demoInput1 = document.getElementById("inputTextContent1");
+        var demoInput2 = document.getElementById("inputTextContent2");
+        var demoInput3 = document.getElementById("inputTextContent3");
+
+        demoButton.addEventListener("click", function () {
+            // 設定輸入文字
+            demoInput1.value = "訂單未付款";
+            demoInput2.value = "有禮貌催繳";
+            demoInput3.value = "課程產品";
+        });
+    });
+
+    // 設定AI文案
+    var AICreateButton = document.getElementById("btn-AiSuggest");
+    var AIoutput = document.getElementById("AITextContent");
+    var loadingPic = document.getElementById("loadingPic");
+
+    AICreateButton.addEventListener("click", function () {           
+        loadingPic.hidden = false;
+        setTimeout(function () {
+            loadingPic.hidden = true;
+            AIoutput.value = "尊敬的[客戶姓名],我代表[你的公司名]，感謝您的選擇並購買我們的產品 / 服務。我們非常重視您的業務，也希望能繼續為您提供卓越的服務。然而，根據我們的記錄，我們注意到您的訂單編號[#訂單編號]，目前尚未支付。我們理解在某些情況下可能會出現付款的遺漏，但我們需要您的協助以完成此交易。如果您已經支付了訂單，請忽略此郵件。如果您還沒有支付，請點擊以下鏈接或使用以下付款信息完成訂單支付：[付款鏈接]訂單總額：[訂單總額]截止日期：[截止日期]我們理解可能有各種原因導致未能及時支付，但請您知道，您的支付對我們非常重要。這有助於我們維持高質量的服務和產品。如果您需要任何關於訂單付款的幫助或有任何疑問，請隨時回覆此郵件或聯繫我們的客戶支援團隊，他們將竭誠為您提供協助。感謝您的合作和支持。我們期待著您尽快完成訂單支付，以便我們能够為您提供所需的服務。祝您一切順利。誠摯地，[你的姓名][你的職務][你的公司名]";
+        }, 9000);
+        
+    });
+
+         
+    ////按鈕，點擊跳alert
+
+    //    $("#btn-AiSuggest").click(function(e){
+    //        e.preventDefault();
+    //        ShowInput();
+
+    //})
+
+    //    async function GetSuggestIntro(f){
+    //        const response = await fetch('@Url.Content("~/ManagerOpenAI/AISuggest")',{
+    //        body:f,
+    //    method:'POST',
+    //    headers: {
+    //        "Content-Type": "application/json"
+    //        }
+    //    })
+    //    const status = await response.status
+
+    //    if(status==200){
+    //        const content =await response.text()
+    //    $("#ShortDescription").text(content)
+    //    }
+    //}
+
+    //    async function ShowInput(){
+    //    const {value: formValues } = await Swal.fire({
+    //        title: '輸入簡短說明想要有的重點',
+    //    html:
+    //    '<input id="swal-input1" class="swal2-input">' +
+    //        '<input id="swal-input2" class="swal2-input">' +
+    //            '<input id="swal-input3" class="swal2-input">',
+    //                focusConfirm: false,
+    //        preConfirm: () => {
+    //            return [
+    //                document.getElementById('swal-input1').value,
+    //                document.getElementById('swal-input2').value,
+    //                document.getElementById('swal-input3').value
+    //                ]
+    //        }
+    //    })
+
+    //                if (formValues) {
+
+    //                    $("#ShortDescription").text("內容生成中...")
+    //        //組成body
+    //        let bodyObject = {instruct: formValues }
+    //                let body = JSON.stringify(bodyObject);
+    //                GetSuggestIntro(body)
+    //    }
+    // }
+
+</script>
+
+<style>
+    .ai-function {
+        align-items:end;
+        background-color: #a0ecc7;
+        width:300px;
+    }
+
+    .btn-close {
+        background-color: #faf0e6;
+        border-radius: 5px;
+    }
+
+    body {
+        margin: 0 auto;
+        padding: 20px;
+        max-width: 1200px;
+        overflow-y: scroll;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 400;
+        color: #777;
+        background-color: #f7f7f7;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+
+    .load-wrapp {
+        float: left;
+        width: 100px;
+        height: 100px;
+        margin: 0 10px 10px 0;
+        padding: 20px 20px 20px;
+        border-radius: 5px;
+        text-align: center;
+        background-color: #d8d8d8;
+    }
+
+        .load-wrapp p {
+            padding: 0 0 20px;
+        }
+
+        .load-wrapp:last-child {
+            margin-right: 0;
+        }
+
+    .ring-1 {
+        width: 10px;
+        height: 10px;
+        margin: 0 auto;
+        padding: 10px;
+        border: 7px dashed #4b9cdb;
+        border-radius: 100%;
+    }
+
+    .load-4 .ring-1 {
+        animation: loadingD 1.5s 0.3s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+    }
+
+    @keyframes loadingD {
+        0 {
+            transform: rotate(0deg);
+        }
+
+        50% {
+            transform: rotate(180deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    #loadingPic {
+        opacity: 0.75;
+    }
+
+
+</style>

@@ -1,0 +1,305 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.ManagerProduct.CProductAttend>
+@{
+    ViewData["Title"] = "報名名單";
+    // ViewBag.Action = "SupplierList";
+}
+
+<h1>報名名單</h1>
+@* <td>
+    @Html.ActionLink("回到課程報名", "List", "ManagerProduct",  new { Class ="btn btn-outline-primary" })
+</td> *@
+<p align="left">
+    <a class="btn btn-outline-primary" type="button" asp-controller="ManagerProduct" asp-action="List">返回課程總覽</a>
+</p>
+@section Styles{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+    @* <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"> *@
+}
+
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">全部</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="attend-tab" data-bs-toggle="tab" data-bs-target="#attend-tab-pane" type="button" role="tab" aria-controls="attend-tab-pane" aria-selected="false">出席</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="notattend-tab" data-bs-toggle="tab" data-bs-target="#notattend-tab-pane" type="button" role="tab" aria-controls="notattend-tab-pane" aria-selected="false">未出席</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+        <table id="attend-table" class="table table-hover table-sm" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>序號 </th>
+                        <th>人工作業(簽到) </th>
+                        <th>@Html.DisplayNameFor(model => model.FProductDetail_ID)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Phone)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                        <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_IsAttend)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        string statusClassForPay = "";//改變付款顏色
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            switch (item.FOrderPay_Status)
+                            {
+                                case "已付款":
+                                    statusClassForPay = "text-success";
+                                    break;
+                                case "未付款":
+                                    statusClassForPay = "text-danger";
+                                    break;
+                                case "取消":
+                                    statusClassForPay = "text-warning";
+                                    break;
+                            }
+                            count++;
+                            <tr>
+                                <td> @count</td>
+                                <td> <input type="checkbox" id="FOrderDetail_ID" name="FOrderDetail_ID" value="@item.FOrderDetail_ID"></td>
+                                <td>@Html.DisplayFor(modelItem => item.FProductDetail_ID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FCustomer_Phone)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FProduct_UnitPrice)</td>
+                                <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status)</td>
+                                <td>
+                                      @Html.DropDownListFor(model => item.FProduct_IsAttend,
+                        new SelectList(new[] { new SelectListItem { Text = "未出席", Value = "False" },
+                                      new SelectListItem { Text = "出席", Value = "True" } },
+                                       "Value", "Text"))
+                                 </td>
+                                <td>
+                                    @Html.ActionLink("修改出席狀態", "CheckCustomerAttend", "ManagerProduct", new { id = item.FOrderDetail_ID,productdetailid= item.FProductDetail_ID}, new { Class = "btn btn-primary" })|        
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade " id="attend-tab-pane" role="tabpanel" aria-labelledby="attend-tab" tabindex="0">
+        <table id="attend-table2" class="table table-hover table-sm" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>序號 </th>
+                        <th>人工作業(簽到) </th>
+                        <th>@Html.DisplayNameFor(model => model.FProductDetail_ID)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Phone)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                        <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_IsAttend)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        count = 0;
+                        foreach (var item in Model)
+                        {
+                            if (item.FProduct_IsAttend == true)
+                            {
+                                switch (item.FOrderPay_Status)
+                                {
+                                    case "已付款":
+                                        statusClassForPay = "text-success";
+                                        break;
+                                    case "未付款":
+                                        statusClassForPay = "text-danger";
+                                        break;
+                                    case "取消":
+                                        statusClassForPay = "text-warning";
+                                        break;
+                                }
+                                count++;
+                                <tr>
+                                    <td>@count </td>
+                                    <td> <input type="checkbox" id="FOrderDetail_ID" name="FOrderDetail_ID" value="@item.FOrderDetail_ID"></td>
+                                    <td>@Html.DisplayFor(modelItem => item.FProductDetail_ID) </td>
+                                    <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FCustomer_Email)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FCustomer_Phone)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FProduct_UnitPrice)</td>
+                                    <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status)</td>
+                                <td>
+                                    @Html.DropDownListFor(model => item.FProduct_IsAttend,
+                        new SelectList(new[] { new SelectListItem { Text = "未出席", Value = "False" },
+                        new SelectListItem { Text = "出席", Value = "True" } },
+                        "Value", "Text"))
+                                </td>
+                                    <td>
+                                        @Html.ActionLink("修改出席狀態", "CheckCustomerAttend", "ManagerProduct", new { id = item.FOrderDetail_ID,productdetailid= item.FProductDetail_ID }, new { Class = "btn btn-primary" }) |  
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade " id="notattend-tab-pane" role="tabpanel" aria-labelledby="notattend-tab" tabindex="0">
+        <table id="attend-table3" class="table table-hover table-sm" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>序號 </th>
+                        <th>人工作業(簽到) </th>
+                        <th>@Html.DisplayNameFor(model => model.FProductDetail_ID)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.FCustomer_Phone)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_Name)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_UnitPrice)</th>
+                        <th>@Html.DisplayNameFor(model => model.FOrderPay_Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.FProduct_IsAttend)</th>
+                      
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        count = 0;
+                        foreach (var item in Model)
+                        {
+                        if (item.FProduct_IsAttend == false || item.FProduct_IsAttend == null)
+                        {
+                                switch (item.FOrderPay_Status)
+                                {
+                                    case "已付款":
+                                        statusClassForPay = "text-success";
+                                        break;
+                                    case "未付款":
+                                        statusClassForPay = "text-danger";
+                                        break;
+                                    case "取消":
+                                        statusClassForPay = "text-warning";
+                                        break;
+                                }
+                                count++;
+                                <tr>
+                                    <td>@count </td>
+                                    <td> <input type="checkbox" id="FOrderDetail_ID" name="FOrderDetail_ID" value="@item.FOrderDetail_ID"></td>
+                                    <td>@Html.DisplayFor(modelItem => item.FProductDetail_ID)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FCustomer_Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FCustomer_Email)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FCustomer_Phone)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FProduct_Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.FProduct_UnitPrice)</td>
+                                    <td class="@statusClassForPay"> @Html.DisplayFor(modelItem => item.FOrderPay_Status)</td>
+                                <td>
+                                    @Html.DropDownListFor(model => item.FProduct_IsAttend,
+                        new SelectList(new[] { new SelectListItem { Text = "未出席", Value = "False" },
+                        new SelectListItem { Text = "出席", Value = "True" } },
+                                     "Value", "Text"))
+                                </td>
+                                <td>
+                                        @Html.ActionLink("修改出席狀態", "CheckCustomerAttend", "ManagerProduct", new { id = item.FOrderDetail_ID,productdetailid= item.FProductDetail_ID }, new { Class = "btn btn-primary" })                                  
+                                    </td>                                  
+                                   
+                            </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+@section Scripts{
+    <!-- 引入 jQuery 和 DataTables 的 JavaScript 檔案 -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script>
+        
+        new DataTable('#attend-table', {
+            scrollX: true,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', {
+                    extend: 'excel',
+                    exportOptions: {
+                        //指定輸出欄位
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    }
+                }, 'pdf', 'print'
+            ],
+            responsive: true,
+        });
+        new DataTable('#attend-table2', {
+
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            responsive: true,
+        });
+        new DataTable('#attend-table3', {
+
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            responsive: true,
+        });
+
+        // // 刪除提醒測試中
+        // function sweetConfirm(event) {
+        //     event.preventDefault();
+        //     console.log(this.href)
+        //     Swal.fire({
+        //         title: '確定要刪除嗎？',
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: '確定'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             Swal.fire(
+        //                 '成功刪除',
+        //                 '已刪除此供應商',
+        //                 'success'
+        //             )
+        //         }
+        //     })
+        // }
+
+        //變更套件樣式
+        document.addEventListener("DOMContentLoaded", function (event) {
+            $('.dt-buttons button').addClass('btn btn-outline-primary');
+        });
+
+    </script>
+}

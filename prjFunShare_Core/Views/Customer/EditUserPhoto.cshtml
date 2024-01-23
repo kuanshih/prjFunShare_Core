@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewData["Title"] = "EditUserPhoto";
+}
+
+<h1>EditUserPhoto</h1>
+
+<div class="row">
+    <div class="col-6">
+        <form id="form1" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <div class="mb-3">
+                    <label for="MemberID" class="form-label">會員ID：</label>
+                    <input type="text" class="form-control" id="MemberID" name="MemberID" placeholder="會員ID">
+                </div>
+                <label for="formFile" class="form-label">照片：</label>
+                <input class="form-control-file" type="file" id="formFile" name="file" accept="image/*" required>
+                <br />
+                <img class="w-100" id="previewImg" src="#" />
+            </div>
+            <button id="button1" type="submit" class="btn btn-primary">送出</button>
+        </form>
+        <div class="alert alert-info" id="div1"></div>
+    </div>
+</div>
+
+@section Styles{
+    <style></style>
+}
+
+@section Scripts{
+    <script>
+
+        $("#formFile").change(function () {
+            //當檔案改變後，做一些事
+            readURL(this);   // this代表<input id="formFile">
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewImg").attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+    </script>
+}

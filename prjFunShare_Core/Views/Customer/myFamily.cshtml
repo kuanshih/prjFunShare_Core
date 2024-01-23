@@ -1,0 +1,296 @@
+﻿@model IEnumerable<prjFunShare_Core.ViewModels.CFamilyView>
+
+@{
+    ViewData["Title"] = "我的家人";
+}
+
+<div class="border d-flex justify-content-center" style="width: 100%; height:auto; padding:20px">
+    <div class="col-md-12">
+        <div style="margin:10px; text-align:center">
+            <h2 class="text-center">
+                我的家人
+            </h2>
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div>
+            @Html.ActionLink("新增家人", "AddFamily", "Customer", null, new { @class = "btn btn-outline-info", style="margin:5px"})
+        </div>
+
+        @* 顯示家族 *@
+        <div class="d-flex justify-content-center align-items-center">
+
+            @* 卡片 *@
+            <div class="col-md-9">
+                @* 切換顯示 *@
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="showElder()" id="TabElder">長輩區</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSame()" id="TabSame">平輩區</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showYounder()" id="TabYounder">晚輩區</a>
+                    </li>
+                </ul>
+
+                @* 卡片顯示 *@
+                @* 長輩 *@
+                <div id="ElderCard" style="display:block">
+                    <div id="ElderCardCollection" style="display:flex; flex-direction: row; flex-wrap:wrap">
+                        @* <h3>尚未新增任何長輩</h3> *@
+
+                        @{
+                            var countElder = 0;
+                            foreach (var item in Model)
+                            {
+                                if (item.Level < 0)
+                                {
+                                    countElder++;
+                                                    <div class="card" style="padding:10px; margin:10px; width:auto; height:auto">
+                                                        <div class="row g-0">
+                                                            <div class="col-md-4">
+                                                                <img src="data:image/jpg;base64,@Convert.ToBase64String(item.Photo)" class="img-fluid rounded-start" style="width:150px; height:150px" alt="@item.Name 的照片">
+                                                            </div>
+                                                            <div class="col-md-8" style="width:auto; height:auto">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">@item.Name</h5>
+                                                                    <p class="card-text">@(((DateTime)item.BirthDate).Year)/@(((DateTime)item.BirthDate).Month)/@(((DateTime)item.BirthDate).Day)</p>
+
+                                                                    <div class="col-md-12">
+                                                                        @Html.ActionLink("履歷", "FamilyCV", "Customer", new {id = @item.MemberId}, new { @class = "btn btn-primary", style="float:right; margin:5px"})
+                                                                        @Html.ActionLink("編輯個人資料", "FamilyEdit", "Customer", new {id = @item.MemberId}, new { @class = "btn btn-info", style="float:right; margin:5px"})
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                }
+                            }
+                            if (countElder == 0)
+                            {
+                                                <h3>尚未新增任何長輩</h3>
+                            }
+                        }
+
+                    </div>
+                </div>
+                @* 平輩 *@
+                <div id="SameCard" style="display:none">
+                    <div id="SameCardCollection" style="display:flex; flex-direction: row; flex-wrap:wrap">
+                        @* <h3>尚未新增任何平輩</h3> *@
+
+                        @{
+                            var countSame = 0;
+                            foreach (var item in Model)
+                            {
+                                if (item.Level == 0)
+                                {
+                                    countSame++;
+                                                    <div class="card" style="padding:10px; margin:10px; width:auto; height:auto">
+                                                        <div class="row g-0">
+                                                            <div class="col-md-4">
+                                                                <img src="data:image/jpg;base64,@Convert.ToBase64String(item.Photo)" class="img-fluid rounded-start" style="width:150px; height:150px" alt="@item.Name 的照片">
+                                                            </div>
+                                                            <div class="col-md-8" style="width:auto; height:auto">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">@item.Name</h5>
+                                                                    <p class="card-text">@(((DateTime)item.BirthDate).Year)/@(((DateTime)item.BirthDate).Month)/@(((DateTime)item.BirthDate).Day)</p>
+
+                                                                    <div class="col-md-12">
+                                                                        @Html.ActionLink("履歷", "FamilyCV", "Customer", new {id = @item.MemberId}, new { @class = "btn btn-primary", style="float:right; margin:5px"})
+                                                                        @Html.ActionLink("編輯個人資料", "FamilyEdit", "Customer", new {id = @item.MemberId}, new { @class = "btn btn-info", style="float:right; margin:5px"})
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                }
+                            }
+                            if (countSame == 0)
+                            {
+                                                <h3>尚未新增任何平輩</h3>
+                            }
+                        }
+
+
+                    </div>
+                </div>
+                @* 晚輩 *@
+                <div id="YounderCard" style="display:none">
+                    <div id="YounderCardCollection" style="display:flex; flex-direction: row; flex-wrap:wrap">
+                        @* <h3>尚未新增任何晚輩</h3> *@
+
+                        @{
+                            var countYounder = 0;
+                            foreach (var item in Model)
+                            {
+                                if (item.Level > 0)
+                                {
+                                    countYounder++;
+                                                    <div class="card" style="padding:10px; margin:10px; width:auto; height:auto">
+                                                        <div class="row g-0">
+                                                            <div class="col-md-4">
+                                                                <img src="data:image/jpg;base64,@Convert.ToBase64String(item.Photo)" class="img-fluid rounded-start" style="width:150px; height:150px" alt="@item.Name 的照片">
+                                                            </div>
+                                                            <div class="col-md-8" style="width:auto; height:auto">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">@item.Name</h5>
+                                                                    <p class="card-text">@(((DateTime)item.BirthDate).Year)/@(((DateTime)item.BirthDate).Month)/@(((DateTime)item.BirthDate).Day)</p>
+
+                                                                    <div class="col-md-12">
+                                                                        @Html.ActionLink("履歷", "FamilyCV", "Customer", new {id = @item.MemberId}, new { @class = "btn btn-primary", style="float:right; margin:5px"})
+                                                                        @Html.ActionLink("編輯個人資料", "FamilyEdit", "Customer", new {id = @item.MemberId}, new { @class = "btn btn-info", style="float:right; margin:5px"})
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                }
+                            }
+                            if (countYounder == 0)
+                            {
+                                                <h3>尚未新增任何晚輩</h3>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            @* 樹狀圖 *@
+            <div id="FamilyTree" class="col-md-3" style="display:block">
+                放樹狀圖
+                <ul>
+                    <li>
+                        1
+                        <ul>
+                            <li>
+                                1-1
+                            </li>
+                            <li>
+                                1-2
+                            </li>
+                            <li>
+                                1-3
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        2
+                        <ul>
+                            <li>
+                                2-1
+                            </li>
+                            <li>
+                                2-2
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+}
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
+    <script>
+        let FamilyTreeDatax = [];
+        //重要！！！Model轉Json
+        var data = @Html.Raw(Json.Serialize(@Model));
+        // console.log(data);
+        for (let i = 0; i < data.length; i++) {
+            // console.log(data[i]);
+            // console.log(data[i].name);
+            if (data[i].parentId == null)
+                data[i].parentId = '#';
+            FamilyTreeDatax.push({ id: data[i].memberId, parent: data[i].parentId, text: data[i].name })
+        }
+        // console.log(FamilyTreeDatax);
+
+        //建立樹狀圖
+        $('#FamilyTree').jstree({
+            'core': {
+                'data': FamilyTreeDatax,
+            },
+            "types": {
+                "default": {
+                    "icon": "fas fa-user"
+                },            
+            },
+            'plugins': ['dnd', 'wholerow', 'types'], // Enable drag-and-drop and other plugins as needed
+        });
+        $(function () { $('#FamilyTree').jstree(); });
+        $('#FamilyTree').on("ready.jstree", function (e, data) {
+            data.instance.open_all();
+        })
+
+        const TabElder = document.getElementById("TabElder");
+        const TabSame = document.getElementById("TabSame");
+        const TabYounder = document.getElementById("TabYounder");
+
+        const ElderCard = document.getElementById("ElderCard");
+        const SameCard = document.getElementById("SameCard");
+        const YounderCard = document.getElementById("YounderCard");
+
+        function showElder() {
+            if (!TabElder.classList.contains('active')) {
+                TabElder.classList.add('active');
+                TabSame.classList.remove('active');
+                TabYounder.classList.remove('active');
+                ElderCard.style.display = 'block';
+                SameCard.style.display = 'none';
+                YounderCard.style.display = 'none';
+            }
+        }
+        function showSame() {
+            if (!TabSame.classList.contains('active')) {
+                TabElder.classList.remove('active');
+                TabSame.classList.add('active');
+                TabYounder.classList.remove('active');
+                ElderCard.style.display = 'none';
+                SameCard.style.display = 'block';
+                YounderCard.style.display = 'none';
+            }
+        }
+        function showYounder() {
+            if (!TabYounder.classList.contains('active')) {
+                TabElder.classList.remove('active');
+                TabSame.classList.remove('active');
+                TabYounder.classList.add('active');
+                ElderCard.style.display = 'none';
+                SameCard.style.display = 'none';
+                YounderCard.style.display = 'block';
+            }
+        }
+
+        function IsError() {
+            if ('@ViewBag.EditFamilyInfoErrorMessage' != "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '@ViewBag.EditFamilyInfoErrorMessage',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                // alert('@TempData["EditFamilyInfoErrorMessage"]');
+                // @TempData["EditFamilyInfoErrorMessage"] = null;
+            }
+        }
+        IsError();
+
+    </script>
+}

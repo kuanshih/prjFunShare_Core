@@ -1,0 +1,111 @@
+﻿@model prjFunShare_backend.Models.Supplier
+
+@{
+    ViewData["Title"] = "Create";
+    ViewBag.Action = "SupplierList";
+}
+
+<div class="container">
+    <h1 class="text-center">新增供應商</h1>
+
+    <h4 class="text-center">供應商新增作業</h4>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="TaxId" class="control-label"></label>
+                    <input asp-for="TaxId" class="form-control" />
+                    <span asp-validation-for="TaxId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SupplierName" class="control-label"></label>
+                    <input asp-for="SupplierName" class="form-control" />
+                    <span asp-validation-for="SupplierName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SupplierPhone" class="control-label"></label>
+                    <input asp-for="SupplierPhone" class="form-control" />
+                    <span asp-validation-for="SupplierPhone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CityId" class="control-label">城市</label>
+                    <select asp-for="CityId" class="form-control" asp-items="@ViewBag.Cities"></select>@*在後面藏選擇的編號*@
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SupplierPhoto" class="control-label"></label>
+                    <input asp-for="SupplierPhoto" class="form-control" />
+                    <span asp-validation-for="SupplierPhoto" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Fax" class="control-label"></label>
+                    <input asp-for="Fax" class="form-control" />
+                    <span asp-validation-for="Fax" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactPerson" class="control-label"></label>
+                    <input asp-for="ContactPerson" class="form-control" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LogoImage" class="control-label"></label>
+                    <input asp-for="LogoImage" class="form-control" />
+                    <span asp-validation-for="LogoImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">檔案上傳</label>
+                    <input class="form-control" type="file" id="formFile" name="file">
+                </div>
+                <img id="imagePreview" src="#" alt="圖片預覽" style="max-width: 100%; max-height: 200px;">
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div class="text-center">
+            <a asp-action="List" class="btn btn-secondary mt-3">回到供應商列表</a>
+        </div>
+
+    </div>
+
+
+
+    @section Scripts {
+        @{
+            //導入 ASP.NET Core MVC 的驗證腳本，這些腳本用於處理客戶端的表單驗證。
+            // ASP.NET Core MVC 的表單驗證可以確保用戶輸入的資料符合指定的規則和格式，從而減少輸入錯誤和無效的資料提交到伺服器端。
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+        <script>
+            // 用來顯示圖片預覽
+            document.getElementById("formFile").addEventListener("change", function () {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("imagePreview").src = e.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+            });
+        </script>
+    }

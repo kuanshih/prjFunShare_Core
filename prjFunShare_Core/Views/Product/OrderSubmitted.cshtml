@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "已送出訂單";
+}
+
+
+<div class="container text-center">
+    <div class="row ">
+        <div >
+            <img src="~/img/success.png" style="width:800px" />
+        </div>
+        <div class="align-content-center">
+            <h1>我們已收到您的訂單</h1>
+            <br /><br />
+        </div>
+        <div>
+            @Html.ActionLink("回首頁", "Index", "Home", new { area = "" }, new { @class = "btn btn-secondary btn-lg" })
+            @Html.ActionLink("檢視訂單", "myOrderList", "Customer", new { area = "" }, new { @class = "btn btn-primary btn-lg" })
+@*             <button class="btn btn-primary" ><a href="~/Home/Home"></a>回首頁</button>
+            <button class="btn btn-secondary">檢視訂單</button> *@
+            <br /> <br />
+        </div>
+    </div>
+</div>

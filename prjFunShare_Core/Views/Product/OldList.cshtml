@@ -1,0 +1,926 @@
+﻿@model prjFunShare_Core.ViewModels.CProductPageViewModel
+@{
+    ViewBag.Title = "產品";
+}
+
+@* 下面<script></script>要用的，藏在這裡 *@
+<p id="sub" hidden>@Model.SubCategoryName</p>
+
+
+<!-- ======= Hero Section (產品名稱+產品圖片)======= -->
+<div>
+    <!-- 大圖+標題 -->
+    <div class="row">
+        <img src="~/img/product/@Model.MainImage" class="img-fluid " alt="">
+    </div>
+
+    <div class="row" style="margin-block: 20px">
+        <h1 id="title" class="h-100 ">@Model.ProductName</h1>
+    </div>
+    <div class="row ">
+        <div class="suitage col-2"><h5>適合年紀: @Model.AgeGrade </h5></div>
+        <div class="suitage col-2"><h5>課程類型: @Model.IsClass</h5></div>
+        <div class="grade col-2">
+            <h5>
+                評價: @Model.Rank
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="yellow" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                </svg>(500)
+            </h5>
+        </div>
+    </div>
+</div>
+
+
+<main id="main">
+    <div class="row right">
+        <section class="col col-12 order">
+            <div>
+                <h1> $  @Model.UnitPrice</h1>
+            </div>
+            <div>
+                <h5>上課地點:   @Model.CityName.FirstOrDefault()</h5>
+            </div>
+            <div class="text-center">
+                <input type="submit" value="+收藏" id="myPocket" class="mypocket" data-id="@Model.ProductId" />
+              @*   <a href="#calendar" class="btn btn-warning gotobuynow">立即體驗預定</a> *@
+            </div>
+
+        </section>
+
+        <!-- ======= 日曆======= -->
+        <div class="col col-12 calendar ">
+                <div class="ctitle">
+                    <h1 class="green" id="calendar-year" align="center">Year</h1>
+                    <h2 class="green small" id="calendar-title" align="center">Month</h2>
+                    <button type="button" id="prev" class="prev btn btn-success"><i class="fas fa-chevron-left"></i></button>
+                    <button type="button" id="next" class="next btn btn-success"><i class="fas fa-chevron-right"></i></button>
+                </div>
+              
+                <div class="row text-center">
+                    <div class="lightgrey body-list col-12 text-center ">
+                        <ul>
+                            <li class="day">一</li>
+                            <li class="day">二</li>
+                            <li class="day">三</li>
+                            <li class="day">四</li>
+                            <li class="day">五</li>
+                            <li class="day">六</li>
+                            <li class="day">日</li>
+                        </ul>
+                    </div>
+                <div class="darkgrey body-list col-12  text-center">
+                        <ul id="days">
+                        </ul>
+                    </div>              
+                </div>
+            
+            <br />
+            </div>
+        <form method="post" asp-action="Order" >
+            <div class=" col col-12 choose" id="addClass" >
+                @* 上面點日期，這裡顯示對應選項 *@
+               @* 這裡藏ProductDetailId 跟txtCount要傳到結帳頁 *@
+             </div>           
+            @* <input type="text" id="pId" hidden name="ProductDetailId" value="@Model.ProductId"/> *@
+            <div class="col col-12 text-center buynow">               
+                <input type="submit" value="立即預約" id="submit" disabled/>
+            </div>
+        </form>
+
+    </div>
+
+    <article class="left">
+        <!-- ======= 導覽 Section======= -->
+        <nav>
+            <ul class="menu">
+                <li><a href="#about">課程介紹</a></li>
+                <li><a href="#faq">常問問題</a></li>
+                <li><a href="#testimonials">評價</a></li>
+                <li><a href="#cancel">取消更改政策</a></li>
+                <li><a href="#supplier">關於廠商</a></li>
+            </ul>
+        </nav>
+
+        <!-- ======= About Us Section(課程簡介) ======= -->
+        <section id="about" class="about">
+            <div class="container" data-aos="fade-up">
+
+                <article class="row gy-4">
+                    <div>
+                        <h3>課程介紹</h3>
+                        <div>
+                            <img src="~/img/product/@Model.MainImage" class="img-fluid rounded-4 mb-4 productimage" alt="">
+                            <p>@Model.ProductIntro</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+
+        <!-- ======= Frequently Asked Questions Section(常問問題) ======= -->
+        <section id="faq" class="faq">
+            <div class="container" data-aos="fade-up">
+                <div class="row gy-4">
+                    <div class="col-lg-4">
+                        <div class="content px-xl-5">
+                            <h3>Frequently Asked Questions<strong>常問問題</strong></h3>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <div class="accordion accordion-flush" id="faqlist" data-aos="fade-up" data-aos-delay="100">
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-1">
+                                        <span class="num">1.</span>
+                                        沒有相關經驗可以報名嗎?
+                                    </button>
+                                </h3>
+                                <div id="faq-content-1" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                    <div class="accordion-body">
+                                        可以，請帶著一顆愉悅的心情來參與課程即可:)
+                                    </div>
+                                </div>
+                            </div><!-- # Faq item-->
+
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-2">
+                                        <span class="num">2.</span>
+                                        請問上課前需要準備什麼嗎?
+                                    </button>
+                                </h3>
+                                <div id="faq-content-2" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                    <div class="accordion-body">
+                                        不需要，課程所需物品和教材我們都會準備好
+                                    </div>
+                                </div>
+                            </div><!-- # Faq item-->
+
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-3">
+                                        <span class="num">3.</span>
+                                        這個課程家長可以一起報名參與嗎?
+                                    </button>
+                                </h3>
+                                <div id="faq-content-3" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                    <div class="accordion-body">
+                                        可以，請在結帳時填入家長和孩子資訊即可
+                                    </div>
+                                </div>
+                            </div><!-- # Faq item-->
+
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-4">
+                                        <span class="num">4.</span>
+                                        課程是否有學習紀錄?
+                                    </button>
+                                </h3>
+                                <div id="faq-content-4" class="accordion-collapse collapse" data-bs-parent="#faqlist">
+                                    <div class="accordion-body">
+                                        您可在會員資訊中，看到一張學習雷達圖，代表孩子的學習履歷
+                                        報名參與課程，雷達圖即會增長，記錄孩子的各學習領域
+                                    </div>
+                                </div>
+                            </div><!-- # Faq item-->
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ======= Testimonials Section(評價) ======= -->
+        <section id="testimonials" class="testimonials">
+            <div class="container" data-aos="fade-up">
+                <div>
+                    <div class="section-header">
+                        <h2>學員評價</h2>
+                    </div>
+                    <!-- ======= 秀星星括號 ======= -->
+                    <div class="slides-3 swiper" data-aos="fade-up" data-aos-delay="100">
+                        <div class="swiper-wrapper">
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/img/testimonials-1.jpg" class="testimonial-img flex-shrink-0" alt="">
+                                            <div>
+                                                <h3>Saul Goodman </h3>
+                                                <div class="stars">
+                                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            可以感受到 @Model.SupplierName 的用心。大推! 真心推薦!
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/img/testimonials-2.jpg" class="testimonial-img flex-shrink-0" alt="">
+                                            <div>
+                                                <h3>Sara Wilsson</h3>
+                                                <div class="stars">
+                                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            非常有趣的體驗課程，適合大朋友小朋友一起參與
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/img/testimonials-3.jpg" class="testimonial-img flex-shrink-0" alt="">
+                                            <div>
+                                                <h3>Jena Karlis</h3>
+                                                <div class="stars">
+                                                    <i class="bi bi-star-half"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            這個課程我家寶貝很愛，一直吵著他還要再參加!
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+
+        <!-- ======= 取消&更改政策 Section======= -->
+        <section id="cancel" class="about">
+            <div class="container" data-aos="fade-up">
+                <div class="row gy-4">
+                    <div class="section-header">
+                        <h2>取消&更改政策</h2>
+                    </div>
+                    <div>
+                        <h5>取消辦法</h5>
+                        <ul>
+                            <li>出發日前 7 日前（不含出發日）通知取消，可全額退費。</li>
+                            <li>出發日前 6 日至前 4 日內（不含出發日）通知取消，收取手續費 50％。</li>
+                            <li>出發日前 3 日（不含出發日）至當日內不接受取消，並不予退回款項。</li>
+                            <li>於活動中如因非可究責主辦單位之因素中止參與活動，將不予退回款項。</li>
+                            <li>如因天災等不可抗力因素，Niceday 將主動聯繫延期或退款。</li>
+                            <li>上述時間以消費者進線客服人員表明要取消的時間點為準。</li>
+                            <li>取消收取手續費依四捨五入計算至元。</li>
+                        </ul>
+                        <br />
+                        <h5>更改辦法</h5>
+                        <ul>
+                            <li>出發日前 4 日前（不含出發日）可更改日期一次。</li>
+                            <li>改期僅限於同一主辦單位、同價格之相同活動方案，且僅限更改至月曆表上已開放之可預訂時段。經改期後之活動恕不接受取消退費。</li>
+                            <li>出發日前 3 日至當日內不接受更改日期。</li>
+                            <li>如欲更改人數，須至少於出發日前 4 天詢問 FUNShare。</li>
+                            <li>上述時間以消費者向客服提出申請訂單更改之時間點為準。</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <!-- ======= 廠商介紹 Section======= -->
+        <section id="supplier" class="about">
+            <div class="container" data-aos="fade-up">
+                <div class="row gy-4">
+                    <div class="section-header">
+                        <h2>廠商介紹</h2>
+                    </div>
+                    <div>
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.SupplierImage)" class="img-fluid rounded-4 mb-4 supplierimage" alt="">
+                        <p>我們是 <a href="@Url.Action("Supplier","Product")/@Model.SupplierId">@Model.SupplierName</a></p>
+                        <p>@Model.SupplierIntro</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </article>
+</main>
+
+<br />
+<br />
+
+<div class="tab-content" id="ex-with-icons-content">
+    <div class="section-header">
+        <h2>猜你喜歡</h2>
+    </div>
+    <div id="ex-with-icons-tabs-1">
+        <div class="row g-4" id="divLike">
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+
+
+<a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+@section Styles{
+    <!-- Vendor CSS Files -->
+    <link rel=" stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+    <link href="~/css/aos.css" rel="stylesheet">
+    <link href="~/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/css/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- MyMain CSS File -->
+    <link href="~/css/MyMain.css" rel="stylesheet" />
+
+    <!-- 日曆 CSS Files -->
+                @*  https://codepen.io/khalidsaifullahfuad/pen/eYEZNzX *@
+
+
+    <!-- Template Main CSS File -->
+    <link href="~/css/main.css" rel="stylesheet">
+
+    <style>
+        .calendar {
+            width: 100%;
+            /* height: 500px; */
+            background: #fff;
+            background-color: #D7FFEE;
+            border-radius: 5px;
+            box-shadow: 5px 5px 5px #D0D0D0;
+        }
+        
+        .ctitle{
+            margin-block: 15px;
+        }
+
+        .body-list ul {
+            width: 100%;
+            font-family: arial;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+            .body-list ul li {
+                width: 14.28%;
+                height: 36px;
+                line-height: 36px;
+                list-style-type: none;
+                display: block;
+                box-sizing: border-box;
+                float: left;
+                text-align: center;
+            }
+
+        .lightgrey {
+            color: #a8a8a8; /*返灰*/
+        }
+
+        .darkgrey {
+            color: #565656; /*深灰*/
+        }
+
+        .green {
+            color: #6ac13c; /*綠色*/
+        }
+
+        .greenbox {
+            border: 1px solid #6ac13c;
+            background: #e9f8df; /*淺綠色*/
+        }
+
+        .prev {
+            width: 80px;
+            height: 30px;
+            align: left;
+        }
+
+        .next {
+            width: 80px;
+            height: 30px;
+            float: right;
+        }
+
+        .day {
+            background-color: #00AA55;
+            color: white;
+            font-size: 20px;
+            font-weight: 1000;
+        }
+
+        .date-button {
+            width:100%;
+            height: 34px;
+            background: #95CACA;
+            color: white;
+            border: 1px solid #00DDAA;
+            /* background-color: #00DD77; */
+        }
+
+            .date-button:hover {
+                background-color: #00AA55;
+                color: black;
+            }
+
+
+    </style>
+}
+
+
+@section Scripts{
+
+    <!-- Vendor JS Files -->
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/aos.js"></script>
+    <script src="~/js/glightbox.min.js"></script>
+    <script src="~/js/purecounter_vanilla.js"></script>
+    <script src="~/js/swiper-bundle.min.js"></script>
+    <script src="~/js/isotope.pkgd.min.js"></script>
+    <script src="~/js/validate.js"></script>
+
+    <!-- 引入 日曆JS  -->
+
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> *@
+
+    <!-- Template Main JS File -->
+    <script src="~/js/main.js"></script>
+
+    <script>
+        // 加入猜你喜歡
+        const divLike = document.querySelector('#divLike');
+        let q = 0;
+        const subName = $('#sub').html();
+        const title = $('#title').html();
+
+        $.ajax({
+            'url': '@Url.Action("getProductsOnSale","Api")',
+            'type': 'get',
+            'dataType': 'json'
+        })
+            .done(function (datas) {
+                $.each(datas, function (i, prod) {
+                    const heart = prod.isPocketed ? "fa-solid" : "fa-regular";
+                    const intro = prod.features.substr(0, 50);
+                    const item = `<div class="col-lg-4 col-md-6">
+                                                                                          <div class="card">
+                                                                                                   <div class="position-relative overflow-hidden">
+                                                                                                        <div class="bg-image hover-zoom">
+                                                                                                                                 <a href="@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                                             <img class="card-img-top" src="@Url.Content("~/img/product/")${prod.imagePath}"/>
+                                                                                                                 </a>
+                                                                                                        </div>
+                                                                                            <div class="position-absolute top-0 end-0 mt-1 me-1">
+                                                                                                                             <button type="button" class="btn btn-white btn-floating shadow-0" data-id="${prod.productId}">
+                                                                                                        <i class="${heart} fa-heart fa-xl pe-none" ></i>
+                                                                                                            </button>
+                                                                                            </div>
+                                                                                     <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                                                        ${prod.subCategoryName}
+                                                                                     </div>
+                                                                                     </div>
+                                                                                    <div class="p-4 pb-0" >
+                                                                                           <a class="d-block h5 mb-2" href = "@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                ${prod.productName}
+                                                                                                </a>
+                                                                                                        <p>${intro}</p>
+                                                                                                <h5 class="text-end mb-3"> ${prod.unitPrice} <small>起</small> </h5>
+                                                                                    </div>
+                                                                                     <div class="d-flex border-top">
+                                                                                              <small class="flex-fill text-center border-end py-2">
+                                                                                               <i class="fa fa-map-marker-alt text-primary me-2"></i>${prod.cityName}
+                                                                                                </small>
+                                                                                                 <small class="flex-fill text-center border-end py-2">
+                                                                                                  <i class="fa fa-star text-primary me-2"> </i>${prod.rank}
+                                                                                                 </small>
+                                                                                                <small class="flex-fill text-center py-2">
+                                                                                                  <i class="fa-solid fa-calendar-days text-primary me-2"></i>${prod.isClass}
+                                                                                                   </small>
+                                                                                            </div>
+                                                                                  </div>
+                                                                         </div>
+                                                                        `;
+
+                    if (prod.subCategoryName == subName && q < 3 && prod.productName != title) {
+                        divLike.innerHTML += item;
+                        q++;
+                    }
+                });
+            });
+
+        //===================================================
+        //加入收藏
+        btnPocket = document.querySelector('#myPocket');
+
+        btnPocket.addEventListener('click', function () {
+            const selectedProductId = $(this).data('id');
+            // alert("請登入");
+            $.ajax({
+                'url': `@Url.Action("addToPocket","Api")?id=${selectedProductId}`,
+                'type': 'get',
+                'dataType': 'json'
+            })
+                .done(function (data) {
+                    if (data == '0') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '請登入會員',
+                        }).then(function () {
+                            var modal = document.getElementById("myModal");
+                            modal.style.display = "block";
+                            LoginBtn();
+                        })
+                    }
+                    if (data == '1') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '已移除收藏',
+                        });
+                        btn.children('i').toggleClass("fa-regular");
+                        btn.children('i').toggleClass("fa-solid");
+                    }
+                    if (data == '2') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '已加入收藏',
+                        });
+                        btn.children('i').toggleClass("fa-regular");
+                        btn.children('i').toggleClass("fa-solid");
+                    }
+                });
+        })
+
+        //===================================================
+        //JS for 日曆l
+        var month_olympic = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var month_normal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var month_name = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+
+        var holder = document.getElementById("days");
+        var prev = document.getElementById("prev");
+        var next = document.getElementById("next");
+        var ctitle = document.getElementById("calendar-title");
+        var cyear = document.getElementById("calendar-year");
+
+        // 取得當前年月日
+        var my_date = new Date();
+        var my_year = my_date.getFullYear();
+        var my_month = my_date.getMonth();
+        var my_day = my_date.getDate();
+
+
+        // 讀取各月份的第一天是星期幾
+        function dayStart(month, year) {
+            var tmpDate = new Date(year, month, 1);
+            return (tmpDate.getDay());
+        }
+
+
+        // 計算每月有多少天 (辨別是普通年份還是閏年)
+        function daysMonth(month, year) {
+            var temp = year;
+            if (temp % 4 == 0 && temp % 100 !== 0 && temp % 400 === 0) {
+                return (month_olympic[month]);
+            } else {
+                return (month_normal[month]);
+            }
+        }
+
+        // 日曆轉換
+        function refreshDate() {
+            var str = "";
+            // 取得當月總天數
+            var totalDay = daysMonth(my_month, my_year);
+            // 取得當月第一天是星期幾
+            var firstDay = dayStart(my_month, my_year);
+            var myclass;
+            // 起始之前日期填空
+            for (var i = 1; i < firstDay; i++) {
+                str += "<li></li>";
+            }                      
+
+            for (var i = 1; i <= totalDay; i++) {
+                if ((i < my_day && my_year == my_date.getFullYear() && my_month == my_date.getMonth()) || my_year < my_date.getFullYear() || (my_year == my_date.getFullYear() && my_month < my_date.getMonth())) {
+                    // 過去日期顯示反灰
+                    myclass = " class='lightgrey'";
+                    btnId = "oldButton";                  
+                }
+                else if (i == my_day && my_year == my_date.getFullYear() && my_month == my_date.getMonth()) {
+                    // 當日以綠色呈現
+                    myclass = " class='green greenbox'";
+                    btnId = "newButton";
+                }
+                else {
+                    // 未來日期以深灰色呈現
+                    myclass = " class='darkgrey'";
+                    btnId = "newButton";
+                }
+                // 建立日期焦點
+                str +=  "<li" + myclass + "><button id='" + btnId + "' class='date-button' data-year='" + my_year + "' data-month='" + (my_month + 1) + "' data-day='" + i + "'>" + i + "</button></li>";
+                btnId = "";
+            }
+
+            // 設定日期顯示
+            holder.innerHTML = str;
+            // 顯示月份
+            ctitle.innerHTML = month_name[my_month];
+            // 顯示年份
+            cyear.innerHTML = my_year;
+        }
+        refreshDate();
+
+        prev.onclick = function (e) {
+            e.preventDefault();
+            const now = new Date();
+            //只顯示到這個月份
+            if(my_year===now.getFullYear() && my_month===now.getMonth())
+            {
+                return;
+            }
+            else
+            my_month--;
+            if (my_month < 0) {
+                my_year--;
+                my_month = 11;
+            }
+            refreshDate();
+        }
+        next.onclick = function (e) {
+            e.preventDefault();
+            my_month++;
+            if (my_month > 11) {
+                my_year++;
+                my_month = 0;
+            }
+            refreshDate();
+        }
+        var dateButtons = document.querySelectorAll('.date-button');
+            dateButtons.forEach(function (button) {
+            button.addEventListener('click', selectDate);
+        });
+
+        function selectDate(event) {
+            var year = event.target.dataset.year;
+            var month = event.target.dataset.month;
+            var day = event.target.dataset.day;
+            var clickDate = year + "/" + month + "/" + day;
+            console.log("Clicked Date:", clickDate);
+            
+            //檢查: 倒進去的第一筆資料，new Date()是資料轉型
+            const pd = new Date(getProductDetail[0].beginTime);
+            // console.log(pd);
+            // console.log(pd.getDate());
+            // console.log(pd.getFullYear());
+            // console.log(pd.getMonth() + 1);
+
+            const addClass = document.querySelector('#addClass')
+             addClass.innerHTML = "";
+            for (var i = 0; i < getProductDetail.length; i++) {
+                const prodetail = new Date(getProductDetail[i].beginTime);
+                const validClass = getProductDetail[i];
+                // console.log(getProductDetail[i].beginTime); //有抓到總筆數
+
+                //點下去的日曆年/月/日=抓出的資料年/月/日，庫存>0，狀態準時開課
+                if (year == prodetail.getFullYear() && month == (prodetail.getMonth() + 1) && day == prodetail.getDate() && getProductDetail[i].stockNow > 0 && getProductDetail[i].statusId == 9) 
+                {
+                    addClass.innerHTML += ` <div class="row">
+                            <div class=" col col-2 d-flex align-items-center justify-content-center"><input type="radio" class="radio" name=radio /></div>
+                            <div class=" col col-5 d-flex align-items-center justify-content-center">
+                             <button class="plusminus btn btn-outline-dark text-center minus" type="button" data-max="${validClass.stockNow}">-</button>
+                                        <label class="txtCountLabel" name="txtCountLabel">1</label>
+                                        <!-- ======= 數量/productDetailId要傳到結帳頁，藏在這裡 的<input>======= -->
+                                        <input type="hidden" class="txtCount" name="txtCount" value="1">
+                                                <input type="hidden" id="${validClass.productDetailId}" name="ProductDetailId" value="${validClass.productDetailId}">
+                                        <button class="plusminus btn btn-outline-dark text-center plus" type="button" data-max="${validClass.stockNow}">+</button>
+                             </div>
+                            <div class=" col col-5 d-flex align-items-center justify-content-center">
+                                <div class="row">
+                                         <div >${year}/${month}/${day}</div>
+                                                 <div >上課地點: ${validClass.districtName}</div>
+                                                 <div >剩餘名額: ${validClass.stockNow}</div>
+                                </div>
+                            </div>
+                        </div><hr>`
+                }
+                //上面每個選項load完後，再針對要動作的每一個按紐設定監聽事件
+                var minusButtons = document.querySelectorAll('.minus');
+                var plusButtons = document.querySelectorAll('.plus');
+                minusButtons.forEach(function (button) {
+                    button.addEventListener('click', minusClick);
+                });
+                plusButtons.forEach(function (button) {
+                    button.addEventListener('click', plusClick);
+                });
+
+
+            }
+       }
+
+        function minusClick(event) {
+            var min = 1;
+            var max = event.target.dataset.max;   //取出藏在button裡的data-max="${validClass.stockNow}"
+                    var current = parseInt($(this).siblings('.txtCount').val())
+                    if (current > min) {
+                        $(this).siblings('.txtCount').val(current - 1);
+                        $(this).siblings('.txtCountLabel').text(current - 1);
+                    }
+         };
+
+        function plusClick(event) {
+            var min = 1;
+            var max = event.target.dataset.max;
+                    var current = parseInt($(this).siblings('.txtCount').val())
+                    if (current < max) {
+                        $(this).siblings('.txtCount').val(current + 1);
+                        $(this).siblings('.txtCountLabel').text(current + 1);
+                    }
+         };
+
+           //radio按下去有選擇課程時，提交鍵才能按
+           $(document).ready(function () {
+
+               function checkRadioSelection() { 
+                   var radios = $('input[type=radio]');
+                   var selectedRadio = radios.filter(':checked');
+
+                   if (selectedRadio.length === 0) {
+                       $('#submit').prop('disabled', true);
+                   }
+                   else {
+                       $('#submit').prop('disabled', false);
+                   }
+               }
+
+               checkRadioSelection();
+
+               $('input[type=radio]').change(function () {
+                   checkRadioSelection()
+               });
+
+            $('form').submit(function (e) {
+                var radios = $('input[type=radio]');
+                var selectedRadio = radios.filter(':checked');
+
+                if (selectedRadio.length === 0) {
+                    e.preventDefault();
+                    alert('請先選擇課程及數量');
+                }
+            });
+         });
+
+
+        //========================================================
+        //抓出這個product ID裡的所有product detail
+        const productId = @(Model.ProductId);      
+        let getProductDetail = null;
+           
+            $.ajax({
+            'url': `@Url.Action("getProductDetail","Api")?id=${productId}`,
+            'type': 'get',
+            'dataType': 'json'
+           })
+            .done(function (datas) {
+                console.log(datas);  //在網頁上檢查是否有抓到這個product ID裡的所有product detail
+                getProductDetail = datas; //檢查有抓到，倒進一個全域變數，在月曆就可以使用
+            })
+        // const btnDate = document.querySelectorAll('.date-button');
+        // btnDate.addEventListener('click', function () {
+        //     const year = $(this).data('year');
+        //     const month = $(this).data('month');
+        //     const day = $(this).data('day');
+        //     console.log(year,month,day);
+
+
+        //========================================================
+
+
+    </script>
+}
+
+<!--猜你喜歡-->
+@*     <div class="container text-center my-3">
+        <div class="section-header">
+            <h2>猜你喜歡</h2>
+        </div>
+        <div class="row mx-auto my-auto justify-content-center">
+            <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    <div class="carousel-item active">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="https://via.placeholder.com/700x500.png/CB997E/333333?text=1" class="img-fluid">
+                                </div>
+                                <div class="card-img-overlay">Slide 1</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="https://via.placeholder.com/700x500.png/DDBEA9/333333?text=2" class="img-fluid">
+                                </div>
+                                <div class="card-img-overlay">Slide 2</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="https://via.placeholder.com/700x500.png/FFE8D6/333333?text=3" class="img-fluid">
+                                </div>
+                                <div class="card-img-overlay">Slide 3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="https://via.placeholder.com/700x500.png/B7B7A4/333333?text=4" class="img-fluid">
+                                </div>
+                                <div class="card-img-overlay">Slide 4</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="https://via.placeholder.com/700x500.png/A5A58D/333333?text=5" class="img-fluid">
+                                </div>
+                                <div class="card-img-overlay">Slide 5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="https://via.placeholder.com/700x500.png/6B705C/eeeeee?text=6" class="img-fluid">
+                                </div>
+                                <div class="card-img-overlay">Slide 6</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
+                <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+    </div> *@
+
+@*                                             // /*JS for recipeCarousel*/
+                                        // let items = document.querySelectorAll('#recipeCarousel .carousel-item')
+
+                                        // items.forEach((el) => {
+                                        //     const minPerSlide = 4
+                                        //     let next = el.nextElementSibling
+                                        //     for (var i = 1; i < minPerSlide; i++) {
+                                        //         if (!next) {
+                                        //             // wrap carousel by using first child
+                                        //             next = items[0]
+                                        //         }
+                                        //         let cloneChild = next.cloneNode(true)
+                                        //         el.appendChild(cloneChild.children[0])
+                                        //         next = next.nextElementSibling
+                                        //     }
+                                        // }) *@

@@ -1,0 +1,1199 @@
+﻿@model prjFunShare_Core.ViewModels.CCartViewModel
+
+@*@model IEnumerable<prjFunShare_Core.Models.Product>*@
+@{
+    ViewData["Title"] = "結帳";
+}
+
+    <!-- Start All Title Box -->
+    <div class="all-title-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>訂單資訊</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="cart-box-main">
+    
+    @* <div class="tab-content" id="pills-tabContent"> *@
+          @* class="tab-pane fade show active" *@
+            <div  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                    <!-- 購物車  -->
+                    <div class="col-md-12 col-lg-12">
+                        <div class="odr-box">
+                            <div class="title-left">
+                                <h3>訂購明細 </h3>
+                            </div>
+                            <div class="row">
+                                <div class="row col-md-6 col-lg-6 ">
+                        @*藏ProductDetailId*@
+                        <input type="hidden" name="ProductDetailId" value="@Model.ProductDetailId" />
+                                    <div class="col col-6 align-self-center">
+                                        <img src="~/img/product/@Model.ImagePath" width="100%" class="img-thumbnail">
+                                    </div>
+                                    <div class="col col-6 align-self-center">
+                                        <div>
+                                            @* <label class="custom-control-label" for="credit">一日機師體驗營</label>*@
+                                            <label for="credit" class="fs-4">課程: @Model.ProductName</label>
+
+                                        </div>
+                                        <div>
+                                            @* <label class="custom-control-label" for="credit">一日機師體驗營</label>*@
+                                            <label for="credit" class="fs-4">地點: @Model.CityName</label>
+
+                                        </div>
+                                        <div>
+                                            @*<label class="custom-control-label" for="credit">2023/9/15</label>*@
+                                <label for="credit" class="fs-4">日期: @Model.BeginTime.Value.Date.ToString("yyyy/MM/dd")</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-md-6 col-lg-6">
+                                    <div class="row" style="margin:5px">
+                                        <div class="row col-md-4 col-lg-4 ">
+                                            <div class="fs-6 text-center ">價格:</div>
+                                        </div>
+                                        <div class="row col-md-8 col-lg-8 ">
+                                <input id="unitPrice" class="form-control" type="text" value="@Model.UnitPrice" aria-label="readonly input example" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin:5px">
+                                        <div class="row col-md-4 col-lg-4 ">
+                                            <div class="fs-6 text-center ">數量:</div>
+                                        </div>
+                                        <div class="row col-md-8 col-lg-8 ">
+                                        <input id="quantity" class="form-control" type="text" value="@Model.Count" aria-label="readonly input example" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin:5px">
+                                        <div class="row col-md-4 col-lg-4 ">
+                                            <div class="fs-6 text-center ">小計:</div>
+                                        </div>
+                                        <div class="row col-md-8 col-lg-8 ">
+                                <input id="sum1" class="form-control" type="text" value="@Model.Amount" aria-label="readonly input example" readonly>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="title-left"> </div>
+                                    <div class="row" style="margin:5px">
+                                        <div class="row col-md-4 col-lg-4 ">
+                                       <div class="fs-6 text-center ">優惠券:  <i class="fa-regular fa-circle-question" data-toggle="tooltip" data-html="true" title="若您有該課程適用之優惠券，系統將自動帶入供選擇使用"></i></div>
+                                        </div>
+                                        <div class="row col-md-8 col-lg-8 ">
+                                            <select class="form-select" id="selectCoupon" required>
+                                    @* 透過下方Ajax呼叫api，api回傳優惠券json，再把優惠券資訊用.map裝進<option></option> *@
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="row" style="margin:5px">
+                                    <div class="row col-md-4 col-lg-4 ">
+                                        <div class="fs-6 text-center ">使用紅利點數: </div>
+                                        <div class="fs-6 text-center ">(您目前有 @Model.Points 點)</div>
+                                    </div>
+                                    <div class="row col-md-8 col-lg-8 ">
+                                <input id="bonus" class="form-control" type="text" value="@Model.Points" aria-label="readonly input example">
+                                    </div>
+                                </div>
+                                    <div class="row" style="margin:5px">
+                                        <div class="row col-md-4 col-lg-4 ">
+                                            <div class="fs-6 text-center ">總金額:</div>
+                                        </div>
+                                        <div class="row col-md-8 col-lg-8 ">
+                                            <input id="sum2" class="form-control" type="text" value="" aria-label="readonly input example" readonly>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+
+                    <!-- 付款方式  -->
+                    @* <div class="row">
+                        @*<div class="col-sm-6 col-lg-6 mb-3">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="checkout-address">
+                                <div class="title-left">
+                                    <h3>付款方式</h3>
+                                </div>
+                                <form class="needs-validation" novalidate>
+                                    <div class="d-block my-3">
+                                        <div class="custom-control custom-radio">
+                                            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+                                            <label class="custom-control-label" for="credit">Credit card</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+                                            <label class="custom-control-label" for="debit">Debit card</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+                                            <label class="custom-control-label" for="paypal">Paypal</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="cc-name">持卡人姓名</label>
+                                            <input type="text" class="form-control" id="cc-name" placeholder="" required> <small class="text-muted">需同卡片背面全名簽名</small>
+                                            <div class="invalid-feedback"> Name on card is required </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="cc-number">信用卡號碼</label>
+                                            <input type="text" class="form-control" id="cc-number" placeholder="" required>
+                                            <div class="invalid-feedback"> Credit card number is required </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="cc-expiration">有效期限</label>
+                                            <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
+                                            <div class="invalid-feedback"> Expiration date required </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="cc-expiration">CVV</label>
+                                            <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
+                                            <div class="invalid-feedback"> Security code required </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="payment-icon">
+                                                <ul>
+                                                    <li><img class="img-fluid" src="~/img/payment-icon/1.png" alt=""></li>
+                                                    <li><img class="img-fluid" src="~/img/payment-icon/2.png" alt=""></li>
+                                                    <li><img class="img-fluid" src="~/img/payment-icon/5.png" alt=""></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div> *@
+                    <br /><br />
+
+
+
+        @* class="tab-pane fade" *@
+            <div  id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                    <!-- 購買人資訊填寫  -->
+                    <div class="row">
+                        @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                        <div class="col-md-12 col-lg-12">
+                            <div class="checkout-address">
+                                <div class="title-left">
+                                    <h3>訂購人資訊</h3>
+                                </div>
+
+                                <div class="needs-validation" novalidate>
+                                   @* 藏MemberID *@
+                                   <input type="hidden" name="MemberId" id="buyMemberID" value="@Model.MemberId" />
+                                    <div class="row bg-light">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="buyName">姓名 *</label>
+                                            <input type="text" class="form-control" id="buyName" placeholder="" value="@Model.Name" required readonly>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                        <label for="buyPhone">手機號碼 *</label>
+                                <input type="tel" class="form-control" id="buyPhone" pattern="[0-9]{10}" placeholder="" value="@Model.PhoneNumber" required readonly><span class="validity"></span>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="buyEmail">電子郵件 *</label>
+                                <input type="email" class="form-control" id="buyEmail" placeholder="" value="@Model.Email" required readonly>
+                                            <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                        </div>
+                                <div class="col-md-6 mb-3" hidden>
+                                <label for="BirthDate">生日*</label>
+                                <input type="text" class="form-control" id="buyBirthday" name="BirthDate" value="@Model.BirthDate.Value.Date.ToString("yyyy/MM/dd")" style="height:35px" />
+                                <div class="invalid-feedback"> Valid first name is required. </div>
+                            </div>
+                            <div class="col-md-6 mb-3" hidden>
+                                <label for="PID">身分證字號 *</label>
+                                <input type="text" class="form-control" id="buyPID" placeholder="" value="@Model.ResidentId" required readonly>
+                                <div class="invalid-feedback"> Valid first name is required. </div>
+                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+               
+                    <!-- 課程參與人資訊填寫  -->
+                    <div class="row">
+                        @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                        <div class="col-md-12 col-lg-12">
+                            <div class="checkout-address">
+                                <div class="title-left">
+                                    <h3>課程參與人資訊</h3>
+                                </div>
+
+                                <div class="needs-validation" novalidate>
+                            <div class="row bg-light" style="position:relative">
+                                    <h3 style="text-decoration:underline">課程參與人 1</h3>
+@*                               <div style="text-align: right">
+                                        <input id="same" name="same" type="checkbox" >
+                                        <label class="custom-control-label" for="credit">同訂購人</label>
+                                    </div> *@
+                                <div style="width:15%; position: absolute; right:0; margin: 10px">
+                                    <select class="form-select" id="validationCustom03" required>
+                                        @*  <option selected  value="" >選擇家人</option> *@
+                                        @* 透過下方Ajax呼叫api，api回傳家人json，再把家人資訊用.map裝進<option></option> *@
+                                    </select>
+                                    @* 藏MemberID *@
+                                    <input type="hidden" name="MemberId" id="MemberID" value="" />
+                                </div>                              
+                                        <div class="col-md-6 mb-3">
+                                            <label for="firstName">姓名 *</label>
+                                            <input type="text" class="form-control" id="Name" placeholder="" value="" required>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="BirthDate">生日*</label>
+                                    <input type="date" class="form-control" name="Birthday" id="Birthday" value="@DateTime.Now.ToString("yyyy/MM/dd")" style="height:35px" />
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="PID">身分證字號 *</label>
+                                            <input type="text" class="form-control" id="PID" placeholder="" value="" required>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email">電子郵件 *</label>
+                                            <input type="email" class="form-control" id="Email" placeholder="" required>
+                                            <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                        </div>
+                                        @* <div class="col-md-6 mb-3">
+                                            <label for="phone">手機號碼 *</label>
+                                        <input type="tel" class="form-control" id="Phone" pattern="[0-9]{10}" placeholder="" value="" required><span class="validity"></span>
+                                            <div class="invalid-feedback"> Valid first name is required. </div>
+                                        </div>                    *@                                                                         
+                                    </div>
+
+                                    <hr class="mb-4">
+
+                                <div class="row bg-light" style="position:relative">
+                                    <h3 style="text-decoration:underline">課程參與人 2</h3>
+                                <div style="width:15%; position: absolute; right:0; margin: 10px" >
+                                    <select class="form-select" id="validationCustom04" required>
+                                       @*  <option selected  value="" >選擇家人</option> *@
+                                          @* 透過下方Ajax呼叫api，api回傳家人json，再把家人資訊用.map裝進<option></option> *@                                       
+                                    </select>
+                                    @* 藏MemberID *@
+                                    <input type="hidden" name="MemberId" id="kidMemberID" value="" />
+                                </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kidName">姓名 *</label>
+                                        <input type="text" class="form-control" id="kidName" placeholder="" value="" required>
+                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kidBirthDate">生日*</label>
+                                    <input type="date" class="form-control" name="kidBirthday" id="kidBirthDate" value="" style="height:35px" />
+                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kidPID">身分證字號 *</label>
+                                        <input type="text" class="form-control" id="kidPID" placeholder="" value="" required>
+                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kidemail">電子郵件 </label>
+                                        <input type="email" class="form-control" id="kidEmail" placeholder="">
+                                        <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                    </div>
+                                @* <div class="col-md-6 mb-3">
+                                    <label for="phone">手機號碼 *</label>
+                                    <input type="tel" class="form-control" id="Phone" pattern="[0-9]{10}" placeholder="" value="" required><span class="validity"></span>
+                                    <div class="invalid-feedback"> Valid first name is required. </div>
+                                </div> *@
+                            </div>
+
+                                    <hr class="mb-4">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+            <!-- 報名注意事項  -->
+            <div class="row">
+                @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                <div class="col-md-12 col-lg-12">
+                    <div class="checkout-address">
+                        <div class="title-left">
+                            <h3>報名注意事項</h3>
+                        </div>
+                        <div class="contract-block" id="contract-block">
+                            <div class="contract-title" id="contract-title">課程相關契約書</div>
+                            <div>
+                                <iframe src="https://localhost:7208/Product/ContractForm" scrolling="yes" frameborder="0" width="100%" height="280"></iframe>
+                            </div>
+                            <label for="checkbox-agree" class="checkbox-agree">
+                                <input type="checkbox" id="check-agree"><span>我已完整閱讀本課程相關契約書，並接受所有規定事項</span><div class="ez-checkbox-input"></div>
+                            </label>
+                        </div>
+                        @* <div class="rounded p-2 bg-light">
+                        <div class="media mb-2 border-bottom">
+                        <div class="media-body">
+                        <div class="small text-muted">
+                        (1)課程開立一般收據，後續將由財務人員統一寄發。
+                        (2)報名與付款完成後，課程達可開班人數，系統將寄發課前通知mail，請留意。
+                        (3)收費課程退費規定：
+                        依開課日60天前退95%、59-16天前退90%、15-3天前退80%、2-1天前退50%；課程開課日後(含開課當天)，不可退費。
+                        </div>
+                        </div>
+                        </div>
+                        </div> *@
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+
+        </div>
+
+            </div>
+
+    <form method="post" asp-action="ECPay" id="createOrder">
+        <!-- 跳出視窗 最後確認  -->
+        <div class="modal fade" id="finalcheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title" id="exampleModalLongTitle">訂單送出前確認</h1>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="backtoClose">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <!-- 訂購明細 最後確認  -->
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="odr-box">
+                                        <div class="title-left">
+                                            <h3>訂購明細</h3>
+                                        </div>
+                                        <div class="row">
+                                            <div class="row col-md-6 col-lg-6 ">
+                                        @*藏要傳的值*@
+                                        <input type="hidden" name="ProductDetailId" value="@Model.ProductDetailId" />
+                                        <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                                                <div class="col col-6 align-self-center">
+                                            <img src="~/img/product/@Model.ImagePath" width="100%" class="img-thumbnail">
+                                                </div>
+                                                <div class="col col-6 align-self-center">
+                                                    <div>
+                                                        @* <label class="custom-control-label" for="credit">一日機師體驗營</label>*@
+                                                     <label for="credit" class="fs-4" name="ProductName">課程: @Model.ProductName</label>
+                                                     <input type="hidden" name="ProductName" value="@Model.ProductName" />
+                                                  </div>
+                                                    <div>
+                                                        @* <label class="custom-control-label" for="credit">一日機師體驗營</label>*@
+                                                        <label for="credit" class="fs-4">地點: @Model.CityName</label>
+                                                    </div>
+                                                    <div>
+                                                        @*<label class="custom-control-label" for="credit">2023/9/15</label>*@
+                                                <label for="credit" class="fs-4" name="BeginTime">日期: @Model.BeginTime.Value.Date.ToString("yyyy/MM/dd")</label>
+                                                <input type="hidden" name="BeginTime" value="@Model.BeginTime" />
+                                            </div>
+                                                </div>
+                                            </div>
+                                            <div class="col col-md-6 col-lg-6">
+                                                <div class="row" style="margin:5px">
+                                                    <div class="row col-md-4 col-lg-4 ">
+                                                        <div class="fs-6 text-center ">價格:</div>
+                                                    </div>
+                                                    <div class="row col-md-8 col-lg-8 ">
+                                                <input id="unitPrice" name="UnitPrice" class="form-control" type="text" value="@Model.UnitPrice" aria-label="readonly input example" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin:5px">
+                                                    <div class="row col-md-4 col-lg-4 ">
+                                                        <div class="fs-6 text-center ">數量:</div>
+                                                    </div>
+                                                    <div class="row col-md-8 col-lg-8 ">
+                                                <input id="quantity" name="Count" class="form-control" type="text" value="@Model.Count" aria-label="readonly input example" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin:5px">
+                                                    <div class="row col-md-4 col-lg-4 ">
+                                                        <div class="fs-6 text-center ">小計:</div>
+                                                    </div>
+                                                    <div class="row col-md-8 col-lg-8 ">
+                                                <input id="sum1" name="Amount" class="form-control" type="text" value="@Model.Amount" aria-label="readonly input example" disabled>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="title-left"> </div>
+                                                <div class="row" style="margin:5px">
+                                                    <div class="row col-md-4 col-lg-4 ">
+                                                        <div class="fs-6 text-center ">優惠券:</div>
+                                                    </div>
+                                                    <div class="row col-md-8 col-lg-8 ">
+                                                <input id="couponCheck"  class="form-control" type="text" value="" aria-label="readonly input example" disabled>
+                                                <input id="couponIdCheck" name="CouponId" class="form-control" type="text" value="" aria-label="readonly input example" hidden>
+                                                  </div>
+                                                </div>
+                                                <div class="row" style="margin:5px">
+                                                    <div class="row col-md-4 col-lg-4 ">
+                                                        <div class="fs-6 text-center ">使用紅利:</div>
+                                                    </div>
+                                                    <div class="row col-md-8 col-lg-8 ">
+                                                <input id="bonusCheck" name="Bonus" class="form-control" type="text" value="400" aria-label="readonly input example" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin:5px">
+                                                    <div class="row col-md-4 col-lg-4 ">
+                                                        <div class="fs-6 text-center ">總金額:</div>
+                                                    </div>
+                                                    <div class="row col-md-8 col-lg-8 ">
+                                                <input id="sum2Check" name="BillingAmount" class="form-control" type="text" value="10,000" aria-label="readonly input example" disabled>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br />
+
+                                <!-- 付款方式  最後確認 -->
+                                <div class="row">
+                                    @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="checkout-address">
+                                            <div class="title-left">
+                                                <h3>付款方式</h3>
+                                            </div>
+                                            <div class="needs-validation" novalidate>
+                                                <div class="d-block my-3">
+                                                    <div class="custom-control custom-radio">
+                                                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input">
+                                                        <label class="custom-control-label" for="Credit">信用卡</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                    <input id="ATM" name="paymentMethod" type="radio" class="custom-control-input">
+                                                        <label class="custom-control-label" for="ATM">ATM匯款</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                    <input id="store" name="paymentMethod" type="radio" class="custom-control-input" >
+                                                        <label class="custom-control-label" for="payAtStore">門市付款</label>
+                                                    </div>
+                                                </div>                                
+@*                                                 <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="cc-name">持卡人姓名</label>
+                                                    <input type="text" class="form-control" id="cc-name" placeholder="" disabled> <small class="text-muted">需同卡片背面全名簽名</small>
+                                                        <div class="invalid-feedback"> Name on card is required </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="cc-number">信用卡號碼</label>
+                                                    <input type="text" class="form-control" id="cc-number" placeholder="" disabled>
+                                                        <div class="invalid-feedback"> Credit card number is required </div>
+                                                    </div>
+                                                </div> *@
+                                                @* <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="cc-expiration">有效期限</label>
+                                                    <input type="text" class="form-control" id="cc-expiration" placeholder="" disabled>
+                                                        <div class="invalid-feedback"> Expiration date required </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="cc-expiration">CVV</label>
+                                                    <input type="text" class="form-control" id="cc-cvv" placeholder=""  disabled>
+                                                        <div class="invalid-feedback"> Security code required </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="payment-icon">
+                                                            <ul>
+                                                                <li><img class="img-fluid" src="~/img/payment-icon/1.png" alt=""></li>
+                                                                <li><img class="img-fluid" src="~/img/payment-icon/2.png" alt=""></li>
+                                                                <li><img class="img-fluid" src="~/img/payment-icon/5.png" alt=""></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                        </div>*@
+                                            </div>   
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br />
+
+                                @* <!-- 報名注意事項 最後確認  -->
+                                <div class="row">
+                                    @*<div class="col-sm-6 col-lg-6 mb-3">
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="checkout-address">
+                                            <div class="title-left">
+                                                <h3>報名注意事項</h3>
+                                            </div>
+                                            <div class="rounded p-2 bg-light">
+                                                <div class="media mb-2 border-bottom">
+                                                    <div class="media-body">
+                                                        <div class="small text-muted">
+                                                            (1)課程開立一般收據，後續將由財務人員統一寄發。
+                                                            (2)報名與付款完成後，課程達可開班人數，系統將寄發課前通知mail，請留意。
+                                                            (3)收費課程退費規定：
+                                                            依開課日60天前退95%、16-59天前退90%、3-15天前退80%、1-2天前退50%；課程開課日後(含開課當天)，不可退費。
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br /> *@
+
+                            <!-- 購買人資訊填寫  最後確認-->
+                                <div class="row">
+                                    @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="checkout-address">
+                                            <div class="title-left">
+                                                <h3>訂購人資訊</h3>
+                                            </div>
+                                            <div class="needs-validation" novalidate>
+                                        @* 藏MemberID *@
+                                        <input type="hidden" name="BuyMemberId" id="buyMemberIDCheck" value="@Model.MemberId" />
+                                                <div class="row bg-light">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="buyName">姓名 *</label>
+                                                <input type="text" name="BuyName" class="form-control" id="buyNameCheck" placeholder="" value="@Model.Name" disabled>
+                                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="buyPhone">手機號碼 *</label>
+                                                <input type="tel" name="BuyPhoneNumber" class="form-control" id="buyPhoneCheck" pattern="[0-9]{10}" placeholder="" value="@Model.PhoneNumber" disabled><span class="validity"></span>
+                                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="buyEmail">電子郵件 *</label>
+                                                <input type="email" name="BuyEmail" class="form-control" id="buyEmailCheck" placeholder="" value="@Model.Email" disabled>
+                                                        <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3" hidden>
+                                                        <label for="BirthDate">生日*</label>
+                                                <input type="text" name="BuyBirthDate" class="form-control" id="buyBirthdayCheck" value="@Model.BirthDate.Value.Date.ToString("yyyy/MM/dd")" style="height:35px" />
+                                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3" hidden>
+                                                        <label for="PID">身分證字號 *</label>
+                                                <input type="text" name="BuyResidentId" class="form-control" id="buyPIDCheck" placeholder="" value="@Model.ResidentId" required readonly>
+                                                        <div class="invalid-feedback"> Valid first name is required. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br />
+
+                            <!-- 課程參與人資訊填寫 最後確認 -->
+                        <div class="row">
+                            @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                            <div class="col-md-12 col-lg-12">
+                                <div class="checkout-address">
+                                    <div class="title-left">
+                                        <h3>課程參與人資訊</h3>
+                                    </div>
+
+                                    <div class="needs-validation" novalidate>
+                                        <div class="row bg-light">
+                                            <h3 style="text-decoration:underline">課程參與人 1</h3>
+                                            @* 藏MemberID *@
+                                            <input type="hidden" name="OrderMemberId" id="MemberIDCheck" value="" />
+                                            <div class="col-md-6 mb-3">
+                                                <label for="firstName">姓名 *</label>
+                                                <input type="text" name="OrderName" class="form-control" id="NameCheck" placeholder="" value="" disabled>
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="BirthDate">生日*</label>
+                                                <input type="text" name="OrderBirthDate" class="form-control" id="BirthdayCheck" value="" style="height:35px" disabled />
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="PID">身分證字號 *</label>
+                                                <input type="text" name="OrderResidentId" class="form-control" id="PIDCheck" placeholder="" value="" disabled>
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email">電子郵件 *</label>
+                                                <input type="email" name="OrderEmail" class="form-control" id="EmailCheck" placeholder="" disabled>
+                                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                            </div>
+   @*                                          <div class="col-md-6 mb-3" hidden>
+                                                <label for="phone">手機號碼 *</label>
+                                                <input type="tel" name="OrderPhoneNumber" class="form-control" id="PhoneCheck" pattern="[0-9]{10}" placeholder="" value="" disabled><span class="validity"></span>
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div> *@
+                                        </div>
+
+                                        <hr class="mb-4">
+
+                                        <div class="row bg-light" style="position:relative">
+                                            <h3 style="text-decoration:underline">課程參與人 2</h3>
+                                            @* 藏MemberID *@
+                                            <input type="hidden" name="OrderMemberId" id="kidMemberIDCheck" value="" />
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kidName">姓名 *</label>
+                                                <input type="text" name="OrderName" class="form-control" id="kidNameCheck" placeholder="" value="" disabled>
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kidBirthDate">生日*</label>
+                                                <input type="date" name="OrderBirthDate" class="form-control" id="kidBirthdayCheck" value="@DateTime.Now.ToString("yyyy/MM/dd")" style="height:35px" disabled />
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kidPID">身分證字號 *</label>
+                                                <input type="text" name="OrderResidentId" class="form-control" id="kidPIDCheck" placeholder="" value="" disabled>
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="kidemail">電子郵件 </label>
+                                                @* <input type="email" name="OrderEmail" class="form-control" id="kidEmailCheck" placeholder="" disabled> *@
+                                                <input type="text" name="OrderEmail" class="form-control" id="kidEmailCheck" placeholder="" disabled>
+                                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                            </div>
+      @*                                       <div class="col-md-6 mb-3" hidden>
+                                                <label for="phone">手機號碼 *</label>
+                                                <input type="tel" name="OrderPhoneNumber" class="form-control" id="PhoneCheck" pattern="[0-9]{10}" placeholder="" value="" disabled><span class="validity"></span>
+                                                <div class="invalid-feedback"> Valid first name is required. </div>
+                                            </div> *@
+                                        </div>
+
+                                        <hr class="mb-4">                                  
+
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+                        </div>
+
+                        </div>
+
+                <!-- 報名注意事項 最後確認  -->
+                <div class="row">
+                    @*<div class="col-sm-6 col-lg-6 mb-3">*@
+                    <div class="col-md-12 col-lg-12">
+                        <div class="checkout-address">
+                            <div class="title-left">
+                                <h3>報名注意事項</h3>
+                            </div>
+                            <div class="rounded p-2 bg-light">
+                                <div class="media mb-2 border-bottom">
+                                    <div class="media-body">
+                                        <div class="small text-muted">
+                                             ✔  已詳讀相關契約書 </br>
+                                                (1)課程開立一般收據，後續將由財務人員統一寄發。</br>
+                                                (2)報名與付款完成後，課程達可開班人數，系統將寄發課前通知mail，請留意。</br>
+                                                (3)收費課程退費規定：</br>
+                                                依開課日60天前退95%、16-59天前退90%、3-15天前退80%、1-2天前退50%；課程開課日後(含開課當天)，不可退費。</br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br /><br />
+
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="backtoRevise">返回修改</button>
+                            @* <button type="button" class="btn btn-primary" onclick="window.location.href='OrderSubmitted'">確認送出訂單</button> 藏綠界轉換 *@
+                        <input id="gotoECpay" type="submit" class="btn btn-primary" value="確認送出訂單" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </form>
+ @*    </div> *@
+
+
+        <!-- 切換按鈕  -->
+       <div class="text-center">
+        <button type="button" class="btn btn-outline-primary" id="backhome">
+            <a asp-area="" asp-controller="Home" asp-action="Index"> 回首頁 </a>
+        </button>
+        <button type="button" class="btn btn-outline-primary " id="nextstep" data-toggle="modal" data-target="#finalcheck">下一步</button>
+        
+    </div>
+  
+        <!-- 第一頁切換按鈕  -->
+@* nav-tab畫面切換寫法
+        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <input class=" active btn btn-primary" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true" value="上一步" style="margin-inline:20px" />
+            </li>
+
+            <!-- 第二頁切換按鈕  -->
+            <li class="nav-item" role="presentation" >
+                <input class=" btn btn-primary" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false" value="下一步" />
+            </li>
+            <li class="nav-item" role="presentation">
+                <input type="submit" class=" btn btn-primary" id="checkout" data-toggle="modal" data-target="#finalcheck" value="下一步" style="margin-inline:20px" />
+            </li>
+        </ul> *@
+
+    </div> 
+
+
+
+@section Styles{
+
+    @*  <meta http-equiv="X-UA-Compatible" content="IE=edge"> *@
+
+    <!-- Mobile Metas -->
+    @* <meta name="viewport" content="width=device-width, initial-scale=1"> *@
+
+    <!-- Site Metas -->
+    @*     <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="author" content=""> *@
+
+    <!-- Site Icons -->
+    @* <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"> *@
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
+    <!-- Bootstrap CSS -->
+    @*  <link rel="stylesheet" href="~/css/bootstrap.min.css"> *@
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="~/css/style.css">
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/custom.css">
+    <style>
+        body {
+            background-color: #FCFCFC;
+        }
+
+        .checkbox-agree 
+        {
+            color: red;
+            font-weight:bold;        
+        }
+
+        h1 {
+            margin: 5px;
+        }
+
+        h5 {
+            margin: 20px;
+        }
+
+        .funshare {
+            color: red;
+        }
+
+        .subheading {
+            color: blue;
+        }
+        
+        </style>
+}
+
+@section Scripts{
+
+    <!---------------------外掛-------------------------------->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- ALL JS FILES -->
+    <script src="~/js/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- ALL PLUGINS -->
+    <script src="~/js/jquery.superslides.min.js"></script>
+    <script src="~/js/bootstrap-select.js"></script>
+    <script src="~/js/inewsticker.js"></script>
+    <script src="~/js/bootsnav.js"></script>
+    <script src="~/js/images-loded.min.js"></script>
+    <script src="~/js/isotope.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    @* <script src="~/js/baguetteBox.min.js"></script>*@
+    <script src="~/js/form-validator.min.js"></script>
+    <script src="~/js/contact-form-script.js"></script>
+    <script src="~/js/custom.js"></script>
+
+
+    <!---------------------自己寫javascript/jquery-------------------------------->
+    <script>
+        //<form>先成立Order，再傳值前往綠界
+        const createOrder = document.querySelector("#createOrder");
+        $("#createOrder").submit(function (event) {
+            //先暫止<form></form>轉至ECPay
+            event.preventDefault();
+            //呼叫建立訂單的function
+            newOrder();         
+        })
+        
+        //呼叫建立訂單的function
+        async function newOrder() {
+            canceldisabled();
+            const formData = new FormData(createOrder);
+            let redirectUrl = "";
+            const pdn = document.querySelector("input[name='ProductName']");
+            const ProductName = pdn.value;
+            const bla = document.querySelector("input[name='BillingAmount']");
+            let BillingAmount = bla.value;
+            BillingAmount = BillingAmount.replace(/,/g, ''); //去掉金額中的, 因為綠界不接受金額有,的格式
+            console.log(BillingAmount);
+
+            const selectedPaymentMethod = $("input[name='paymentMethod']:checked").attr("id");
+
+            //選不同的radio導向不同的URL
+            if (selectedPaymentMethod === 'credit') {
+                redirectUrl = `@Url.Content("~/Product/ECPay")?prouctName=${ProductName}&billingAmount=${BillingAmount}`;
+            }
+            else if (selectedPaymentMethod === 'ATM') {
+                redirectUrl = `@Url.Content("~/Product/OrderSubmittedATM")?billingAmount=${BillingAmount}`;
+            }
+
+            const response = await fetch ('@Url.Content("~/Product/Order")', {
+                    body: formData,
+                    method:'post'              
+            })
+            const data = await response.text();
+            if (data != null) {
+                //用同步方式寄送Email
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", `@Url.Action("PaymentSuccessfulEmail","Api")/${data}`);
+                xhr.send();
+                location.href = redirectUrl;
+            }
+        }
+
+        //送出表單前先移除disabled屬性 =>才可寫入後台
+        function canceldisabled()
+        {        
+            $('input[name="UnitPrice"]').prop('disabled', false);
+            $('input[name="Count"]').prop('disabled', false);
+            $('input[name="Amount"]').prop('disabled', false);
+            $('input[name="CouponId"]').prop('disabled', false);
+            $('input[name="Bonus"]').prop('disabled', false);
+            $('input[name="BillingAmount"]').prop('disabled', false);
+
+            $('input[name="BuyName"]').prop('disabled', false);
+            $('input[name="BuyEmail"]').prop('disabled', false);
+            $('input[name="BuyPhoneNumber"]').prop('disabled', false);
+
+            $('input[name="OrderName"]').prop('disabled', false);
+            // $('input[name="OrderPhoneNumber"]').prop('disabled', false);
+            $('input[name="OrderEmail"]').prop('disabled', false);
+            $('input[name="OrderResidentId"]').prop('disabled', false);
+            $('input[name="OrderBirthDate"]').prop('disabled', false);
+        }
+
+        //==============================================
+        //自動帶入會員有的折價券資訊
+        var selectCoupon = $("#selectCoupon");
+        async function loadCoupon() {
+            selectCoupon.html('<option selected value="">未選擇優惠券</option>');
+            const response = await fetch(`@Url.Content("~/Api/myCoupon")?id=${@(Model.MemberId)}&pid=${@(Model.ProductId)}`);
+            // console.log(response);
+            const datas = await response.json(); 
+            console.log(datas);
+            const coupons = datas.map(coupon => `<option data-name="${coupon.couponName}" data-discount="${coupon.couponDiscount}" data-id="${coupon.memberCouponId}" data-description="${coupon.couponDescription}">${coupon.couponDescription}</option>`);
+            console.log(coupons);
+            selectCoupon.append(coupons.join(""));
+        }
+
+        loadCoupon();
+        //==============================================
+        //總金額帶入折價券/紅利計算(先扣紅利再打折)
+        $(document).ready(function () {
+            // 获取sum1的值并格式化为千分位逗号分隔符格式
+            var sum1Value = formatNumber($("#sum1").val());
+            // 获取bonus的值
+            var bonusValue = parseFloat($("#bonus").val()) || 0;
+            // 获取selectCoupon的jQuery对象
+            var selectCoupon = $("#selectCoupon");
+
+            // 计算初始的sum2值，等于sum1减去bonus
+            var sum2Value = parseFloat(sum1Value.replace(/,/g, '')) - bonusValue;
+
+            // 设置原始的bonus值
+            var originalBonusValue = bonusValue;
+
+            // 设置sum2的值并格式化
+            $("#sum2").val(formatNumber(sum2Value));
+
+            // 监听bonus输入框的键盘输入事件
+            $("#bonus").on("input", function () {
+                // 获取bonus的值
+                 bonusValue = parseFloat($(this).val()) || 0;
+
+                if (bonusValue > originalBonusValue) {
+                    // 如果输入值大于原始值，将其限制为原始值
+                    bonusValue = originalBonusValue;
+                    Swal.fire(
+                        '喔喔',
+                        `您目前最多有 ${originalBonusValue} 點可使用，請輸入不超過  ${originalBonusValue} 的紅利點數`,
+                        'question'
+                    )
+                    $(this).val(originalBonusValue); // 更新输入框的值
+                }
+
+                // 计算新的sum2值
+                //sum2Value = parseFloat(sum1Value.replace(/,/g, '')) - bonusValue;
+                updateSum2(bonusValue);
+            });
+
+            // 监听selectCoupon的change事件
+            selectCoupon.change(function () {
+                // 计算新的sum2值
+                updateSum2();
+            });
+
+            function updateSum2() {
+                // 计算新的sum2值，根据选择的优惠券
+                var selectedOption = $("option:selected", selectCoupon);
+                var discount = parseFloat(selectedOption.data("discount"));
+
+                // 如果选择的是"未選擇優惠券"，则计算sum2=sum1-bonus
+                if (selectedOption.val() === "") {
+                    sum2Value = parseFloat(sum1Value.replace(/,/g, '')) - bonusValue;
+                } else {
+                    // 如果bonus未输入值，则计算sum2=sum1*selectedOption
+                    if (bonusValue === 0) {
+                        sum2Value = parseFloat(sum1Value.replace(/,/g, '')) * discount;
+                    } else {
+                        // 否则，根据折扣值和bonus计算sum2
+                        sum2Value = (parseFloat(sum1Value.replace(/,/g, '')) - bonusValue) * discount;
+                    }
+                }
+
+                // 设置sum2的值并格式化
+                $("#sum2").val(formatNumber(Math.round(sum2Value)));
+            }
+
+            function formatNumber(number) {
+                // 使用自定义函数添加千分位逗号分隔符
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+        });
+
+      
+        //==============================================
+        //同訂購人打勾則自動帶入值，取消打勾則清掉值
+        $(document).ready(function () {
+            $('#same').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#Name').val($('#buyName').val());
+                    $('#Phone').val($('#buyPhone').val());
+                    $('#Email').val($('#buyEmail').val());
+                    $('#Birthday').val($('#buyBirthday').val());
+                    $('#PID').val($('#buyPID').val());
+                    $('#MemberID').val($('#buyMemberID').val());
+                }
+                else {
+                    $('#Name').val('');
+                    $('#Phone').val('');
+                    $('#Email').val('');
+                    $('#Birthday').val('');
+                    $('#PID').val('');
+                    $('#MemberID').val('');
+                }
+            });
+        });
+
+        //==============================================   
+        //自動載入會員家人資訊
+        var selectFamily = $("#validationCustom04");
+        var selectNewFamily = $("#validationCustom03");
+        async function loadFamily() {
+            selectFamily.html('<option selected value="">選擇家人</option>');
+            selectNewFamily.html('<option selected value="">選擇家人</option>');
+            const response = await fetch(`@Url.Content("~/Api/myFamily")?id=${@(Model.MemberId)}`)
+            const datas = await response.json();
+            console.log(datas);
+            const familys = datas.map(family => `<option data-memberid="${family.memberId}" data-name="${family.name}" data-birthday="${family.birthDate}" data-id="${family.residentId}" data-email="${family.email}">${family.name}</option>`);
+            console.log(familys);
+            selectFamily.append(familys.join(""));
+            selectNewFamily.append(familys.join(""));
+        }
+     
+        loadFamily();
+
+        //選擇對應家人時，自動帶入數值
+        selectNewFamily.change(function () {
+            const selectedOption = $(this).find("option:selected");
+            const name = selectedOption.data("name");
+            const birthday = selectedOption.data("birthday");
+            const bdForJS = new Date(birthday).toISOString().split('T')[0];
+            const id = selectedOption.data("id");
+            const email = selectedOption.data("email");
+            const memberid = selectedOption.data("memberid");
+            console.log($("#BirthDate") );
+
+            $("#Name").val(name);
+            $("#Birthday").val(bdForJS);
+            $("#PID").val(id);
+            $("#Email").val(email);
+            $("#MemberID").val(memberid);
+        })
+
+        selectFamily.change(function () {
+            const selectedOption = $(this).find("option:selected");
+            const name = selectedOption.data("name");
+            const birthday = selectedOption.data("birthday");
+            const bdForJS = new Date(birthday).toISOString().split('T')[0];
+            const id = selectedOption.data("id");
+            const email = selectedOption.data("email");
+            const memberid = selectedOption.data("memberid");
+            console.log($("#kidBirthDate"));
+
+            $("#kidName").val(name);
+            $("#kidBirthDate").val(bdForJS);
+            $("#kidPID").val(id);
+            $("#kidEmail").val(email);
+            $("#kidMemberID").val(memberid);
+        })
+
+        //==============================================
+        // 勾選同意書才進行下一步
+        $(document).ready(function () {
+            // 监听下一步按钮的点击事件
+            $('#nextstep').click(function () {
+                // 检查是否勾选了同意的复选框
+                if ($('#check-agree').is(':checked')) {
+                    // 如果勾选了，打开模态框
+                    $('#finalcheck').modal('show');
+                    //跳出視窗帶入前面輸入值
+                    $('#MemberIDCheck').val($('#MemberID').val())
+                    // const M = document.getElementById("MemberID");
+                    // const M2 = document.getElementById("MemberIDCheck");
+                    // console.log("M = " + M.value)
+                    // console.log("M2 = " + M.value)
+                    $('#NameCheck').val($('#Name').val())
+                    // console.log("Name = " + $('#Name').val())
+                    $('#PhoneCheck').val($('#Phone').val())
+                    $('#EmailCheck').val($('#Email').val())
+                    $('#PIDCheck').val($('#PID').val())
+                    $('#BirthdayCheck').val($('#Birthday').val())
+                    $('#couponCheck').val($('#selectCoupon').val())
+                    $('#couponIdCheck').val($('#selectCoupon').find('option:selected').data('id'))
+                    $('#bonusCheck').val($('#bonus').val())
+                    $('#sum2Check').val($('#sum2').val())
+                    $('#kidNameCheck').val($('#kidName').val())
+                    $('#kidBirthdayCheck').val($('#kidBirthDate').val())
+                    $('#kidPIDCheck').val($('#kidPID').val())
+                    $('#kidEmailCheck').val($('#kidEmail').val())
+                    $('#kidMemberIDCheck').val($('#kidMemberID').val())
+
+                } else {
+                    // 如果未勾选，弹出提醒
+                    Swal.fire(
+                        '唉呀!?',
+                        '請完成閱讀相關契約書並勾選同意',
+                        'question'
+                    );                    
+                    
+                    // alert("請完成閱讀相關契約書並勾選同意");
+                    return false;
+                }
+            });
+        });
+
+        $('#backtoRevise').click(function () {
+            // 关闭模态框
+            $('#finalcheck').modal('hide');
+        });
+        $('#backtoClose').click(function () {
+            // 关闭模态框
+            $('#finalcheck').modal('hide');
+        });
+        //==============================================
+       //勾選付款方式後才能提交到綠界
+         
+        $(document).ready(function () { 
+            var gotoECpay = $("#gotoECpay");
+            var paymentRadios = $("input[name='paymentMethod'");
+        
+            gotoECpay.click(function (event) { 
+                var isSelectetd = paymentRadios.is(":checked");
+
+                if (!isSelectetd) {
+                    //不送出表單
+                    event.preventDefault();
+                    //跳出提醒
+                     Swal.fire(
+                        '唉呀!?',
+                        '請先選擇付款方式',
+                        'question'
+                    );                    
+                }
+            })
+        })
+
+        //==============================================
+        // 綠界界面轉換 TODO 待參數確認後要將
+        $("#nextstep").on('click', (e) => {
+            // e.preventDefault();
+            let formData = $("#form").serializeArray();
+            var json = {};
+            $.each(formData, function () {
+                json[this.name] = this.value || "";
+            });
+            console.log(json);
+            //step3 : 新增訂單到資料庫
+            $.ajax({
+                type: 'POST',
+                url: 'https://localhost:7208/Api/AddOrders',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(json),
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (err) { console.log(err); },
+            });
+        });
+
+
+        //==============================================
+        //(已拿掉畫面切換)進訂單畫面時，隐藏pills-home-tab和checkout
+                // $(document).ready(function () {
+                //     $("#pills-home-tab, #checkout").hide();
+                //     });
+
+                // // 当点击pills-profile-tab按钮时
+                //     $("#pills-profile-tab").click(function () {
+                //         // 隐藏backhome和pills-profile-tab
+                //         $("#backhome, #pills-profile-tab").hide();
+                //         // 显示pills-home-tab和checkout
+                //         $("#pills-home-tab, #checkout").show();
+                //     });
+
+                //     // 当点击pills-home-tab按钮时
+                //     $("#pills-home-tab").click(function () {
+                //             // 隐藏 pills-home-tab和checkout
+                //             $("#pills-home-tab, #checkout").hide();
+                //             // 显示 backhome和pills-profile-tab
+                //             $("#backhome, #pills-profile-tab").show();
+                //         });
+
+    </script>
+
+}
+
+
+
+
+

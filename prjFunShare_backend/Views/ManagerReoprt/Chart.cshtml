@@ -1,0 +1,569 @@
+﻿@{
+    ViewData["Title"] = "Chart";
+    ViewBag.Action = "Chart";
+    string hidden = "";
+    if (!Context.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+    {
+        hidden = "hidden";
+    }
+}
+@section Styles{
+<style>
+        .chart-container {
+            display: flex;
+            align-items: flex-start; 
+            gap: 10px;
+        }
+</style>
+}
+<h1>報表系統</h1>
+<div class="my-4 gap-2">
+<button type="button" class="btn btn-outline-primary" id="showSalesChart">銷售趨勢</button>
+<button type="button" class="btn btn-outline-secondary" id="showInventoryChart">即時報名狀態</button>
+<button type="button" class="btn btn-outline-success" id="showOrderChart">訂單報表</button>
+    <button type="button" class="btn btn-outline-info" id="showMonthGrowthRateChart">銷售年月率報表</button>
+    <button type="button" class="btn btn-primary" id="showProdectChart" @hidden>產品分析</button>
+    <button type="button" class="btn btn-success" id="showMixChart" @hidden>訂單分析</button>
+    <button type="button" class="btn btn-info" id="showMemberChart" @hidden>會員分析</button>
+    <button type="button" class="btn btn-warning" id="showSupplierChart" @hidden>廠商分析</button>
+
+</div>
+
+<div id="gaugeChartContainer" style="display: none;">
+    <div id="supplierCountText" style="text-align: center; font-size: 16px; margin-top: -20px;">
+    </div>
+    <iframe title="Report Section" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiNGY1NDdmNDAtYmZkNS00MDU4LWI3ZWItMGZkMDQzMzUwZDAzIiwidCI6ImE0M2Y2Y2QzLTU0MTItNGIxZi1hMTM0LTJjMjc3MzY0Y2FmNiIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe><div id="gaugeChart" style="width: 400%; height: 300%;"></div>
+</div>
+@* 訂單的選擇 *@
+
+<div id="divSelectOrderYear" style="display:none">
+    <p class="fw-bold mb-0">請選擇年分：</p>
+        <div class="row mb-2">
+        <div class="col-2">
+            <select class="form-select" id="selectYear1"></select>
+        </div>
+        <div class="col-2">
+            <select class="form-select" id="selectYear2"></select>
+        </div>
+    </div>
+</div>
+<div id="divSelectMonthGrowthRate" style="display:none">
+    <p class="fw-bold mb-0">請選擇月份：</p>
+    <div class="row mb-2">
+        <div class="col-2">
+            <select class="form-select" id="selectMonth1"></select>
+        </div>
+        <div class="col-2">
+            <select class="form-select" id="selectMonth2"></select>
+        </div>
+    </div>
+</div>
+
+
+<div id="divOrderSales" style="display:none">
+    <iframe title="FUNShare PowerBI儀表板-訂單" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiOThkNzBmNjgtM2I2ZC00ZDQyLWJjMmQtOGJjOWQzYThjYzU0IiwidCI6ImE0M2Y2Y2QzLTU0MTItNGIxZi1hMTM0LTJjMjc3MzY0Y2FmNiIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+</div>
+@* <div id="divSelectOrderYear2" style="display:none">
+    測試用有沒有傳送到資料
+</div> *@
+<div id="gaugeChartContainer" style="width: 400px; height: 200px; display: none;"></div>
+<div id="inventoryChartContainer" style="width: 1000px; height: 600px; display: none;"></div>
+<div id="MonthGrowthRateChartContainer" style="width: 1500px; height: 600px; display: none;"></div>
+@* 訂單水平 *@
+<div class="chart-container">
+    <div id="orderChartContainer" style="width: 800px; height: 400px; display: none;"></div>
+    <div id="OrderGrowthRateChartContainer" style="width: 800px; height: 400px; display: none;"></div>
+</div>
+@* BI *@
+<div id="prodectChartContainer" style="display: none;">
+    <iframe title="產品分析" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiNmMyMGFiM2EtZWQ1OC00ODI4LThlYzctZTE4NWUyZTMxNWU1IiwidCI6ImE0M2Y2Y2QzLTU0MTItNGIxZi1hMTM0LTJjMjc3MzY0Y2FmNiIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+</div>
+<div id="mixChartContainer" style="width: 800px; height: 700px; display: none;"></div>
+<div id="memberChartContainer" style="display: none;">
+    <iframe title="會員分析儀表板" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiOWRjNmI5YTAtMzc0NS00MWVhLWFjOWItY2RmYWQ1ZTViZTM1IiwidCI6ImE0M2Y2Y2QzLTU0MTItNGIxZi1hMTM0LTJjMjc3MzY0Y2FmNiIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+</div>
+@section Scripts{
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+    <script>
+        var suppliers = @Html.Raw(Json.Serialize(Model));
+        var gaugeChart = echarts.init(document.getElementById('gaugeChart'));
+        var orderChart = echarts.init(document.getElementById('orderChartContainer'));
+        var OrderGrowthRateChart = echarts.init(document.getElementById('OrderGrowthRateChartContainer'));
+        var MonthGrowthRateChart = echarts.init(document.getElementById('MonthGrowthRateChartContainer'));
+        var inventoryChart = echarts.init(document.getElementById('inventoryChartContainer'));
+        var productChart = document.getElementById('prodectChartContainer');
+        var mixChart = echarts.init(document.getElementById('mixChartContainer'));
+        var currentYear = new Date().getFullYear();
+        for (var year = 2020; year <= currentYear; year++) {
+            var yearOption = document.createElement('option');
+            yearOption.value = year;
+            yearOption.textContent = year;
+            selectYear1.appendChild(yearOption);
+            selectYear2.appendChild(yearOption.cloneNode(true));
+        }
+
+        // var currentMonth = new Date().getMonth() + 1;  
+        // for (var month = 1; month <= 12; month++) {
+        //     var monthOption = document.createElement('option');
+        //     monthOption.value = month;
+        //     monthOption.textContent = month;
+        //     selectMonth1.appendChild(monthOption);
+        //     selectMonth2.appendChild(monthOption.cloneNode(true));
+        // }
+        // 綜合報表mixChartContainer
+        document.getElementById('showMixChart').addEventListener('click', function () {
+            document.getElementById('divOrderSales').style.display = 'block';
+            document.getElementById('gaugeChartContainer').style.display = 'none';
+            document.getElementById('prodectChartContainer').style.display = 'none';
+            document.getElementById('orderChartContainer').style.display = 'none';
+            document.getElementById('inventoryChartContainer').style.display = 'none';
+            document.getElementById('divSelectOrderYear').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            gaugeChart.clear();
+            // $.ajax({
+            //     type: 'GET',
+            //     url: '@Url.Action("GetGrowthChart", "ManagerReoprt")',
+            //     success: function (data) {
+            //         console.log(data)
+            //         var option = {
+            //             animationDuration: 1000,
+            //             dataset: [
+            //                 {
+            //                     id: 'dataset_raw',
+            //                     source: data
+            //                 }
+            //             ],
+            //             title: {
+            //                 text: '年度銷售額變化'
+            //             },
+            //             tooltip: {
+            //                 order: 'valueDesc',
+            //                 trigger: 'axis'
+            //             },
+            //             xAxis: {
+            //                 type: 'category',
+            //                 nameLocation: 'middle'
+            //             },
+            //             yAxis: {
+            //                 name: '銷售額'
+            //             },
+            //             grid: {
+            //                 right: 140
+            //             },
+            //             series: [
+            //                 {
+            //                     type: 'line',
+            //                     datasetId: 'dataset_raw',
+            //                     showSymbol: false,
+            //                     labelLayout: {
+            //                         moveOverlap: 'shiftY'
+            //                     },
+            //                     emphasis: {
+            //                         focus: 'series'
+            //                     },
+            //                     encode: {
+            //                         x: '年份',
+            //                         y: '銷售成長率',
+            //                         label: ['年份', '銷售成長率'],
+            //                         itemName: '年份',
+            //                         tooltip: ['銷售成長率']
+            //                     }
+            //                 }
+            //             ]
+            //         };
+            //         var mixChart = echarts.init(document.getElementById('mixChartContainer'));
+            //         mixChart.setOption(option);
+            //     }
+            // });
+        });
+        //產品報表
+        // 綁定點擊事件
+        document.getElementById('showProdectChart').addEventListener('click', function () {
+            document.getElementById('prodectChartContainer').style.display = 'block'; // 顯示圖表
+            document.getElementById('gaugeChartContainer').style.display = 'none'; // 隱藏供應商
+            document.getElementById('orderChartContainer').style.display = 'none'; // 隱藏訂單圖表
+            document.getElementById('inventoryChartContainer').style.display = 'none'; // 隱藏庫存
+            document.getElementById('divSelectOrderYear').style.display = 'none'; // 隱藏選擇年分按鍵
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'none'; 
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+        });
+        document.getElementById('showMemberChart').addEventListener('click', function () {
+            document.getElementById('prodectChartContainer').style.display = 'none'; // 顯示圖表
+            document.getElementById('gaugeChartContainer').style.display = 'none'; // 隱藏供應商
+            document.getElementById('orderChartContainer').style.display = 'none'; // 隱藏訂單圖表
+            document.getElementById('inventoryChartContainer').style.display = 'none'; // 隱藏庫存
+            document.getElementById('divSelectOrderYear').style.display = 'none'; // 隱藏選擇年分按鍵
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'block';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+        });
+        document.getElementById('showSupplierChart').addEventListener('click', function () {
+            document.getElementById('gaugeChartContainer').style.display = 'block'; // 顯示圖表
+            document.getElementById('prodectChartContainer').style.display = 'none'; //隱藏
+            document.getElementById('orderChartContainer').style.display = 'none'; // 隱藏
+            document.getElementById('inventoryChartContainer').style.display = 'none'; // 隱藏庫存
+            document.getElementById('divSelectOrderYear').style.display = 'none'; // 隱藏選擇年分按鍵
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'none';
+           
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+
+            gaugeChart.clear();
+            var supplierCounts = suppliers.length;
+
+            var option = {
+                tooltip: {
+                    formatter: '{a} <br/>{b} : {c}%'
+                },
+                series: [
+                    {
+                        name: 'Pressure',
+                        type: 'gauge',
+                        detail: {
+                            formatter: '{value}'
+                        },
+                        data: [
+                            {
+                                value: supplierCounts,
+                                name: '數量'
+                            }
+                        ]
+                    }
+                ],
+                graphic: [
+                    {
+                        type: 'text',
+                        left: 'center',
+                        top: 'bottom',
+                        style: {
+                            text: '供應商數量：' + supplierCounts,
+                            fontSize: 16
+                        }
+                    }
+                ]
+            };
+            gaugeChart.setOption(option);
+        });
+        //訂單報表
+        document.getElementById('showOrderChart').addEventListener('click', function () {
+            document.getElementById('orderChartContainer').style.display = 'block'; // 顯示訂單圖表
+            document.getElementById('divSelectOrderYear').style.display = 'block'; // 顯示選擇年分按鍵
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'block';
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+            document.getElementById('gaugeChartContainer').style.display = 'none'; // 隱藏供應商图表
+            document.getElementById('inventoryChartContainer').style.display = 'none'; // 隱藏庫存表
+            document.getElementById('prodectChartContainer').style.display = 'none';
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+
+            orderChart.clear();
+            selectYear1.addEventListener('change', updateOrderChart);
+            selectYear2.addEventListener('change', updateOrderChart);
+            function updateOrderChart() {
+                var selectedYear1 = selectYear1.value;
+                var selectedYear2 = selectYear2.value;
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetOrderDataChart", "ManagerReoprt")',
+                    data: { year1: selectedYear1, year2: selectedYear2 },
+                    success: function (data) {
+                        console.log(data); //檢查json資料用
+                        var yearData = data.map(function (item) {
+                            return item.月份;
+                        });
+                        var orderCountData = data.map(function (item) {
+                            return item.總數;
+                        });
+                        var option = {
+                            animationDuration: 1000,
+                            title: {
+                                text: '訂單數量變化'
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: yearData
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [
+                                {
+                                    type: 'line',
+                                    data: orderCountData,
+                                    label: {
+                                        show: true
+                                    }
+                                }
+                            ]
+                        };
+                        orderChart.setOption(option);
+                    }
+                });
+            }
+                // 清除舊的圖表資料
+                OrderGrowthRateChart.clear();
+                console.log('@Url.Action("GetOrderGrowthChart", "ManagerReoprt")');
+                // 從後端獲取成長率數據
+                $.ajax({
+                    url: '@Url.Action("GetOrderGrowthChart", "ManagerReoprt")', // 替換成你的API的路徑
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        // 使用數據繪製圖表
+                        var option = {
+                            title: {
+                                text: '訂單成長率'
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: data.years  // 假設你的API也回傳了年份數據
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [{
+                                data: data.growthRates,
+                                type: 'line'
+                            }]
+                        };
+
+                        OrderGrowthRateChart.setOption(option);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+        });
+        //  銷售報表
+        document.getElementById('showSalesChart').addEventListener('click', function () {
+            document.getElementById('orderChartContainer').style.display = 'block'; // 顯示銷售圖表
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('divSelectOrderYear').style.display = 'none';
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+            document.getElementById('gaugeChartContainer').style.display = 'none'; // 隱藏供應商圖表
+            document.getElementById('inventoryChartContainer').style.display = 'none'; // 隱藏庫存表
+            document.getElementById('prodectChartContainer').style.display = 'none'; //隱藏客戶圖表
+            document.getElementById('divSelectOrderYear').style.display = 'none'; // 隱藏選擇年分按鍵
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            orderChart.clear();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetmomeyDataChart", "ManagerReoprt")',
+                success: function (data) {
+                    var option = {
+                        animationDuration: 2500,
+                        dataset: [
+                            {
+                                id: 'dataset_raw',
+                                source: data
+                            }
+                        ],
+                        title: {
+                            text: '年度銷售額變化'
+                        },
+                        tooltip: {
+                            order: 'valueDesc',
+                            trigger: 'axis'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            nameLocation: 'middle'
+                        },
+                        yAxis: {
+                            name: '銷售額'
+                        },
+                        grid: {
+                            right: 140
+                        },
+                        series: [
+                            {
+                                type: 'line',
+                                datasetId: 'dataset_raw',
+                                showSymbol: false,
+                                labelLayout: {
+                                    moveOverlap: 'shiftY'
+                                },
+                                emphasis: {
+                                    focus: 'series'
+                                },
+                                encode: {
+                                    x: '年分',
+                                    y: '總數',
+                                    label: ['年分', '總數'],
+                                    itemName: '年分',
+                                    tooltip: ['總數']
+                                }
+                            }
+                        ]
+                    };
+                    orderChart.setOption(option);
+                }
+            });
+        });
+        
+        //庫存報表
+        document.getElementById('showInventoryChart').addEventListener('click', function () {
+            document.getElementById('inventoryChartContainer').style.display = 'block';
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'none'; 
+            document.getElementById('divSelectOrderYear').style.display = 'none';
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+            document.getElementById('orderChartContainer').style.display = 'none';
+            document.getElementById('gaugeChartContainer').style.display = 'none';
+            document.getElementById('prodectChartContainer').style.display = 'none';
+            document.getElementById('divSelectOrderYear').style.display = 'none';
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            inventoryChart.clear();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetstockDataChart", "ManagerReoprt")',
+                success: function (data) {
+
+                    var chartData = data.map(function (item) {
+                        var color = item.庫存量 < 5 ? 'red' : 'blue';
+                        return {
+                            商品名稱: item.商品名稱,
+                            庫存量: item.庫存量,
+                            color: color
+                        };
+                    });
+                    var option = {
+                        title: {
+                            text: '剩餘名額'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: chartData.map(function (item) {
+                                return item.商品名稱;
+                            })
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                data: chartData.map(function (item) {
+                                    return item.庫存量;
+                                }),
+                                type: 'bar'
+                            }
+                        ]
+                    };
+                    inventoryChart.setOption(option);
+                }
+            });
+        });
+        //月銷售成長率
+        document.getElementById('showMonthGrowthRateChart').addEventListener('click', function () {
+            // 顯示訂單成長率圖表容器
+            document.getElementById('MonthGrowthRateChartContainer').style.display = 'block';
+            document.getElementById('divSelectOrderYear').style.display = 'none'; // 顯示選擇年分按鍵
+            document.getElementById('orderChartContainer').style.display = 'none';
+            document.getElementById('gaugeChartContainer').style.display = 'none';
+            document.getElementById('prodectChartContainer').style.display = 'none';
+            document.getElementById('divOrderSales').style.display = 'none';
+            document.getElementById('memberChartContainer').style.display = 'none';
+            document.getElementById('OrderGrowthRateChartContainer').style.display = 'none';
+            document.getElementById('divSelectMonthGrowthRate').style.display = 'none';
+            document.getElementById('inventoryChartContainer').style.display = 'none';
+            
+
+            $.ajax({
+                url: '@Url.Action("GetGrowthRateMMDataChart", "ManagerReoprt")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var chart = echarts.init(document.getElementById('MonthGrowthRateChartContainer'));
+
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            position: function (pt) {
+                                return [pt[0], '10%'];
+                            }
+                        },
+                        title: {
+                            left: 'center',
+                            text: '銷售月成長率'
+                        },
+                        toolbox: {
+                            feature: {
+                                dataZoom: {
+                                    yAxisIndex: 'none'
+                                },
+                                restore: {},
+                                saveAsImage: {}
+                            }
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data.dates
+                        },
+                        yAxis: {
+                            type: 'value',
+                            boundaryGap: [0, '100%']
+                        },
+                        dataZoom: [
+                            {
+                                type: 'inside',
+                                start: 0,
+                                end: 10
+                            },
+                            {
+                                start: 0,
+                                end: 10
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '銷售月成長率',
+                                type: 'line',
+                                symbol: 'none',
+                                sampling: 'lttb',
+                                itemStyle: {
+                                    color: 'rgb(255, 70, 131)'
+                                },
+                                areaStyle: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                        {
+                                            offset: 0,
+                                            color: 'rgb(255, 158, 68)'
+                                        },
+                                        {
+                                            offset: 1,
+                                            color: 'rgb(255, 70, 131)'
+                                        }
+                                    ])
+                                },
+                                data: data.growthRates
+                            }
+                        ]
+                    };
+
+                    chart.setOption(option);
+                },
+                error: function (error) {
+                    console.log(error.responseText);
+                }
+            });
+        })
+    </script>
+}
+
+

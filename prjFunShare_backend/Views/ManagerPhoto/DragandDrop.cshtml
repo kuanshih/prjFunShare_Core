@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "圖片上傳";
+}
+
+<h1>圖片上傳</h1>
+<body >
+    <form class="box col-6 border-1" id="form1" method="post" action="" enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-body" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <img src="~/img/dragndrop.gif" width=100%/>                
+            </div>
+        </div>
+        <div>
+            <input class="card-img" type="file" name="files[]" id="file" daccept="image/x-png,image/gif,image/jpeg"  ata-multiple-caption="{count} files selected" multiple />
+        </div>
+        <br/>
+        <div>            
+            <input class="btn btn-primary" type="submit" name="submitHandler" id="submitHandler" value="上傳並儲存" />
+        </div>
+    </form>
+   <br/>
+    <div>
+        <a asp-controller="ManagerProduct" asp-action="List">回到產品首頁</a>
+
+    </div>
+   
+    
+</body>
+
+@section Scripts{
+    <script>
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+    </script>
+}

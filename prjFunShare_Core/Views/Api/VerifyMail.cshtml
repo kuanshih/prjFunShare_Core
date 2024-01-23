@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "VerifyMail";
+}
+
+<h1>驗證成功</h1>
+
+<br>
+<br>
+<div class="mb-3">
+    <p>
+        信箱驗證成功！
+        <br />
+        重新登入即可使用完整會員功能。
+    </p>
+</div>
+<br>
+
+@section Scripts{
+    <script>
+
+        let timerInterval
+        Swal.fire({
+            icon: 'success',
+            title: '驗證成功',
+            html: '<b></b> 秒後將為您跳轉回首頁',
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = parseInt(Swal.getTimerLeft() / 1000)+1
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                // window.location.href = '../';
+                window.history.replaceState(null, "", '../');
+                window.history.go(0);
+            }
+        })
+    </script>
+}

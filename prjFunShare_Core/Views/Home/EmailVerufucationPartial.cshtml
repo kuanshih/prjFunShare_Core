@@ -1,0 +1,68 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<h2 class="text-center">重設密碼</h2>
+<form method="post" class="row g-3 needs-validation" id="EmailVerifyform">
+    @* col-12 代表填滿一列 *@
+    <div class="col-md-12">
+        <div class="form-outline">
+            <input type="text" class="form-control" id="Account" name="txtAccount" required />
+            <label for="Account" class="form-label">Email帳號</label>
+            <div class="invalid-feedback">請輸入您的會員Email</div>
+        </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+        <input type="submit" value="送出" class="btn btn-success" />
+    </div>
+</form>
+
+@section Scripts{
+
+    <!-- MDB -->
+    <script type="text/javascript" src="~/js/mdb.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+
+        const EmailVerifyform = document.querySelector('#EmailVerifyform');
+        $("#EmailVerifyform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault();
+
+                resetpassword();
+            }
+        })
+
+        async function resetpassword() {
+            const Account = document.getElementById("Account")
+            const response = await fetch(`@Url.Content("/api/ForgotPassword")?userEmail=${Account.value}`)
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '註冊成功',
+                    text: "重設密碼驗證信已寄至您的電子信箱，請於 30 分鐘內開啟驗證信中的連結以重設密碼。",
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        history.back();
+                    }, 2000);
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: "寄送失敗，請確認Email是否正確"
+                })
+            }
+        }
+    </script>
+}

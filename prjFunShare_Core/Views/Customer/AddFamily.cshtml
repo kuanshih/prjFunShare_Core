@@ -1,0 +1,246 @@
+﻿@model prjFunShare_Core.Models.CustomerInfomation
+
+@{
+    ViewData["Title"] = "";
+}
+
+@Html.AntiForgeryToken()
+
+@*註冊套版範例*@
+<div class="border d-flex justify-content-center align-items-center" style="width: 100%; height:auto;padding:30px">
+    <div class="col-md-3" style="width: 800px">
+        <h2 class="text-center">新增家人</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="card" style="padding:30px">
+            @*用card的外框裝Form*@
+            <form class="row g-3 needs-validation" method="post" enctype="multipart/form-data" id="addfamilyform">
+                <div class="col-md-6 row g-3">
+                    <div class="col-md-12">
+                        @* col-4 代表1/3列 (12就是全滿)*@
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="AddFamilyName" name="Name" required />
+                            <label for="AddFamilyName" class="form-label">姓名</label>
+                            <div class="valid-feedback">請輸入姓名</div>
+                        </div>
+                        <label id="AddFamilyNameErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="AddFamilyResidentId" name="ResidentId" pattern="[a-z,A-Z]{1}[1-2,8-9]{1}[\d]{8}" maxlength="10" required />
+                            <label for="AddFamilyResidentId" class="form-label">身分證字號</label>
+                            <div class="valid-feedback">請輸入身分證字號</div>
+                        </div>
+                        <label id="ResidentIdErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+
+                    @* 不可編輯Email和密碼 *@
+                    <input type="hidden" name="Email" value="None" />
+                    <input type="hidden" name="Password" value="None" />
+
+                    <div class="col-md-12">
+                        性別：
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderMale" value="M" />
+                            <label class="form-check-label" for="GenderMale">男</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderFemale" value="F" />
+                            <label class="form-check-label" for="GenderFemale">女</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderSecret" value="S" checked />
+                            <label class="form-check-label" for="GenderSecret">不方便透漏</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        與您的關係：
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="IsChild" id="Parent" value="false" />
+                            <label class="form-check-label" for="Parent">父母</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="IsChild" id="Child" value="true" checked />
+                            <label class="form-check-label" for="Child">孩子</label>
+                        </div>
+                    </div>
+
+                    @* 生日 *@
+                    <div class="col-md-12">
+                        <input type="date" class="form-control" name="BirthDate" id="AddFamilyBirthDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="height:35px" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <input type="hidden" name="IsAllergy" id="IsAllergy" />
+                        是否過敏：
+                        @* <div class="form-outline"> *@
+                        @* col-12 代表填滿一列 *@
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="IsAllergy" id="AllergyYes" value="true" />
+                            <label class="form-check-label" for="AllergyYes">是</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="IsAllergy" id="AllergyNo" value="false" checked />
+                            <label class="form-check-label" for="AllergyYes">否</label>
+                        </div>
+                        @* </div> *@
+                    </div>
+                    <div class="col-md-12" id="ShowAllergyDescription" style="display:none">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="AllergyDescription" name="AllergyDescription" />
+                            <label for="AllergyDescription" class="form-label">過敏史</label>
+                            <div class="invalid-feedback">請輸入過敏史</div>
+                        </div>
+                    </div>
+                </div>
+                @* 頭貼 *@
+                <div class="col-md-6" style="padding-left:30px;padding-top:20px">
+                    <div class="form-outline">
+                        <img class="img-fluid rounded-start" id="previewImg" src="~/img/預設頭像.jpg" />
+                        <input class="form-control-file" type="file" id="formFile" name="file" accept="image/*">
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <input id="DemoBtn" type="button" value="李爺爺" class="btn btn-danger ms-2" />
+                    <input type="submit" value="立即新增" class="btn btn-primary ms-2" />
+                    @Html.ActionLink("返回我的家人", "myFamily", "Customer", null, new { @class = "btn btn-secondary  ms-2" })
+                </div>
+
+                <input type="hidden" value="2" name="StatusId">
+
+                <input type="hidden" value="@DateTime.Now.Date " name="RegistrationDay">
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        const addfamilyform = document.querySelector('#addfamilyform');
+        $("#addfamilyform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault(); //防止預設行為(action="~/api/getdemo" 之類)的發生
+
+                loadaddfamily();
+            }
+        })
+
+        async function loadaddfamily() {
+            Swal.fire({
+                title: '正在為您新增',
+                html: '請稍後...',
+                // timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+            const formData = new FormData(addfamilyform);
+            const response = await fetch('@Url.Content("/api/AddFamily")', {
+                body: formData,
+                method: 'post'
+            })
+            const data = await response.text();
+            if (data == "新增成功") {
+                // alert("登入成功");
+                Swal.fire({
+                    icon: 'success',
+                    title: '新增成功',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        window.location.replace(document.referrer);
+                    }, 2000);
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '新增失敗',
+                    text: data,
+                })
+                setTimeout(
+                    function () {
+                        window.location.replace(document.referrer);
+                    }, 2000);
+            }
+        }
+
+        $('#DemoBtn').on('click', function () {
+            $('#AddFamilyName').addClass('active');
+            $('#AddFamilyResidentId').addClass('active');
+            $('#BirthDate').addClass('active');
+
+            $('#AddFamilyName').val('李爺爺');
+            $('#AddFamilyResidentId').val('T123144510');
+            $('#AddFamilyBirthDate').val('1970-05-13');
+            $('#Parent').prop('checked', true)
+        })
+
+        //判斷是否過敏=>過敏史是否顯示
+        const AllergyYes = document.getElementById('AllergyYes')
+        const AllergyNo = document.getElementById('AllergyNo')
+        const ShowAllergyDescription = document.getElementById('ShowAllergyDescription')
+        AllergyNo.addEventListener('click', event => {
+            if (AllergyNo.checked) {
+                ShowAllergyDescription.style.display = "none";
+            }
+        })
+        AllergyYes.addEventListener('click', event => {
+            if (AllergyYes.checked) {
+                ShowAllergyDescription.style.display = "";
+            }
+        })
+
+        //驗證輸入資料
+        //姓名
+        const AddFamilyName = document.getElementById("AddFamilyName")
+        const AddFamilyNameErrorMesssage = document.getElementById("AddFamilyNameErrorMesssage")
+        AddFamilyName.addEventListener('blur', () => {
+            if (AddFamilyName.value == "") {
+                AddFamilyNameErrorMesssage.innerHTML = "姓名為必填";
+                AddFamilyNameErrorMesssage.style.display = "";
+            }
+            else {
+                AddFamilyNameErrorMesssage.innerHTML = "";
+                AddFamilyNameErrorMesssage.style.display = "none";
+            }
+        })
+
+        //身分證字號
+        const AddFamilyResidentId = document.getElementById("AddFamilyResidentId")
+        const ResidentIdErrorMesssage = document.getElementById("ResidentIdErrorMesssage")
+        AddFamilyResidentId.addEventListener('blur', () => {
+            if (AddFamilyResidentId.value == "") {
+                ResidentIdErrorMesssage.innerHTML = "身分證字號為必填";
+                ResidentIdErrorMesssage.style.display = "";
+            }
+            else {
+                ResidentIdErrorMesssage.innerHTML = "";
+                ResidentIdErrorMesssage.style.display = "none";
+            }
+        })
+
+        $("#formFile").change(function () {
+            //當檔案改變後，做一些事
+            readURL(this);   // this代表<input id="formFile">
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewImg").attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

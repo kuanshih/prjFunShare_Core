@@ -1,0 +1,328 @@
+﻿@model FunShare_Admin.Models.TProduct
+
+
+
+<h1>新增課程</h1>
+
+<h3>課程資訊</h3>
+<form asp-controller="SuperProduct" asp-action="Create" id="ProductForm" enctype="multipart/form-data" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @*  <div class="form-group">
+    <label asp-for="ProductId" class="control-label"></label>
+    <input asp-for="ProductId" class="form-control" />
+    <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div> *@
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="form-group col">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="SupplierId" class="control-label"></label>
+                <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="AgeId" class="control-label"></label>
+                <select asp-for="AgeId" class="form-control" asp-items="ViewBag.AgeId"></select>
+                <span asp-validation-for="AgeId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Level" class="control-label"></label>
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            @* <div class="form-group col">
+            <label asp-for="Stock" class="control-label"></label>
+            <input asp-for="Stock"  class="form-control" />
+            <span asp-validation-for="Stock" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="ImagePath" class="control-label"></label>
+                <input asp-for="ImagePath" name="photo" type="file" class="form-control" />
+                <span asp-validation-for="ImagePath" class="text-danger"></span>
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group col">
+                <label asp-for="ReleasedTime" class="control-label"></label>
+                <input asp-for="ReleasedTime" class="form-control" />
+                <span asp-validation-for="ReleasedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Times" class="control-label"></label>
+                <input asp-for="Times" class="form-control" />
+                <span asp-validation-for="Times" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="IntervalId" class="control-label"></label>
+                <select asp-for="IntervalId" class="form-control" asp-items="ViewBag.IntervalId"></select>
+                <span asp-validation-for="IntervalId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="StatusId" class="control-label"></label>
+                <select asp-for="StatusId" class="form-control" value="17" asp-items="ViewBag.StatusId1"></select>
+                <span asp-validation-for="StatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Commision" class="control-label"></label>
+                <input asp-for="Commision" class="form-control" />
+                <span asp-validation-for="Commision" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsClass" /> @Html.DisplayNameFor(model => model.IsClass)
+                </label>
+            </div>
+            <div class="form-group col">
+                <label asp-for="ProductIntro" class="control-label"></label>
+                <textarea asp-for="ProductIntro" class="form-control"></textarea>
+                <span asp-validation-for="ProductIntro" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" class="form-control"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Features" class="control-label"></label>
+                <textarea asp-for="Features" class="form-control"></textarea>
+                <span asp-validation-for="Features" class="text-danger"></span>
+            </div>
+            <br />
+        </div>
+    </div>
+    <h3>課程詳細資訊</h3>
+
+    <button type="button" class="btn btn-default btn-sm" id="btnPlus">
+        <img src="~/img/plus.svg" />
+    </button>
+    <button type="button" class="btn btn-default btn-sm" id="btnMinus">
+        <img src="~/img/circle-minus.svg" />
+    </button>
+
+    <ol id="productDetailList">
+
+        <div class="row">
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.Dealine)
+            </div>
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.BeginTime)
+            </div>
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.EndTime)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.DistrictId)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.StatusId)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.Stock)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </div>            
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.Address)
+            </div>
+        </div>
+
+        <li>
+            <div class="row">
+                <div class="col-md-2">
+                    @*  @Html.DisplayFor(modelItem => item.Dealine) *@
+                    <input asp-for="Dealine" class="form-control col-md-1" />
+                    @* <input type="date" name="Dealines" />
+                    <input type="date" name="Dealines" /> *@
+                </div>
+                <div class="col-md-2">
+                    @*  @Html.DisplayFor(modelItem => item.BeginTime) *@
+                    <input asp-for="BeginTime" class="form-control col-md-2" />
+                </div>
+                <div class="col-md-2">
+                    @*  @Html.DisplayFor(modelItem => item.EndTime) *@
+                    <input asp-for="EndTime" class="form-control col-md-2" />
+                </div>
+                <div class="col-md-1">
+                    <select asp-for="DistrictId" class="form-control col-md-2" value="10" asp-items="ViewBag.DistrictId"></select>
+
+                </div>
+                <div class="col-md-1">
+                    @*  @Html.DisplayFor(modelItem => item.StatusId) *@
+                    <select asp-for="StatusId" class="form-control" value="9" asp-items="ViewBag.StatusId2"></select>
+                    @*  <input asp-for="Status.Description" class="form-control col-md-1" /> *@
+                </div>
+
+                <div class="col-md-1">
+                    @* @Html.DisplayFor(modelItem => item.Stock) *@
+                    @* <input asp-for="Stock" class="form-floating col-md-1" /> *@
+                    <input asp-for="Stock" class="form-control col-md-1" />
+                </div>
+                <div class="col-md-1">
+                    @* @Html.DisplayFor(modelItem => item.UnitPrice) *@
+                    @* <input asp-for="UnitPrice" class="form-floating col-md-1" /> *@
+                    <input asp-for="UnitPrice" class="form-control col-md-1" />
+                </div>
+                <div class=" col-md-2">
+                    @* @Html.DisplayFor(modelItem => item.Address) *@
+                    <input asp-for="Address" class="form-control col-md-2" />
+                </div>
+            </div>
+        </li>
+
+    </ol>
+    <br />
+    <div class="form-group">
+        <input type="submit" value="儲存" class="btn btn-primary" />
+    </div>
+
+</form>
+
+<div>
+    <a asp-controller="ManagerProduct" asp-action="List">Back to List</a>
+</div>
+
+
+@*     <h3>上傳圖片</h3> *@
+
+@* <div class="form-group">
+        <label asp-for="ImageId" class="control-label"></label>
+        <input asp-for="ImageId" class="form-control" />
+        <span asp-validation-for="ImageId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductId" class="control-label"></label>
+        <input asp-for="ProductId" class="form-control" />
+        <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div> *@
+@*
+    <div class="form-group form-check">
+        <label asp-for="IsMain" class="form-check-label"></label>
+        <input asp-for="IsMain" class="form-check-input" />
+        <span asp-validation-for="IsMain" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImagePath" class="control-label"></label>
+        <input asp-for="ImagePath" class="form-control" id="photo" type="file" />
+        <span asp-validation-for="ImagePath" class="text-danger"></span>
+        <img src="~/img/NoImage.jpg" sizes="auto">
+    </div>
+    <div class="form-group">
+        <label asp-for="Images" class="control-label"></label>
+        <input asp-for="Images" class="form-control" id="images" type="files" multiple />
+        <span asp-validation-for="Images" class="text-danger"></span>
+
+    </div>
+    <div class="dragndrop"><h1>Drag and drop</h1></div><br />
+
+    <div class="form-group">
+        <input type="submit" value="新增" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-controller="ManagerProduct" asp-action="List">Back to List</a>
+</div> *@
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $("#btnPlus").click(function () {
+
+                $("ol").append(`<br/>  <li>
+                                            <div class="row">
+                                            <div class="col-md-2">
+                                              <input  type="date" class="form-control col-md-1" id="Dealine" name="Dealine"/>
+                                            </div>
+                                            <div class="col-md-2">
+                                               <input class="form-control col-md-2"  type="datetime-local" id="BeginTime" name="BeginTime" >
+                                            </div>
+                                            <div class=" col-md-2">
+                                                <input class="form-control col-md-2"  type="datetime-local" id="EndTime" name="EndTime" >
+                                            </div>
+                                                    <div class="col-md-1">
+                                                              <select class="form-control col-md-1"  id="DistrictId" value="10" name="DistrictId">
+                                                                 <option value="1">中正區</option>
+                                                                 <option value="2">七堵區</option>
+                                                                 <option value="3">暖暖區</option>
+                                                                 <option value="4">仁愛區</option>
+                                                                 <option value="5">中山區</option>
+                                                                 <option value="6">安樂區</option>
+                                                                 <option value="7">信義區</option>
+                                                                 <option value="8">士林區</option>
+                                                                 <option value="9">大同區</option>
+                                                                 <option value="10">大安區</option>
+                                                                 <option value="11">中山區</option>
+                                                                 <option value="12">中正區</option>
+                                                                 <option value="13">內湖區</option>
+                                                                 <option value="14">文山區</option>
+                                                         </select>
+                                                    </div>
+                                            <div class="col-md-1">
+                                              <select class="form-control col-md-1"  id="StatusId" value="9" name="StatusId">
+                                                 <option value="9">準時開課</option>
+                                                 <option value="10">停課</option>
+                                                 <option value="11">延期</option>
+                                                 </select>
+                                            </div>
+                                                     <div class="col-md-1">
+                                                         <input class="form-control col-md-1" type="text" id="Stock" name="Stock"  />
+                                                    </div>
+                                            <div class="col-md-1">
+                                                 <input class="form-control col-md-1" type="text" id="UnitPrice" name="UnitPrice" />
+                                            </div>
+                                           
+                                            <div class="col-md-2">
+                                                  <input class="form-control col-md-3" type="text" id="Address" name="Address"  />
+                                            </div>
+                                            </div>
+                                            </form>
+                                          </li> `
+                );
+            });
+            $("#btnMinus").click(function () {
+                $('#productDetailList').children('li').last().remove();
+            });
+        });
+
+
+        // upload file
+        "use strict";
+
+        function AJAXSubmit(oFormElement) {
+            var oReq = new XMLHttpRequest();
+            oReq.onload = function (e) {
+                // oFormElement.elements.namedItem("result").value = 'Result:' + this.status + '' + this.statusText;
+            };
+            oReq.open("post", oFormElement.action);
+            oReq.send(new Formdata(oFormElement));
+        }
+
+    </script>
+}
+
+<style>
+    .dragndrop {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+        opacity: 0.1;
+        text-align: center;
+    }
+
+        .dragndrop:hover {
+            background-color: darkgrey;
+            opacity: 0.3;
+        }
+</style>

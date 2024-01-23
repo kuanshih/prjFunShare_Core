@@ -1,0 +1,276 @@
+﻿@model prjFunShare_backend.Models.TProduct
+@using Newtonsoft.Json;
+
+@{
+    ViewData["Title"] = "新增課程";
+
+}
+
+<div><h2>新增課程</h2></div>
+<br/>
+<div><h4>課程資訊</h4></div>
+<hr />
+<form asp-controller="SuperProduct" asp-action="Create" id="ProductForm" enctype="multipart/form-data" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+   
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="form-group col">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="SupplierId" class="control-label"></label>
+                <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="AgeId" class="control-label"></label>
+                <select asp-for="AgeId" class="form-control" asp-items="ViewBag.AgeId"></select>
+                <span asp-validation-for="AgeId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Level" class="control-label"></label>
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>           
+            <div class="form-group col">
+                <label asp-for="Commision" class="control-label"></label>
+                <input asp-for="Commision" class="form-control" />
+                <span asp-validation-for="Commision" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsClass" /> @Html.DisplayNameFor(model => model.IsClass)
+                </label>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Times" class="control-label"></label>
+                <input asp-for="Times" class="form-control" />
+                <span asp-validation-for="Times" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="IntervalId" class="control-label"></label>
+                <select asp-for="IntervalId" class="form-control" asp-items="ViewBag.IntervalId"></select>
+                <span asp-validation-for="IntervalId" class="text-danger"></span>
+            </div>
+           
+        </div>
+        <div class="col-md-6">
+            
+            
+            <div class="form-group col">
+                <label asp-for="ProductIntro" class="control-label"></label>
+                <textarea asp-for="ProductIntro" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="ProductIntro" class="text-danger"></span>
+            </div>           
+            <div class="form-group col">
+                <label asp-for="Features" class="control-label"></label>
+                <textarea asp-for="Features" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Features" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+           
+        </div>
+    </div>
+    <br/>
+        <div><h4>課程詳細資訊</h4></div>
+    <hr />
+    <button type="button" class="btn btn-default btn-sm" id="btnPlus">
+        <img src="~/img/plus.svg" />
+    </button>
+    <button type="button" class="btn btn-default btn-sm" id="btnMinus">
+        <img src="~/img/circle-minus.svg" />
+    </button>
+
+    <ol id="productDetailList">
+
+        <div class="row">
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.Dealine)
+            </div>
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.BeginTime)
+            </div>
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.EndTime)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.Stock)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </div>
+            <div class="form-floating col-md-4">
+                @Html.DisplayNameFor(model => model.Address)
+            </div>
+        </div>
+
+        <li>
+            <div class="row">
+                <div class="col-md-2">                   
+                    <input asp-for="Dealine" value="2023-09-15" class="form-control col-md-1" />                    
+                </div>
+                <div class="col-md-2">                   
+                    <input asp-for="BeginTime" value="2023-09-30T10:00" class="form-control col-md-2" />
+                </div>
+                <div class="col-md-2">
+                    <input asp-for="EndTime" value="2023-09-30T12:00" class="form-control col-md-2" />
+                </div>
+                <div class="col-md-1">
+                    <input asp-for="Stock" value="20" class="form-control col-md-1" />
+                </div>
+                <div class="col-md-1">                   
+                    <input asp-for="UnitPrice" value="2000" class="form-control col-md-1" />
+                </div>
+                <div class=" col-md-4">
+                    <input asp-for="Address" value="105台北市松山區南京東路四段2號" class="form-control col-md-2" />
+                </div>
+            </div>
+        </li>
+    </ol>
+    <br/>
+    <div><h4>圖檔</h4></div>
+    <hr />
+    <div class="form-group">
+        <label asp-for="ImagePath" class="control-label"></label>
+        <input asp-for="ImagePath" name="photo" type="file" class="form-control" />
+        <span asp-validation-for="ImagePath" class="text-danger"></span>
+        <img id="preview-image" src="~/img/NoImage.jpg" alt="example image" class="img-thumbnail" />
+    </div>
+    <br />
+    <div class="form-group">
+        <input type="submit" value="儲存" class="btn btn-outline-primary" />
+        <a class="btn btn-outline-primary" type="button" asp-controller="ManagerProduct" asp-action="List">回上一頁</a>
+        <input type="button" id="btnDemo" value="Demo" class="btn btn-outline-primary" />
+    </div>
+</form> 
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+
+        $('#btnDemo').on('click', function () {
+            $('#ProductName').addClass('active');
+            $('#ProductName').val('秋季體驗｜小小美人魚');           
+            $('#AgeId').addClass('active');
+            $('#AgeId').val('2');
+            $('#Level').addClass('active');
+            $('#Level').val('2'); 
+            $('#Commision').addClass('active');
+            $('#Commision').val('20');
+            $('#ProductIntro').addClass('active');
+            $('#ProductIntro').val('源自英國的美人魚課程  讓孩子運用無盡的想像力  變身成自由穿梭在水中的小小人魚 藉由老師教學說明 透過律動來提升儀態雕碩與體態 並穿著fin在水中練習平衡、引導核心力量 更藉由美人魚課程讓孩子們保持對水的熱愛以及對未知的探索');
+            $('#Note').addClass('active');
+            $('#Note').val('成為美人魚並非一項運動或體育活動本身，但參與這美人魚課程的基礎是對游泳的進一步追求——自由潛水。相信無論是爸爸媽媽、還是孩子，都會看過潛水員使用氧氣瓶在水下停留很長時間。那麼，美人魚課程就是使用自身的力量，不依賴外部幫助進行呼吸。透過訓練身體機能，慢慢使美人魚們可以一次屏住呼吸好幾分鐘，達到自由潛水的效果。');
+            $('#Features').addClass('active');
+            $('#Features').val('美人魚課程源自英國，其讓孩子運用無盡的想像力變身成自由穿梭在水中的小小人魚，透過律動來提升儀態雕碩與體態。孩子會穿著魚尾巴在水中練習平衡、引導核心力量，除了增強身體以外，更藉此讓孩子們保持對水的熱愛以及對未知的探索。課程以穿著設計成美人魚尾巴的單鰭游泳裝為一大特色，除了在水下學習複雜動作外，亦會學習在水下長時間停留。美人魚課程結合自由潛水運動的元素及優雅的動作而成，為新興的一項活動。');
+         })
+        
+        $(document).ready(function () {
+            $("#btnPlus").click(function () {
+
+                $("ol").append(`<br/>  <li>
+                   <div class="row">
+                   <div class="col-md-2">
+                   <input  type="date" class="form-control" value="2023-09-22" id="Dealine" name="Dealine"/>
+                   </div>
+                   <div class="col-md-2">
+                   <input class="form-control"  type="datetime-local" value="2023-10-07T10:00" id="BeginTime" name="BeginTime" >
+                   </div>
+                    <div class=" col-md-2">
+                    <input class="form-control"  type="datetime-local" value="2023-10-07T12:00" id="EndTime" name="EndTime" >
+                    </div>
+                    <div class="col-md-1">
+                    <input class="form-control" type="text" id="Stock" value="20" name="Stock"  />
+                      </div>
+                     <div class="col-md-1">
+                     <input class="form-control" type="text" id="UnitPrice" value="2000" name="UnitPrice" />
+                    </div>
+
+                    <div class="col-md-4">
+                     <input class="form-control" type="text" id="Address" value="105台北市松山區南京東路四段2號" name="Address"  />
+                      </div>
+                      </div>
+                      </form>
+                    </li> `
+                );
+            });
+            $("#btnMinus").click(function () {
+                $('#productDetailList').children('li').last().remove();
+            });
+
+            //判斷登入廠商
+            const supId = @(ViewBag.LoggedId);
+            console.log(supId)
+            const selectSup = document.querySelector('#SupplierId');
+            $('#SupplierId option').each(function () {
+                let thisOption = $(this)
+                if (thisOption.val() == supId) {
+                    thisOption.attr('selected', true);
+                }
+            });
+            $('#Times').attr('disabled', true);
+            $('#IntervalId').attr('disabled', true);
+        });
+
+        const fileInput = document.getElementById('ImagePath');
+        const previewImage = document.getElementById('preview-image');
+
+        fileInput.addEventListener('change', event => {
+            if (event.target.files.length > 0) {
+                previewImage.src = URL.createObjectURL(
+                    event.target.files[0],
+                );
+
+                previewImage.style.display = 'block';
+            }
+
+            // 👇️ reset file input once you're done
+            //fileInput.value = null;
+        });
+
+
+        // upload file
+        "use strict";
+
+        function AJAXSubmit(oFormElement) {
+            var oReq = new XMLHttpRequest();
+            oReq.onload = function (e) {
+                // oFormElement.elements.namedItem("result").value = 'Result:' + this.status + '' + this.statusText;
+            };
+            oReq.open("post", oFormElement.action);
+            oReq.send(new Formdata(oFormElement));
+        }
+
+        //是長期課程
+        $('#IsClass').on('change', function () {
+            $('#IntervalId').prop('disabled', (i, v) => !v);
+            $('#Times').prop('disabled', (i, v) => !v);
+        })
+    </script>
+
+}
+
+<style>
+    .dragndrop {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+        opacity: 0.1;
+        text-align: center;
+    }
+
+        .dragndrop:hover {
+            background-color: darkgrey;
+            opacity: 0.3;
+        }
+</style>

@@ -1,0 +1,57 @@
+﻿@model FunShare_Admin.Models.BonusWrap
+
+@{
+    ViewData["Title"] = "新增紅利";
+}
+
+<h1>新增紅利</h1>
+
+<h4>紅利</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="BonusCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div class="form-group">
+            <label asp-for="PointsId" class="control-label"></label>
+            <input asp-for="PointsId" class="form-control" />
+            <span asp-validation-for="PointsId" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label"></label>
+                <input asp-for="MemberId" id="MemberId"class="form-control" />
+                <span asp-validation-for="MemberId" onClick="return confirm('確定有這個會員?');" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Points" class="control-label"></label>
+                <input asp-for="Points" class="form-control" />
+                <span asp-validation-for="Points" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderId" class="control-label"></label>
+                <input asp-for="OrderId" class="form-control" />
+                <span asp-validation-for="OrderId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="新增紅利" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="BonusList">回上頁</a>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+}

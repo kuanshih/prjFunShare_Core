@@ -1,0 +1,90 @@
+﻿@model prjFunShare_backend.ViewModels.COrderEditViewModel
+@*@model prjFunShare_backend.Models.ManagerOrder.COrderDetail*@
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>訂單修改</h1>
+
+<h4>修改訂單資料</h4>
+<hr />
+<div class="row">
+
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="FOrder_ID" value="@Model.COrder.FOrder_ID" />@*這會害死修改type="hidden"*@
+            <div class="form-group">
+                <label asp-for="COrder.FOrder_ID" class="control-label">訂單編號</label>
+                <input asp-for="COrder.FOrder_ID" class="form-control" disabled />
+                <span asp-validation-for="COrder.FOrder_ID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="COrder.FOrder_Time" class="control-label">訂購時間</label>
+                <input asp-for="COrder.FOrder_Time" class="form-control" disabled />
+                <span asp-validation-for="COrder.FOrder_Time" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="COrder.FOrder_Status" class="control-label">訂單狀態</label>
+                <select class="form-select" name="FOrder_StatusID">
+                    @{
+                        string s1 = "";
+                        foreach (var item in Model.Statusod)
+                        {
+                            if (item.StatusId == Model.COrder.FOrder_StatusID)
+                            {
+                                s1 = "selected";
+                            }
+                            <option value="@item.StatusId" s1>@item.Description</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="COrder.FCustomer_Name" class="control-label">訂購人姓名</label>
+                <input asp-for="COrder.FCustomer_Name" class="form-control" />
+                <span asp-validation-for="COrder.FCustomer_Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="COrder.FProduct_Name" class="control-label">產品名稱</label>
+                <input asp-for="COrder.FProduct_Name" class="form-control" />
+                <span asp-validation-for="COrder.FProduct_Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="COrder.FProduct_UnitPrice" class="control-label">產品金額</label>
+                <input asp-for="COrder.FProduct_UnitPrice" class="form-control" disabled />
+
+            </div>
+            <div class="form-group">
+                <label asp-for="COrder.FOrderPay_Status" class="control-label">付款狀態</label>
+                <select class="form-select" name="FOrderPay_StatusID">
+                    @{
+                        string s2 = "";
+                        foreach (var item in Model.Statuspay)
+                        {
+                            if (item.StatusId == Model.COrder.FOrderPay_StatusID)
+                            {
+                                s2 = "selected";
+                            }
+                            <option value="@item.StatusId" s2>@item.Description</option>
+                        }
+                    }
+                </select>
+            </div>
+            <tr class="form-group">
+                <td>
+                    <input type="submit" value="儲存修改" class="btn btn-primary" />
+                </td>
+                <td><a asp-action="OrderPreview" class="btn btn-info">回上頁</a></td>
+            </tr>
+
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

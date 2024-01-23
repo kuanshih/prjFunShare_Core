@@ -1,0 +1,71 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.Comment>
+
+@{
+    ViewData["Title"] = "評論總覽";
+    ViewBag.Action = "CommentIndex";
+}
+
+<h1>評論一覽</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-primary">新增評論</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                評論內容
+            </th>
+            <th>
+                評分
+            </th>
+            <th>
+                時間
+            </th>
+            <th>
+                圖片
+            </th>
+            <th>
+                會員
+            </th>
+            <th>
+                訂購課程
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Review)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                <img src="~/img/commentimg/@item.ImagePath" width="150"/>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.OrderDetail.First().ProductDetail.Product.ProductName)
+            </td>
+                <td >
+                    <a href="@Url.Action("Edit" , "ManagerComments", new { id=item.CommentId })" class="btn bg-transparent text-success">
+                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                    </a>|
+                    <a href="@Url.Action("Delete" , "ManagerComments", new { id=item.CommentId })" class="btn bg-transparent text-danger"
+                       onclick="return confirm('確定要刪除嗎?')">
+                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                    </a>
+                </td>
+         
+        </tr>
+}
+    </tbody>
+</table>

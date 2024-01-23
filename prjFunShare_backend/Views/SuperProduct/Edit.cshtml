@@ -1,0 +1,271 @@
+﻿@model prjFunShare_backend.Models.TProduct
+
+
+@{
+    ViewData["Title"] = "編輯課程";
+}
+
+<div><h2>編輯課程</h2></div>
+<br />
+<div><h4>課程資訊</h4></div>
+<hr />
+<form asp-controller="SuperProduct" asp-action="Edit" id="ProductForm" enctype="multipart/form-data" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @*  <div class="form-group">
+    <label asp-for="ProductId" class="control-label"></label>
+    <input asp-for="ProductId" class="form-control" />
+    <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div> *@
+    <input type="hidden" name="ProductID" value="@Model.ProductId" />
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="form-group col">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="SupplierId" class="control-label"></label>
+                <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="AgeId" class="control-label"></label>
+                <select asp-for="AgeId" class="form-control" asp-items="ViewBag.AgeId"></select>
+                <span asp-validation-for="AgeId" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Level" class="control-label"></label>
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Commision" class="control-label"></label>
+                <input asp-for="Commision" class="form-control" />
+                <span asp-validation-for="Commision" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsClass" /> @Html.DisplayNameFor(model => model.IsClass)
+                </label>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Times" class="control-label"></label>
+                <input asp-for="Times" class="form-control" />
+                <span asp-validation-for="Times" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="IntervalId" class="control-label"></label>
+                <select asp-for="IntervalId" class="form-control" asp-items="ViewBag.IntervalId"></select>
+                <span asp-validation-for="IntervalId" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+
+            <div class="form-group col">
+                <label asp-for="ProductIntro" class="control-label"></label>
+                <textarea asp-for="ProductIntro" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="ProductIntro" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Features" class="control-label"></label>
+                <textarea asp-for="Features" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Features" class="text-danger"></span>
+            </div>
+            <div class="form-group col">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    <div><h3>課程詳細資訊</h3></div>
+    <hr />
+    <ol id="productDetailList">
+        <div class="row">
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.Dealine)
+            </div>
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.BeginTime)
+            </div>
+            <div class="form-floating col-md-2">
+                @Html.DisplayNameFor(model => model.EndTime)
+            </div>            
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.Stock)
+            </div>
+            <div class="form-floating col-md-1">
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </div>            
+            <div class="form-floating col-md-3">
+                @Html.DisplayNameFor(model => model.Address)
+            </div>
+            <div class="form-floating col-md-1">
+                編輯
+            </div>
+        </div>
+@foreach(var item in Model.ProductDetail){
+            <li>
+                <div class="row">
+                    <input type="hidden" name="ProductDetailId" value="@Model.ProductDetailId" />
+                    <input type="hidden" name="ProductID" value="@Model.ProductId" />
+                    <div class="form-floating col-md-2">
+                        @Html.DisplayFor(modelItem => item.Dealine)
+
+                    </div>
+                    <div class="form-floating col-md-2">
+                        @Html.DisplayFor(modelItem => item.BeginTime)
+                       @*  @Html.EditorFor(modelItem => item.BeginTime, new { id=item.ProductDetailId} ) *@
+                    </div>
+                    <div class="form-floating col-md-2">
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                       @*  @Html.EditorFor(modelItem => item.EndTime, new { id=item.ProductDetailId} ) *@
+                    </div>
+                    
+                    <div class="form-floating col-md-1">
+                        @Html.DisplayFor(modelItem => item.Stock)
+                        @* @Html.EditorFor(modelItem => item.Stock, new { id=item.ProductDetailId} ) *@
+                    </div>
+
+                    <div class="form-floating col-md-1">
+                        @Html.DisplayFor(modelItem => item.UnitPrice)
+                        @* @Html.EditorFor(modelItem => item.UnitPrice, new { id=item.ProductDetailId} ) *@
+                    </div>
+
+                    <div class="form-floating col-md-3">
+                        @Html.DisplayFor(modelItem => item.Address)
+                        @* @Html.EditorFor(modelItem => item.Address, new { id=item.ProductDetailId} ) *@
+                    </div>
+                    <div class="form-floating col-md-1">
+                        @Html.ActionLink("編輯", "edit","ManagerProductDetail", new { id=item.ProductDetailId })
+                    </div>
+                </div>
+            </li>
+        }        
+    </ol>
+    <br />
+    <div><h4>圖檔</h4></div>
+    <hr />
+    <div class="form-group">
+        <label asp-for="ImagePath" class="control-label"></label>
+        <input asp-for="ImagePath"  name="photo" type="file" class="form-control" />
+        <span asp-validation-for="ImagePath" class="text-danger"></span>
+        <input asp-for="ImageId" class="form-control" hidden />
+        <img id="preview-image" src="~/img/product/@Model.ImageList.ImagePath" alt="example image" class="img-thumbnail" />
+        
+    </div>
+    <br />
+    <div class="form-group">
+        <input type="submit" value="儲存" class="btn btn-outline-primary" />
+        <a class="btn btn-outline-primary" type="button" asp-controller="ManagerProduct" asp-action="List">回上一頁</a>
+    </div>
+</form>
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // $("#btnPlus").click(function () {
+
+            //     $("ol").append(`<br/>  <li>
+            //                <div class="row">
+            //                <div class="col-md-2">
+            //                <input  type="date" class="form-control" value="2023-09-22" id="Dealine" name="Dealine"/>
+            //                </div>
+            //                <div class="col-md-2">
+            //                <input class="form-control"  type="datetime-local" value="2023-10-07T10:00" id="BeginTime" name="BeginTime" >
+            //                </div>
+            //                 <div class=" col-md-2">
+            //                 <input class="form-control"  type="datetime-local" value="2023-10-07T12:00" id="EndTime" name="EndTime" >
+            //                 </div>
+            //                 <div class="col-md-1">
+            //                 <input class="form-control" type="text" id="Stock" value="20" name="Stock"  />
+            //                   </div>
+            //                  <div class="col-md-1">
+            //                  <input class="form-control" type="text" id="UnitPrice" value="2000" name="UnitPrice" />
+            //                 </div>
+
+            //                 <div class="col-md-4">
+            //                  <input class="form-control" type="text" id="Address" value="105台北市松山區南京東路四段2號" name="Address"  />
+            //                   </div>
+            //                   </div>
+            //                   </form>
+            //                 </li> `
+            //     );
+            // });
+            // $("#btnMinus").click(function () {
+            //     $('#productDetailList').children('li').last().remove();
+            // });
+
+            //判斷登入廠商
+            const supId = @(ViewBag.LoggedId);
+            console.log(supId)
+            const selectSup = document.querySelector('#SupplierId');
+            $('#SupplierId option').each(function () {
+                let thisOption = $(this)
+                if (thisOption.val() == supId) {
+                    thisOption.attr('selected', true);
+                }
+            });
+            $('#Times').attr('disabled', true);
+            $('#IntervalId').attr('disabled', true);
+        });
+        //是長期課程
+        $('#IsClass').on('change', function () {
+            $('#IntervalId').prop('disabled', (i, v) => !v);
+            $('#Times').prop('disabled', (i, v) => !v);
+        })
+
+        const fileInput = document.getElementById('ImagePath');
+        const previewImage = document.getElementById('preview-image');
+
+        fileInput.addEventListener('change', event => {
+            if (event.target.files.length > 0) {
+                previewImage.src = URL.createObjectURL(
+                    event.target.files[0],
+                );
+
+                previewImage.style.display = 'block';
+            }
+
+            // 👇️ reset file input once you're done
+            //fileInput.value = null;
+        });
+
+        // upload file
+        //"use strict";
+
+        function AJAXSubmit(oFormElement) {
+            var oReq = new XMLHttpRequest();
+            oReq.onload = function (e) {
+                // oFormElement.elements.namedItem("result").value = 'Result:' + this.status + '' + this.statusText;
+            };
+            oReq.open("post", oFormElement.action);
+            oReq.send(new Formdata(oFormElement));
+        }
+    </script>
+    }
+
+<style>
+    .dragndrop {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+        opacity: 0.1;
+        text-align: center;
+    }
+
+        .dragndrop:hover {
+            background-color: darkgrey;
+            opacity: 0.3;
+        }
+</style>
+

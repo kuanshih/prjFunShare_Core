@@ -1,0 +1,384 @@
+﻿@model prjFunShare_Core.Models.CustomerInfomation
+@{
+    ViewData["Title"] = "FamilyCV";
+}
+
+<div class="col-md-12">
+    <input type="button" onclick="history.back()" value="返回" class="btn btn-success" , style="margin:5px"></input>
+</div>
+
+<div class="border d-flex justify-content-center align-items-center" style="width:auto; height:auto">
+    <div class="col-md-12 row g-3">
+        <h2 class="text-center">家人履歷</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="col-md-6">
+            <div class="card col-md-12 d-flex justify-content-center" style="padding:30px; margin:10px; width:auto; height:auto">
+                <div class="col-md-6 d-flex justify-content-start flex-column" style="display: flex; align-items: center; float:left; margin:10px; width:auto; height:auto">
+                    <h2>@Model.Name</h2>
+                    <h2 id="BirthDate">@(((DateTime)Model.BirthDate).ToString("yyyy-MM-dd"))</h2>
+                    <h2 id="age"></h2>
+                    @{
+                        if (ViewBag.totaltimes != 0)
+                        {
+                            <h4 id="total">已參加過 @ViewBag.totaltimes 種課程及活動</h4>
+                        }
+                        else
+                        {
+                            <h4 id="total">尚未參加過任何課程及活動</h4>
+                        }
+                    }
+                    
+                </div>
+                <hr />
+                <div class="col-md-6 d-flex justify-content-start flex-column" style="display: flex; align-items: center; float:left; margin:10px; width:auto; height:auto">
+                    <h3>
+                        學習紀錄
+@* 
+                        <span data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="關於" id="info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                            </svg>
+                        </span>
+ *@
+                    </h3>
+
+                    <div class="accordion text-left col-md-12" id="learningrecord">
+                        <ul>
+                            <li>
+                                <a href="#" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="關於" id="info">第一項說明</a>
+                                <div class="accordion-content">
+                                    <ul>
+                                        <li>1</li>
+                                        <li>2</li>
+                                        <li>3</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="關於" id="info2">第二項說明</a>
+                                <div class="accordion-content">
+                                    <ul>
+                                        <li>4</li>
+                                        <li>5</li>
+                                        <li>6</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#" title="">第三項說明</a>
+                                <div class="accordion-content">
+                                    <ul>
+                                        <li>7</li>
+                                        <li>8</li>
+                                        <li>9</li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card col-md-12 d-flex justify-content-start" style="padding:30px; margin:10px; width:auto; height:auto">
+                <div class="col-md-6 d-flex justify-content-start flex-column" style="display: flex; align-items: center; float:left; margin:10px; width:auto; height:auto">
+                    <h3>能力圖</h3>
+                    <div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <hr />
+                <div class="col-md-6 d-flex justify-content-start flex-column" style="display: flex; align-items: center; float:left; margin:10px; width:auto; height:auto">
+                    <h3>徽章成就</h3>
+                    <div id="badge">
+                        @* <img src="~/img/achieve/abc.svg" style="width:50px; height:50px; margin:10px" title="測試" />
+                        <img src="~/img/achieve/actor.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/airplane.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/awards.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/basketball.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/chess.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/cooking.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/discover.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/diving.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/golf.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/guitar.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/hiking.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/idea.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/kayak.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/music.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/nature.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/note.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/painting.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/prize.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/puzzle.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/rainbow.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/science.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/sport.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/think.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/tourist.svg" style="width:50px; height:50px; margin:10px" />
+                        <img src="~/img/achieve/violin.svg" style="width:50px; height:50px; margin:10px" /> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <style>
+        .tooltip-inner {
+            max-width: 250px;
+            /* If max-width does not work, try using width instead */
+            width: 250px;
+        }
+    </style>
+}
+@section Scripts{
+    <script src="https://cdn.staticfile.org/Chart.js/3.9.1/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script>
+
+        // const info = document.getElementById("info");
+        // function loadinfo() {
+        //     info.setAttribute("data-bs-title", "能力計算公式");
+
+        //     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        //     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        // }
+        // loadinfo();
+
+        // let datavalue;
+        function loadAbilityValue() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `@Url.Content("/api/getAbilityValue")?memberid=${@Model.MemberId}`);
+            xhr.send();
+            xhr.addEventListener('load', () => {
+                const datas = JSON.parse(xhr.responseText);
+                // console.log("datas = " + datas);
+                // datavalue = data;
+                //百分比不做了
+                // let total = datas[0] + datas[1] + datas[2] + datas[3] + datas[4] + datas[5];
+                // console.log("total = " + total);
+                // let percent = datas.map(item => {
+                //     item = item / total;
+                //     console.log("item = " + item);
+                //     return item;
+                // });
+                // console.log("percent = " + percent);
+                const ctx = document.getElementById('myChart');
+                const data = {
+                    labels: ['身體動作與健康', '美感', '情緒', '社會', '語文', '認知'],
+                    datasets: [{
+                        label: '能力值',
+                        data: datas,
+                        fill: true,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        pointBackgroundColor: 'rgb(255, 99, 132)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(255, 99, 132)'
+                    }]
+                    //   }, {
+                    //       label: '第二个数据集',
+                    //       data: [28, 48, 40, 19, 96, 100],
+                    //       fill: true,
+                    //       backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    //       borderColor: 'rgb(54, 162, 235)',
+                    //       pointBackgroundColor: 'rgb(54, 162, 235)',
+                    //       pointBorderColor: '#fff',
+                    //       pointHoverBackgroundColor: '#fff',
+                    //       pointHoverBorderColor: 'rgb(54, 162, 235)'
+                    // }]
+                };
+                const config = {
+                    type: 'radar',
+                    data: data,
+                    options: {
+                        responsive: true, // 设置图表为响应式，根据屏幕窗口变化而变化
+                        maintainAspectRatio: false,// 保持图表原有比例
+                        elements: {
+                            line: {
+                                borderWidth: 3 // 设置线条宽度
+                            }
+                        },
+                        scales: {       //刻度控制項目
+                            r: {       //r軸，只要繞一圈的都適用r，折線圖長條圖則適用x軸、y軸
+                                beginAtZero: true,       //數值是否從0開始依比例繪製
+                                min: 0,                //r軸數值的最小值
+                                // max: 100,       //r軸數值的最大值
+                            }
+                        },
+                        plugins: {             //額外項目
+                            legend: {       //腳色的標籤
+                                display: false       //要不要顯示標籤
+                            },
+                        }
+                    }
+                }
+                const myChart = new Chart(ctx, config);
+            })
+        }
+        loadAbilityValue()
+        // let datavalue = [65, 59, 90, 81, 56, 40]
+        // let datavalue = [16, 3, 0, 0, 0, 0]
+        // console.log("datavalue = " + datavalue);
+
+        const learningrecord = document.querySelector('#learningrecord');
+        let k = 1;
+        let CategoryName;
+        async function loadCategory() {
+            const response = await fetch(`@Url.Content("/api/getCategory")`)
+            const datas = await response.json();
+            const categories = datas.map(category =>
+                `<ul>
+                        <li>
+                                    <a href="#" title="" data-bs-toggle="tooltip" data-bs-placement="right" id="${category}">${category}</a>
+                            <div class="accordion-content">
+                                 <ul id="category${k++}">
+                                </ul>
+                            </div>
+                        </li>
+                </ul>
+                        `);
+            CategoryName = datas.map(category => category).join(",").split(",");
+            learningrecord.innerHTML = categories.join("");
+            // console.log(CategoryName);
+            loadRecord();
+            setAccordion();
+        }
+        loadCategory();
+
+        const total = document.querySelector('#total');
+        let totalTimes = 0;
+        function loadRecord() {
+            for (let m = 1; m < k; m++) {
+                const nowcategory = document.getElementById("category" + m);
+                const categorylink = document.getElementById(`${CategoryName[m-1]}`)
+                async function loadLearningRecord() {
+                    const response = await fetch(`@Url.Content("/api/getLearningRecord")?memberid=${@Model.MemberId}&category=${CategoryName[m-1]}`)
+                    const datas = await response.json();
+                    const records = datas.map(record => `<li>${record}</li>`);
+                    const count = datas.length;
+                    // totalTimes += count;
+                    // console.log(categorylink.innerText);
+                    categorylink.innerText += `(${count})`;
+                    if (count != 0) {
+                        nowcategory.innerHTML = records.join("");
+                    }
+                    // console.log(totalTimes);
+                    // if (totalTimes != 0) {
+                    //     total.innerHTML = `已參加過${totalTimes}種課程及活動`;
+                    // }
+                    // else {
+                    //     total.innerHTML = `尚未參加過任何課程及活動`;
+                    // }
+                }
+                loadLearningRecord();
+
+                async function loadCategoryAbility() {
+                    const response = await fetch(`@Url.Content("/api/getCategoryAbility")?category=${CategoryName[m - 1]}`)
+                    const abilitys = await response.json();
+                    const ability = abilitys.join(" / ");
+                    // console.log(ability);
+                    categorylink.setAttribute("data-bs-title", ability);
+                    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+                    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+                }
+                loadCategoryAbility();
+            }
+
+        }
+
+        /*-----------------------------------*/
+        //////////// Accordion設定 ////////////
+        /*-----------------------------------*/
+
+        $('.accordion').each(function () {
+            $(this).find('.accordion-content').hide();
+            var _accordionItem = $(this).children('ul').children('li').children('a');
+            _accordionItem.each(function () {
+                function accordion(e) {
+                    $(this).parent('li').siblings().children('a').removeClass('active');
+                    $(this).toggleClass('active');
+                    $(this).parent('li').siblings().children('.accordion-content').slideUp();
+                    $(this).next('.accordion-content').slideToggle();
+                    e.preventDefault();
+                }
+                $(this).click(accordion);
+                $(this).keyup(accordion);
+            });
+        });
+
+        function setAccordion() {
+            $('.accordion').each(function () {
+                $(this).find('.accordion-content').hide();
+                var _accordionItem = $(this).children('ul').children('li').children('a');
+                _accordionItem.each(function () {
+                    function accordion(e) {
+                        $(this).parent('li').siblings().children('a').removeClass('active');
+                        $(this).toggleClass('active');
+                        $(this).parent('li').siblings().children('.accordion-content').slideUp();
+                        $(this).next('.accordion-content').slideToggle();
+                        e.preventDefault();
+                    }
+                    $(this).click(accordion);
+                    $(this).keyup(accordion);
+                });
+            });
+        }
+
+        const badge = document.querySelector('#badge');
+        let i = 1;
+        let imgFileName;
+        async function loadBadge() {
+            const response = await fetch(`@Url.Content("/api/getBadge")?memberid=${@Model.MemberId}`)
+            const datas = await response.json();
+            // console.log(datas);
+            //src要去掉~才能使用 <img src="~/img/achieve/abc.svg" style = "width:50px; height:50px; margin:10px" />
+            const icons = datas.map(icon => `<img src="/img/achieve/${icon}" style="width:50px; height:50px; margin:10px" id="badge${i++}"/>`)
+            imgFileName = datas.map(name => name).join(",").split(",");
+            // console.log(icons);
+            // console.log(imgFileName);
+            badge.innerHTML = icons.join("");
+            loadDescription();
+        }
+        loadBadge();
+
+        function loadDescription() {
+            for (let j = 1; j < i; j++) {
+                const nowbadge = document.getElementById("badge" + j);
+                async function loadBadgeDescription() {
+                    const response2 = await fetch(`@Url.Content("/api/getBadgeDescription")?badgeFileName=${imgFileName[j - 1]}`)
+                    const description = await response2.json();
+                    nowbadge.setAttribute("title", description);
+                    // console.log(description);
+                }
+                loadBadgeDescription();
+            }
+        }
+
+        //計算年齡
+        const age = document.querySelector('#age');
+        const BirthDate = document.querySelector('#BirthDate');
+        const userBirthDate = BirthDate.innerHTML
+
+        const calculateAge = (birthday) => {
+            const ageDifMs = Date.now() - new Date(birthday).getTime();
+            const ageDate = new Date(ageDifMs);
+            return Math.abs(ageDate.getUTCFullYear() - 1970);
+        }
+
+        const userAge = calculateAge(userBirthDate);
+        // console.log(userBirthDate)
+        // console.log(userAge)
+
+        age.innerHTML += `${userAge}歲`;
+
+
+    </script>
+}

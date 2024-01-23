@@ -1,0 +1,231 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.Supplier>
+
+@{
+    ViewData["Title"] = "供應商總覽";
+    ViewBag.Action = "SupplierList";
+
+}
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+    @* <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"> *@
+}
+
+
+    <h1>供應商總覽</h1>
+    <p>
+        <a asp-action="Create" class="btn btn-outline-primary">新增供應商</a>
+    </p>
+
+    <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list-tab-pane" type="button" role="tab" aria-controls="list-tab-pane" aria-selected="true">供應商資訊</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="checklist-tab" data-bs-toggle="tab" data-bs-target="#checklist-tab-pane" type="button" role="tab" aria-controls="checklist-tab-pane" aria-selected="false">審核狀態</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="list-tab-pane" role="tabpanel" aria-labelledby="list-tab" tabindex="0">
+        <table id="supplier-table" class="table table-hover table-sm" style="width:100%">
+                <thead class="table-light">
+                    <tr>
+                        <th>序號</th>
+                        <th>統一編號 @* @Html.DisplayNameFor(model => model.TaxId) *@</th>
+                        <th>公司名稱 @* @Html.DisplayNameFor(model => model.SupplierName) *@</th>
+                        <th>電話 @* @Html.DisplayNameFor(model => model.SupplierPhone) *@</th>
+                        @* <th>@Html.DisplayNameFor(model => model.Email)</th> *@
+                        <th>
+                            城市@*@Html.DisplayNameFor(model => model.City.CityName)*@
+                        </th>
+                        @* <th>@Html.DisplayNameFor(model => model.SupplierPhoto)</th> *@
+                        <th>傳真 @* @Html.DisplayNameFor(model => model.Fax) *@</th>
+                        @* <th>@Html.DisplayNameFor(model => model.Password)</th> *@
+                        <th>聯絡人 @* @Html.DisplayNameFor(model => model.ContactPerson) *@</th>
+                        <th>LOGO @* @Html.DisplayNameFor(model => model.LogoImage) *@</th>
+                        <th>簡介 @* @Html.DisplayNameFor(model => model.Description) *@</th>
+                        <th>狀態 @* @Html.DisplayNameFor(model => model.Status.Description) *@ </th>
+                        <th>地址 @* @Html.DisplayNameFor(model => model.Address) *@</th>
+                        <th>修改/刪除</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int count = 0;
+                        foreach (var item in Model)
+                        {
+                            count++;
+                                <tr>
+                                    <td>@count</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TaxId)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SupplierPhone)</td>
+                                    @*<td>@Html.DisplayFor(modelItem => item.Email)</td>*@
+                                    <td>@Html.DisplayFor(modelItem => item.City.CityName)</td>
+                                    @*<td>@Html.DisplayFor(modelItem => item.SupplierPhoto)</td>*@
+                                    <td>@Html.DisplayFor(modelItem => item.Fax)</td>
+                                    @*<td>@Html.DisplayFor(modelItem => item.Password)</td>*@
+                                    <td>@Html.DisplayFor(modelItem => item.ContactPerson)</td>
+                                    <td>
+                                        @if (item.LogoImage != null)
+                                    {
+                                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.LogoImage)" style="width: 100px; height: auto;" />
+                                    }
+                                    </td>
+                                    <td width="200">
+                                        <div class="accordion" id="descriptionAccordion_@count">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="heading_@count">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@count" aria-expanded="true" aria-controls="collapse_@count">
+                                                        簡介
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse_@count" class="accordion-collapse collapse" aria-labelledby="heading_@count" data-bs-parent="#descriptionAccordion_@count">
+                                                    <div class="accordion-body">
+                                                        @Html.DisplayFor(modelItem => item.Description)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                            <td width="80">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                            <td width="100">
+                                <a href="@Url.Action("Edit" , "ManagerSupplier", new { id=item.SupplierId })" class="btn bg-transparent text-success">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                        </a>|
+                                <a href="@Url.Action("Delete" , "ManagerSupplier", new { id=item.SupplierId })" class="btn bg-transparent text-danger"
+                                           onclick="return confirm('確定要刪除嗎?')">
+                                    <i class="fa-solid fa-trash-can fa-lg"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="checklist-tab-pane" role="tabpanel" aria-labelledby="checklist-tab" tabindex="0">
+                <form method="post" action="@Url.Action("CheckSuppliersBulkApproved")">
+                    
+                    <div class="table-responsive">
+                <table id="supplier-table2" class="table table-hover table-sm" style="width:100%">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>序</th>
+                                    <th>批次審核<button type="submit" class="btn btn-outline-success" onclick="confirmAndSubmit(event);"><i class="fa-solid fa-check-double"></i></button></th>
+                                    <th>統一編號 @* @Html.DisplayNameFor(model => model.TaxId) *@</th>
+                                    <th>公司名稱 @* @Html.DisplayNameFor(model => model.SupplierName) *@</th>
+                                    <th>狀態 @* @Html.DisplayNameFor(model => model.Status.Description) *@</th>
+                                    <th>審核</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    count = 0;
+                                    foreach (var item in Model)
+                                    {
+                                        if (item.StatusId == 16)
+                                        {
+                                            count++;
+                                                <tr>
+                                                    <td>@count</td>
+                                                    <td> <input type="checkbox" id="SupplierId" name="SupplierId" value="@item.SupplierId"></td>
+                                                    <td>@Html.DisplayFor(modelItem => item.TaxId)</td>
+                                                    <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                                                    <td>@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                                                    <td>
+                                            <a href="@Url.Action("CheckSupplierApproved" , "ManagerSupplier", new { id=item.SupplierId })" class="btn bg-transparent text-primary
+                                            onclick = "return confirm ('確定要通過嗎？')">
+                                                <i class="fa-solid fa-circle-check fa-2xl"></i>
+                                            </a>|
+                                            <a href="@Url.Action("CheckSupplierReject" , "ManagerSupplier", new { id=item.SupplierId })" class="btn bg-transparent text-danger"
+                                               onclick="return confirm ('確定要不通過嗎？')">
+                                                <i class="fa-solid fa-circle-xmark fa-2xl"></i>
+                                            </a>
+                                                    </td>
+                                                </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </form>      
+        </div>
+    </div>
+
+
+
+
+
+
+
+@section Scripts{
+    <!-- 引入 jQuery 和 DataTables 的 JavaScript 檔案 -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script>
+        //TODO..
+        new DataTable('#supplier-table', {
+            scrollX: true,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            responsive: true,
+        });
+        new DataTable('#supplier-table2', {
+
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            dom: 'lBfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            responsive: true,
+        });
+       
+   
+   
+        // 刪除提醒測試中
+        function sweetConfirm(event) {
+            event.preventDefault();
+            console.log(this.href)
+            Swal.fire({
+                title: '確定要刪除嗎？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '確定'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        '成功刪除',
+                        '已刪除此供應商',
+                        'success'
+                    )
+                }
+            })
+        }
+
+        //變更套件樣式
+        document.addEventListener("DOMContentLoaded", function (event) {
+            $('.dt-buttons button').addClass('btn btn-outline-primary');
+        });
+        
+    </script>
+}

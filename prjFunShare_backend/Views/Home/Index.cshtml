@@ -1,0 +1,188 @@
+﻿@model prjFunShare_backend.ViewModels.CIndexInfoViewModel
+@{
+    ViewData["Title"] = "首頁";
+    ViewBag.Action = "Index";
+}
+
+<section>
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between px-md-1">
+                        <div>
+                            <h3 class="text-danger">@Model.OrderCount</h3>
+                            <p class="mb-0 fw-bold">訂單總數</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fa-solid fa-file-invoice-dollar text-danger fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between px-md-1">
+                        <div>
+                            <h3 class="text-warning">NT$ @Model.OrderAmount.ToString("###,###,###")</h3>
+                            <p class="mb-0 fw-bold">訂單總金額</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fa-solid fa-coins text-warning fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 mb-4">
+            <div class="card shadow border-1">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between px-md-1">
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line text-success fa-3x"></i>
+                        </div>
+                        <div class="text-end">
+                            <h3 class="text-success">@Model.MoM.ToString("P")</h3>
+                            <p class="mb-0 fw-bold">月營收成長率（MoM）</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12 mb-4">
+            <div class="card shadow border-1">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between px-md-1">
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line text-primary fa-3x"></i>
+                        </div>
+                        <div class="text-end">
+                            <h3 class="text-primary">@Model.YoY.ToString("P")</h3>
+                            <p class="mb-0 fw-bold">年營收成長率（YoY）</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-3 col-sm-6 col-12 mb-4">
+                <div class="card shadow border-1">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-md-1">
+                            <div class="align-self-center">
+                                <i class="fa-solid fa-calendar-days text-info fa-3x"></i>
+                            </div>
+                            <div class="text-end">
+                                <h3 class="text-info">@Model.ProductCount</h3>
+                                <p class="mb-0 fw-bold">課程總數</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12 mb-4">
+                <div class="card shadow border-1">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between px-md-1">
+                            <div class="align-self-center">
+                                <i class="fa-solid fa-calendar-days text-success fa-3x"></i>
+                            </div>
+                            <div class="text-end">
+                                <h3 class="text-success">@Model.ProductOnSaleCount</h3>
+                                <p class="mb-0 fw-bold">銷售中課程</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @{
+            //管理員
+            if (Context.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+            {
+                <div class="col-xl-3 col-sm-6 col-12 mb-4">
+                    <div class="card shadow border-1">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div class="align-self-center">
+                                    <i class="fa-solid fa-suitcase text-success fa-3x"></i>
+                                </div>
+                                <div class="text-end">
+                                    <h3 class="text-success">@Model.SupplierCount</h3>
+                                    <p class="mb-0 fw-bold">廠商總數</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12 mb-4">
+                    <div class="card shadow border-1">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div class="align-self-center">
+                                    <i class="fa-solid fa-suitcase text-danger fa-3x"></i>
+                                </div>
+                                <div class="text-end">
+                                    <h3 class="text-danger">@Model.SupplierToBeApproved</h3>
+                                    <p class="mb-0 fw-bold">待審核廠商</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            //廠商登入
+            else
+            {
+                string prods = "";
+                for(int i = 0; i < Model.ProductName.Length; i++)
+                {
+                    if (i == Model.ProductName.Length - 1)
+                    {
+                        prods += (i+1)+"." + Model.ProductName[i];
+                    }
+                    else
+                    {
+                        prods += (i + 1) + "." + Model.ProductName[i] + "/";
+                    }
+                }
+                <div class="col-xl-6 col-sm-12 col-12 mb-4">
+                    <div class="card shadow border-1">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between px-md-1">
+                                <div class="align-self-center">
+                                    <i class="fa-solid fa-trophy text-danger fa-3x"></i>
+                                </div>
+                                <div class="text-end">
+                                    <h3 class="text-danger">@prods</h3>
+                                    <p class="mb-0 fw-bold">課程TOP3</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        </div>
+</section>
+<!--Section: Minimal statistics cards-->
+<div>
+    @{
+        if (Model.Supplier != null)
+        {
+            <div class="p-5 mb-4 bg-light rounded-3">
+                <div class="align-content-start justify-content-start py-5">
+                    <h1 class="display-5 fw-bold">@Model.Supplier.SupplierName</h1>
+                    <p class="col-md-8 fs-4">
+                        @Model.Supplier.Description
+                    </p>
+                    <a class="btn btn-primary btn-lg" href="@Url.Action("Edit", "ManagerSupplier", new{id = Model.Supplier.SupplierId})">編輯廠商資料</a>
+                </div>
+            </div>
+        }
+    }
+
+</div>
+

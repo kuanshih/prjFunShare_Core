@@ -1,0 +1,114 @@
+﻿@model prjFunShare_backend.Models.ProductWrap
+
+@{
+    ViewData["Title"] = "課程編輯";
+}
+
+<h1>課程編輯</h1>
+<p align="right">
+    <a class="btn btn-outline-danger" type="button" asp-action="ChangeStatus">產品下架</a>
+    <a class="btn btn-outline-primary" type="button" asp-controller="ManagerProductDetail" asp-action="List">課程明細一覽表</a>
+    <a class="btn btn-outline-primary" type="button" asp-controller="ManagerProductDetail" asp-action="Edit">編輯課程明細</a>
+    <a class="btn btn-outline-primary" type="button" asp-controller="ManagerPhoto" asp-action="DragandDrop">編輯圖片</a>
+    <a class="btn btn-outline-primary" type="button" asp-action="List">回上一頁</a>
+</p>
+
+<h4>課程資訊</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <input asp-for="ProductId" class="form-control" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div> *@
+            <input type="hidden" value="@Model.ProductId" name="ProductID" />
+
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductIntro" class="control-label"></label>
+                <input asp-for="ProductIntro" class="form-control" />
+                <span asp-validation-for="ProductIntro" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SupplierId" class="control-label">廠商</label>
+                <input asp-for="SupplierId" class="form-control" />
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AgeId" class="control-label">分齡</label>
+                <input asp-for="AgeId" class="form-control" />
+                <span asp-validation-for="AgeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleasedTime" class="control-label"></label>
+                <input asp-for="ReleasedTime" class="form-control" />
+                <span asp-validation-for="ReleasedTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Times" class="control-label"></label>
+                <input asp-for="Times" class="form-control" />
+                <span asp-validation-for="Times" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IntervalId" class="control-label"></label>
+                <input asp-for="IntervalId" class="form-control" />
+                <span asp-validation-for="IntervalId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <input asp-for="Note" class="form-control" />
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusId" class="control-label">狀態</label>
+                <input asp-for="StatusId" class="form-control" />
+                <span asp-validation-for="StatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsClass" /> @Html.DisplayNameFor(model => model.IsClass)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Commision" class="control-label"></label>
+                <input asp-for="Commision" value="20" class="form-control" />
+                <span asp-validation-for="Commision" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Features" class="control-label"></label>
+                <input asp-for="Features"  class="form-control" />
+                <span asp-validation-for="Features" class="text-danger"></span>
+            </div>
+            </br>
+            <div class="form-group">
+                <input type="submit" value="更新並儲存" class="btn btn-primary" />
+                
+            </div>
+        </form>
+    </div>
+</div>
+</br>
+<div>
+    <a asp-action="List">回上頁</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

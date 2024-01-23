@@ -1,0 +1,171 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "FUNShareContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "prjFunShare_Core",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Achievement]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AchievementList]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Advertise_Order]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Advertise_Product]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Advertise_Product_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Age]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Bonus]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Chat]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[City]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Comment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Coupon_List]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Customer_Infomation]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[District]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ECPay]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Image_List]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Interest]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Interval_List]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Login_Log]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Member_Coupon]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MemberAchievement]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Message]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Order]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Order_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Pocket_List]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product_Detail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductCategories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Region]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Status]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SubCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Supplier]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Survey]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "desktop-rae7e6c.FUNShare.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

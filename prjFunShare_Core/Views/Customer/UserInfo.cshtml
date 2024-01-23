@@ -1,0 +1,351 @@
+﻿@model prjFunShare_Core.Models.CustomerInfomation
+
+@{
+    ViewData["Title"] = "我的資料";
+}
+
+@*@Html.AntiForgeryToken()*@
+
+<div class="border d-flex justify-content-center align-items-center" style="width: 100%; height:auto;padding:30px">
+    <div class="col-md-3" style="width: 800px">
+        <h2 class="text-center">我的資料</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="card" style="padding:30px">
+            @*用card的外框裝Form*@
+            <form class="row g-3 needs-validation" method="post" enctype="multipart/form-data" id="userinfoform">
+                <input type="hidden" name="MemberId" value="@Model.MemberId" />
+                <div class="col-md-6 row g-3">
+                    <div class="col-md-12">
+                        @* col-4 代表1/3列 (12就是全滿)*@
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                            <label for="Name" class="form-label">姓名</label>
+                            <div class="valid-feedback">請輸入姓名</div>
+                        </div>
+                        <label id="NameErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="ResidentId" name="ResidentId" value="@Model.ResidentId" pattern="[a-z,A-Z]{1}[1-2,8-9]{1}[\d]{8}" maxlength="10" />
+                            <label for="ResidentId" class="form-label">身分證字號</label>
+                            <div class="valid-feedback">請輸入身分證字號</div>
+                        </div>
+                        <label id="ResidentIdErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required readonly />
+                            <label for="Email" class="form-label">Email</label>
+                            <div class="invalid-feedback">請輸入Email</div>
+                        </div>
+                        <label id="EmailErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
+                            <label for="PhoneNumber" class="form-label">手機號碼</label>
+                            <div class="invalid-feedback">請輸入手機號碼</div>
+                        </div>
+                    </div>
+                </div>
+                @* 頭貼 *@
+                <div class="col-md-6" style="padding-left:30px;padding-top:20px">
+                    <div class="form-outline">
+                        <img class="img-fluid rounded-start" id="previewImg" src="data:image/jpg;base64,@Convert.ToBase64String(Model.Photo)" />
+                        <input class="form-control-file" type="file" id="formFile" name="file" accept="image/*">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    性別：
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Gender" id="GenderMale" value="M" />
+                        <label class="form-check-label" for="GenderMale">男</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Gender" id="GenderFemale" value="F" />
+                        <label class="form-check-label" for="GenderFemale">女</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Gender" id="GenderSecret" value="S" />
+                        <label class="form-check-label" for="GenderSecret">不方便透漏</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-outline">
+                        <input type="text" class="form-control" id="Nickname" name="Nickname" value="@Model.Nickname" />
+                        <label for="Nickname" class="form-label">暱稱</label>
+                        <div class="invalid-feedback">請輸入暱稱</div>
+                    </div>
+                </div>
+                @* 行政區要改下拉選單*@
+                <div class="col-md-6">
+                    <input type="hidden" name="DistrictId" id="DistrictId" value="@Model.DistrictId" />
+                    <input type="hidden" name="DistrictName" id="DistrictName" value="@Model.District.DistrictName" />
+                    <input type="hidden" name="CityName" id="CityName" value="@Model.District.City.CityName" />
+                    <div style="display:flex; flex-direction: row; flex-wrap:wrap">
+                        行政區：
+                        @* @Model.District.City.CityName @Model.District.DistrictName *@
+                        <div class="col-md-4">
+                            <select class="form-select " id="selectCity">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="selectDistrict">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                @* 生日 *@
+                <div class="col-md-6">
+                    <input type="date" class="form-control" name="BirthDate" value="@(((DateTime)Model.BirthDate).ToString("yyyy-MM-dd"))" style="height:35px" />
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-outline">
+                        <input type="text" class="form-control" id="Address" name="Address" value="@Model.Address" />
+                        <label for="Address" class="form-label">地址</label>
+                        <div class="invalid-feedback">請輸入地址</div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    是否過敏：
+                    @* <div class="form-outline"> *@
+                    @* col-12 代表填滿一列 *@
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsAllergy" id="AllergyYes" value="true" />
+                        <label class="form-check-label" for="AllergyYes">是</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsAllergy" id="AllergyNo" value="false" />
+                        <label class="form-check-label" for="AllergyYes">否</label>
+                    </div>
+                    @* </div> *@
+                </div>
+                <div class="col-md-12" id="ShowAllergyDescription" style="display:none">
+                    <div class="form-outline">
+                        <input type="text" class="form-control" id="AllergyDescription" name="AllergyDescription" value="@Model.AllergyDescription" />
+                        <label for="AllergyDescription" class="form-label">過敏史</label>
+                        <div class="invalid-feedback">請輸入過敏史</div>
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <input type="submit" value="確認修改並儲存" class="btn btn-primary" id="save" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        //載入資料庫是否過敏的值
+        const AllergyYes = document.getElementById("AllergyYes")
+        const AllergyNo = document.getElementById("AllergyNo")
+
+        function loadAllergy() {
+            if ("@Model.IsAllergy" == "True") {
+                AllergyYes.setAttribute('checked', 'checked')
+            }
+            else {
+                AllergyNo.setAttribute('checked', 'checked')
+            }
+        }
+        loadAllergy();
+
+        //載入資料庫性別的值
+        const Gender = document.getElementById("Gender")
+        const GenderMale = document.getElementById("GenderMale")
+        const GenderFemale = document.getElementById("GenderFemale")
+        const GenderSecret = document.getElementById("GenderSecret")
+
+        function loadGender() {
+            if ("@Model.Gender" == "M") {
+                GenderMale.setAttribute('checked', 'checked')
+            }
+            else if ("@Model.Gender" == "F") {
+                GenderFemale.setAttribute('checked', 'checked')
+            }
+            else {
+                GenderSecret.setAttribute('checked', 'checked')
+            }
+        }
+        loadGender();
+
+        //載入資料庫縣市
+        const selCity = document.querySelector('#selectCity');
+        const selDistrict = document.querySelector('#selectDistrict');
+        const CityName = document.getElementById("CityName");
+        const DistrictName = document.getElementById("DistrictName");
+        const DistrictId = document.getElementById("DistrictId");
+        // console.log("C = " + CityName.Value);
+        // console.log("D = " + DistrictName.Value);
+
+
+        async function loadCity() {
+            const response = await fetch('@Url.Content("/api/Cities")')
+            const datas = await response.json();
+            const cities = datas.map(city => `<option value='${city}'>${city}</option>`);
+            selCity.innerHTML = cities.join("");
+            selCity.value = CityName.value;
+            loadDistrict()
+        }
+        loadCity()
+
+        //載入資料庫行政區
+        async function loadDistrict() {
+            const response = await fetch(`@Url.Content("/api/Districts")?city=${selCity.value}`)
+            const datas = await response.json();
+            const districts = datas.map(district => `<option value='${district}'>${district}</option>`);
+            selDistrict.innerHTML = districts.join("");
+            // $("#selectDistrict option").each(function () {
+            //     console.log($(this).val());
+            //     if ($(this).val() == DistrictName.Value) {
+            //         selDistrict.value = DistrictName.value;
+            //     }
+            // });
+            if (selCity.value == CityName.value) {
+                selDistrict.value = DistrictName.value;
+            }
+        }
+
+        selCity.addEventListener('change', () => {
+            loadDistrict()
+        })
+
+        selDistrict.addEventListener('change', () => {
+            FindDistrictID();
+        })
+
+        function FindDistrictID() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `@Url.Content("/api/FindDistrictId")?city=${selCity.value}&district=${selDistrict.value}`);
+            xhr.send();
+            xhr.addEventListener('load', () => {
+                const datas = JSON.parse(xhr.responseText)
+                // console.log(datas);
+                DistrictId.value = datas;
+            });
+        }
+
+        //判斷是否過敏=>過敏史是否顯示
+        const ShowAllergyDescription = document.getElementById('ShowAllergyDescription')
+        AllergyNo.addEventListener('click', event => {
+            if (AllergyNo.checked) {
+                ShowAllergyDescription.style.display = "none";
+            }
+        })
+        AllergyYes.addEventListener('click', event => {
+            if (AllergyYes.checked) {
+                ShowAllergyDescription.style.display = "";
+            }
+        })
+
+        // //驗證輸入資料
+        // //姓名
+        // const Name = document.getElementById("Name")
+        // const NameErrorMesssage = document.getElementById("NameErrorMesssage")
+        // Name.addEventListener('blur', () => {
+        //     if (Name.value == "") {
+        //         NameErrorMesssage.innerHTML = "姓名為必填";
+        //         NameErrorMesssage.style.display = "";
+        //     }
+        //     else {
+        //         NameErrorMesssage.innerHTML = "";
+        //         NameErrorMesssage.style.display = "none";
+        //     }
+        // })
+
+        // //身分證字號
+        // const ResidentId = document.getElementById("ResidentId")
+        // const ResidentIdErrorMesssage = document.getElementById("ResidentIdErrorMesssage")
+        // ResidentId.addEventListener('blur', () => {
+        //     if (ResidentId.value == "") {
+        //         ResidentIdErrorMesssage.innerHTML = "身分證字號為必填";
+        //         ResidentIdErrorMesssage.style.display = "";
+        //     }
+        //     else {
+        //         ResidentIdErrorMesssage.innerHTML = "";
+        //         ResidentIdErrorMesssage.style.display = "none";
+        //     }
+        // })
+
+        // //Email
+        // const Email = document.getElementById("Email")
+        // const EmailErrorMesssage = document.getElementById("EmailErrorMesssage")
+        // Email.addEventListener('blur', () => {
+        //     if (Email.value == "") {
+        //         EmailErrorMesssage.innerHTML = "Email為必填";
+        //         EmailErrorMesssage.style.display = "";
+        //     }
+        //     else {
+        //         EmailErrorMesssage.innerHTML = "";
+        //         EmailErrorMesssage.style.display = "none";
+        //     }
+        // })
+
+        $('#formFile').on('change', function (e) {
+            const file = this.files[0];
+            const objectURL = URL.createObjectURL(file);    // 使用 createObjectURL 產生圖片url
+            $('#previewImg').attr('src', objectURL);
+        });
+
+        const userinfoform = document.querySelector('#userinfoform');
+        $("#userinfoform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault(); //防止預設行為(action="~/api/getdemo" 之類)的發生
+
+                loaduserinfo();
+            }
+        })
+
+        async function loaduserinfo() {
+            const formData = new FormData(userinfoform);
+            const response = await fetch('@Url.Content("/api/UserInfo")', {
+                body: formData,
+                method: 'post'
+            })
+            const data = await response.text();
+            // alert(data);
+            if (data == "儲存成功") {
+                // alert("儲存成功");
+                Swal.fire({
+                    icon: 'success',
+                    title: '儲存成功',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        window.location.reload();
+                    }, 2000);
+            }
+            else {
+                // alert(data);
+                Swal.fire({
+                    icon: 'error',
+                    title: '儲存失敗',
+                    text: data,
+                })
+                setTimeout(
+                    function () {
+                        window.location.reload();
+                    }, 2000);
+            }
+        }
+    </script>
+}

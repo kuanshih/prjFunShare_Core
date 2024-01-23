@@ -1,0 +1,231 @@
+﻿@model IEnumerable<FunShare_Admin.Models.Product>
+
+@{
+    ViewData["Title"] = "課程總覽";
+}
+@* <style>
+    .slidecontainer {
+        width: 100%; /* Width of the outside container */
+    }
+
+    /* The slider itself */
+    .slider {
+        -webkit-appearance: none; /* Override default CSS styles */
+        appearance: none;
+        width: 100%; /* Full-width */
+        height: 25px; /* Specified height */
+        background: #d3d3d3; /* Grey background */
+        outline: none; /* Remove outline */
+        opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+    }
+
+        /* Mouse-over effects */
+        .slider:hover {
+            opacity: 1; /* Fully shown on mouse-over */
+        }
+
+        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Override default look */
+            appearance: none;
+            width: 25px; /* Set a specific slider handle width */
+            height: 25px; /* Slider handle height */
+            background: #04AA6D; /* Green background */
+            cursor: pointer; /* Cursor on hover */
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px; /* Set a specific slider handle width */
+            height: 25px; /* Slider handle height */
+            background: #04AA6D; /* Green background */
+            cursor: pointer; /* Cursor on hover */
+        }
+
+</style> *@
+
+<h1>課程總覽</h1>
+@using (Html.BeginForm())
+{
+    <div align="right">
+        關鍵字 @Html.TextBox("txtKeyword")
+        <input class="btn btn-outline-primary" type="submit" value="查詢" />
+        <a class="btn btn-outline-primary" type="button" asp-controller="SuperProduct" asp-action="Create">新增課程</a>
+    </div>
+}
+@* <p align="right">
+    <button class="btn btn-outline-primary" type="submit" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">查詢</button>
+</p>
+<div>
+    <div class="collapse collapse-horizontal" id="collapseWidthExample">
+        <div class="card card-body" style="width: 300px;">
+            <div style="text-align:center"> <h2>課程查詢條件</h2></div>
+            <div>
+                @using (Html.BeginForm())
+                {
+                    <div>課程名稱 @Html.TextBox("textProductName") </div> <br />
+                    <div>廠商名稱 @Html.TextBox("textSupplierName") </div> <br />
+                    <div class="slidecontainer">單價 <input type="range" min="1" max="100" value="50" id="myRange"></div> <br />
+                    <div>週期 @Html.DropDownList("IntervalId") </div> <br />
+                    <div>截止日期<input type="date" name="textReleaseDate" /> </div>
+
+                    <br />
+                    <div>類型 @Html.CheckBox("boolIsClass") </div> <br />
+                }
+            </div>
+            <div><button class="btn btn-primary" type="button" aria-controls="Clear">清除</button></div>
+        </div>
+    </div>
+</div> *@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序
+                @* @Html.DisplayNameFor(model => model.ProductId) *@
+            </th>
+            <th>
+                課程名稱
+                @* @Html.DisplayNameFor(model => model.ProductName) *@
+            </th>
+
+            <th>
+                合作夥伴
+                @*  @Html.DisplayNameFor(model => model.SupplierId) *@
+            </th>
+            <th>
+                難易度
+                @*  @Html.DisplayNameFor(model => model.Level) *@
+            </th>
+            <th>
+                單價
+                @* @Html.DisplayNameFor(model => model.ProductName) *@
+            </th>
+            <th>
+                庫存
+                @* @Html.DisplayNameFor(model => model.Stock) *@
+            </th>
+            <th>
+                上架日
+                @* @Html.DisplayNameFor(model => model.ReleasedTime) *@
+            </th>
+            <th>
+                堂數
+                @* @Html.DisplayNameFor(model => model.Times) *@
+            </th>
+            <th>
+                週期
+                @*  @Html.DisplayNameFor(model => model.IntervalId) *@
+            </th>
+
+            <th>
+                狀態
+                @*  @Html.DisplayNameFor(model => model.StatusId) *@
+            </th>
+            <th>
+                是長期課程?
+                @* @Html.DisplayNameFor(model => model.IsClass) *@
+            </th>
+            <th>
+                傭金
+                @*  @Html.DisplayNameFor(model => model.Commision) *@
+            </th>
+
+            <th>編輯/上下架</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                        <br />
+                        
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Level)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductDetail.FirstOrDefault().UnitPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Stock)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleasedTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Times)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Interval.IntervalDescription)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsClass)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Commision)
+                    </td>
+                    <td>
+                        @Html.ActionLink("編輯", "Edit","SuperProduct", new { id=item.ProductId }, new {Class="btn btn-primary"})
+                        @{
+                            if (item.Status.Description == "銷售中")
+                            {
+                                @Html.ActionLink("下架", "ChangeStatustoDiscontinue", new { id=item.ProductId },new { @class="btn btn-danger",onClick="confirm()"})
+                            }
+                            else
+                            {
+                                @Html.ActionLink("上架", "ChangeStatustoLaunch", new { id=item.ProductId },new { @class="btn  btn-primary"})
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        var slider = document.getElementById("#myRange");
+        var output = document.getElementById("textUnitPrice");
+        // output.innerHTML = slider.value; // Display the default slider value
+
+        // // Update the current slider value (each time you drag the slider handle)
+        // slider.oninput = function () {
+        //     output.innerHTML = this.value;
+        // }
+
+        //sweetalert for discontinued
+        function confirm() {
+            Swal.fire({
+                title: "下架",
+                text: "您確定要下架嗎?",
+                type: "warning",
+                confirmButtonText: "確定",
+                cancelButtonText: "取消"
+
+            })
+        }
+
+    </script>
+}

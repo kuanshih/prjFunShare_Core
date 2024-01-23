@@ -1,0 +1,100 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.ProductDetail>
+
+@{
+    ViewData["Title"] = "課程明細一覽表";
+}
+
+<h1>課程明細總覽</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                序
+            </th>
+            <th>
+                產品ID
+            </th>
+            <th>
+                開始時間
+               @*  @Html.DisplayNameFor(model => model.BeginTime) *@
+            </th>
+            <th>
+                結束時間
+                @* @Html.DisplayNameFor(model => model.EndTime) *@
+            </th>
+            <th>
+                行政區編號
+               @*  @Html.DisplayNameFor(model => model.DistrictId) *@
+            </th>
+            <th>
+                狀態編號
+                @* @Html.DisplayNameFor(model => model.StatusId) *@
+            </th>
+            <th>
+                課程地址
+                @* @Html.DisplayNameFor(model => model.Address) *@
+            </th>
+            <th>
+                單價
+                @* @Html.DisplayNameFor(model => model.UnitPrice) *@
+            </th>
+            <th>
+                截止日期
+              @*   @Html.DisplayNameFor(model => model.Dealine) *@
+            </th>
+            <th>
+                教室編號
+                @* @Html.DisplayNameFor(model => model.ClassId) *@
+            </th>
+            <th>編輯/刪除</th>
+            <th>詳細資料</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.ProductId)
+             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BeginTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DistrictId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dealine)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClassId)
+            </td>
+            <td>
+                        <a href="@Url.Action("DetailList" , "ManagerProduct", new { pid=item.ProductDetailId , id=item.ProductId })" class="btn btn-success">
+                         <i class="fa-solid fa-list-check"></i>
+                    </a>
+            </td>
+        </tr>
+}}
+    </tbody>
+</table>

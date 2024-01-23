@@ -1,0 +1,172 @@
+﻿@using Newtonsoft.Json;
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FunShare後台管理</title>
+    <!-- FunShare icon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v6.4.2/css/all.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/backend.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles",required:false)
+</head>
+<body id="body-pd" class="body-pd">
+    <!--Main layout-->
+    <header class="header body-pd" id="header">
+        <div class="header_toggle"> <i class='fa-solid fa-xmark' id="header-toggle"></i> </div>
+        @{
+            if (Context.Session.Keys.Contains(CDictionary.SK_LOGINED_SUPPLIER))
+            {
+                string json = Context.Session.GetString(CDictionary.SK_LOGINED_SUPPLIER);
+                Supplier s = JsonConvert.DeserializeObject<Supplier>(json);
+
+        string userSrc = $"data:image / jpg; base64,{Convert.ToBase64String(s.LogoImage)}";
+                <div class="ms-auto"><img class="header_img" src="@userSrc"></div>
+        <div class="p-2">@s.SupplierName</div>
+        }
+            if (Context.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+            {
+                <div class="p-2">Welcome, 管理員</div>
+            }
+        }
+    </header>
+    <div class="l-navbar show_sidebar" id="nav-bar">
+        <nav class="nav_sidebar">
+            <div>
+                <a href="@Url.Action("Index","Home")" class="nav_logo">
+                    <img src="~/favicon.ico" id="logoSm" style="display:none">
+                    <img src="~/img/FUNShareLOGO.png" id="logoLg" class="mb-0 p-0" style="height: 45px;">
+                </a>
+                <div class="nav_list">
+                    <a id="Index" class="nav_link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fa-solid fa-house nav_icon"></i>
+                        <span class="nav_name">首頁</span>
+                    </a>
+                    <hr class="border border-light opacity-20"/>
+                    @{
+                        if (Context.Session.Keys.Contains(CDictionary.SK_LOGINED_ADMIN))
+                        {
+                            <a id="CustomerList" class="nav_link" href="@Url.Action("List","ManagerCustomer")">
+                                <i class="fa-solid fa-user nav_icon"></i>
+                                <span class="nav_name">會員管理</span>
+                            </a>
+                            <a id="SupplierList" class="nav_link" href="@Url.Action("List","ManagerSupplier")">
+                                <i class="fa-solid fa-suitcase nav_icon"></i>
+                                <span class="nav_name">廠商管理</span>
+                            </a>
+                            <a id="CommentIndex" class="nav_link" asp-area="" asp-controller="ManagerComments" asp-action="Index">
+                                <i class="fa-solid fa-comments nav_icon"></i>
+                                <span class="nav_name">評價管理</span>
+                            </a>
+                            <a class="nav_link" data-bs-toggle="collapse" data-bs-target="#marketingMenu" style="cursor:pointer"
+                               aria-expanded="true" aria-controls="marketingMenu" id="marketingMenuToggle">
+                                <i class="fa-solid fa-bullhorn nav_icon"></i>
+                                <span class="nav_name">行銷系統</span>
+                            </a>
+                            <div class="accordion-collapse collapse bg-success-subtle" id="marketingMenu">
+                                <a id="BonusList" class="nav_link my-0" asp-area="" asp-controller="ManagerMarketing" asp-action="BonusList">
+                                    <i class="fa-regular fa-gem"></i>
+                                    <span>紅利系統</span>
+                                </a>
+                                <a id="CouponList" class="nav_link my-0" asp-area="" asp-controller="ManagerMarketing" asp-action="CouponList">
+                                    <i class="fa-solid fa-ticket"></i>
+                                    <span>優惠券系統</span>
+                                </a>
+                                <a id="MemberCouponList" class="nav_link mt-0" asp-area="" asp-controller="ManagerMarketing" asp-action="MemberCouponList">
+                                    <i class="fa-solid fa-gift"></i>
+                                    <span>優惠券發放</span>
+                                </a>
+                            </div>
+                        }
+                    }
+                    <a id="ProductList" class="nav_link" asp-area="" asp-controller="ManagerProduct" asp-action="List">
+                        <i class="fa-solid fa-calendar-days nav_icon"></i>
+                        <span class="nav_name">課程管理</span>
+                    </a>
+                    <a id="OrderPreview" class="nav_link" asp-area="" asp-controller="ManagerOrder" asp-action="OrderPreview">
+                        <i class="fa-solid fa-clipboard-list nav_icon"></i>
+                        <span class="nav_name">訂單管理</span>
+                    </a>
+                    <a id="Chart" class="nav_link" asp-area="" asp-controller="ManagerReoprt" asp-action="Chart">
+                        <i class="fa-solid fa-chart-line nav_icon"></i>
+                        <span class="nav_name">報表</span>
+                    </a>
+                    <a id="Chat" class="nav_link mt-0" href="https://localhost:7208/backend/manager/index">
+                        <i class="fa-solid fa-check-to-slot"></i>
+                        <span>即時客服</span>
+                    </a>
+                </div>
+            </div>
+            <a href="@Url.Action("Logout", "Home")" class="nav_link">
+                <i class="fa-solid fa-arrow-right-from-bracket fa-flip-horizontal nav_icon"></i>
+                <span class="nav_name">登出</span>
+            </a>
+        </nav>
+    </div>
+    <!--Main layout-->
+
+    <div class="container-fluid pt-4 pe-5">
+        @RenderBody()        
+    </div>
+    <!-- AI文案產生器 -->
+    <div class="ai-intromaker">
+        <img src="~/src/AI003.gif" alt="Scroll Up" title="AI文案產生器" class="ai-intromaker-img" onclick="showIframe()" />
+    </div class="ai-intromaker">
+        <iframe id="iframeAI" style="display: none; position: fixed; right: 20px; bottom: 20px; width: 500px; height: 450px; border: none;"></iframe>
+    
+
+    <footer class="border-top footer text-muted">
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        /*===== LINK ACTIVE =====*/
+        const id = `@(ViewBag.Action)`
+        if (id != null) {
+            $(`#${id}`).addClass('active_sidebar');
+            // if (id == "SupplierList" || id == "Chat") {
+            //     $('#supplierMenuToggle').addClass('active_sidebar');
+            //     $('#supplierMenu').addClass('show_sidebar')
+            //     $('#supplierMenu').addClass('show')
+            // }
+            if (id == "BonusList" || id == "CouponList" || id == "MemberCouponList") {
+                $('#marketingMenuToggle').addClass('active_sidebar');
+                $('#marketingMenu').addClass('show_sidebar')
+                $('#marketingMenu').addClass('show')
+            }
+        }
+
+        /*========AI文案產生器========*/
+        // AI客服
+        window.addEventListener("message", function (event) {
+            if (event.data === "closeIframe") {
+                closeIframe();
+            }
+        });
+
+        // 顯示 iframe
+        function showIframe() {
+            var iframe = document.getElementById("iframeAI");
+            iframe.src = "@Url.Content("~/OpenAI.html")";
+            iframe.style.display = "block";
+        }
+
+        // ('@Url.Content("~/OpenAI.html")', 'AI文案產生器', 'width=500,height=450')
+
+        // 關閉 iframe
+        function closeIframe() {
+            var iframe = document.getElementById("iframeAI");
+            iframe.style.display = "none";
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.CustomerInfomation>
+
+@{
+    ViewData["Title"] = "會員總覽";
+    ViewBag.Action = "CustomerList";
+}
+
+<h1>會員總覽</h1>
+@using (Html.BeginForm())
+{
+    <div align="right">
+        關鍵字 @Html.TextBox("txtKeyword")
+        <input class="btn btn-outline-primary" type="submit" value="查詢" />
+        
+    </div>
+}
+
+
+<ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">全部</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="registered-tab" data-bs-toggle="tab" data-bs-target="#registered-tab-pane" type="button" role="tab" aria-controls="registered-tab-pane" aria-selected="false">已註冊</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="unregistered-tab" data-bs-toggle="tab" data-bs-target="#unregistered-tab-pane" type="button" role="tab" aria-controls="unregistered-tab-pane" aria-selected="false">未註冊</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="suspended-tab" data-bs-toggle="tab" data-bs-target="#suspended-tab-pane" type="button" role="tab" aria-controls="suspended-tab-pane" aria-selected="false">停權中</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+        <table id="customer-all-table" class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>身分證字號</th>
+                    @* <th>家長ID</th> *@
+                    <th>性別</th>
+                    <th>電話</th>
+                    <th>信箱</th>
+                    <th>行政區</th>
+                    <th>生日</th>
+                    @* <th>暱稱</th> *@
+                    @* <th>過敏</th> *@
+                    @* <th>過敏描述</th> *@
+                    <th>狀態</th>
+                    <th>編輯/停(復)權</th>
+                    @* <th>詳細資料</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string statusCustomer = "";//改變會員狀態顏色
+                    string Gender = "";//會員性別辨認(M/F/S)
+                    string Birthday = "";//會員生日轉型
+
+                    int count = 0;
+                    foreach (var item in Model)
+                    {
+                        Birthday = $"{((DateTime)item.BirthDate).Year}/{((DateTime)item.BirthDate).Month}/{((DateTime)item.BirthDate).Day}";
+
+                        switch (item.Status.Description)
+                        {
+                            case "已註冊":
+                                statusCustomer = "text-success";
+                                break;
+                            case "停權中":
+                                statusCustomer = "text-danger";
+                                break;
+                            case "未註冊":
+                                statusCustomer = "text-warning";
+                                break;
+                        }
+
+                        switch (item.Gender)
+                        {
+                            case "M":
+                                Gender = "男性";
+                                break;
+                            case "F":
+                                Gender = "女性";
+                                break;
+                            case "S":
+                                Gender = "隱藏";
+                                break;
+                        }
+
+                        count++;
+                        <tr>
+                            <td>@count</td>
+                            <td>@Html.DisplayFor(modelItem => item.MemberId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ResidentId)</td>
+                            @* <td>@Html.DisplayFor(modelItem => item.ParentId)</td> *@
+                            @* <td>@Html.DisplayFor(modelItem => item.Gender)</td> *@
+                            <td>@Gender</td>
+                            <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.District.DistrictName)</td>
+                            @* <td>@Html.DisplayFor(modelItem => item.BirthDate)</td> *@
+                            <td>@Birthday</td>
+                            @* <td>@Html.DisplayFor(modelItem => item.Nickname)</td> *@
+                            @* <td>@Html.DisplayFor(modelItem => item.IsAllergy)</td> *@
+                            @* <td>@Html.DisplayFor(modelItem => item.AllergyDescription)</td> *@
+                            <td class="@statusCustomer">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                            <!-- 編輯/刪除 -->
+
+                            <td>
+                                <a href="@Url.Action("Edit", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-success">
+                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                </a> 
+                                @if (item.Status.Description == "停權中")
+                                {
+                                    <a href="@Url.Action("ReverseStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-primary"
+                                       onclick="return alert('你確定要復權?')">
+                                        <i class="fa-solid fa-unlock fa-lg"></i>
+                                    </a>
+                                }
+                                else if (item.Status.Description == "已註冊")
+                                {
+                                    <a href="@Url.Action("ChangeStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-secondary">
+                                        <i class="fa-solid fa-lock fa-lg"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" class="btn bg-transparent text-dark"
+                                       onclick="return alert('該會員尚未註冊，無法停權/復權')">
+                                        <i class="fa-solid fa-xmark fa-lg"></i>
+                                    </a>
+                                }
+                            </td>
+                            @* 家人先註解掉 *@
+                            @*
+                    <!-- 詳細資料 -->
+                    <td>
+                    <a href="#" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#detail-@count">
+                    詳細資料
+                    </a>
+                    </td>
+                    *@
+                        </tr>
+
+                        @*
+                <!-- 明細的部分修正版 -->
+                <tr id="detail-@count" class="collapse">
+                <th>序號:</th>
+                <th>課程明細編號:</th>
+                <th>開始時間:</th>
+                <th>結束時間:</th>
+                <th>課程價格:</th>
+                <th>已報名/總額:</th>
+                <th>行政區編號:</th>
+                <th>明細狀態:</th>
+                <th>課程地址:</th>
+                <th>截止日期:</th>
+                <th>刪除:</th>
+                <th>報名系統:</th>
+                </tr>
+
+                int countdetial = 0;
+                foreach (var item2 in item.CProductDetails)
+                {
+                switch (item2.FProductClass_Status)
+                {
+                case "準時開課":
+                statusClassForOrder = "text-success";
+                break;
+                case "停課":
+                statusClassForOrder = "text-danger";
+                break;
+                case "延期":
+                statusClassForOrder = "text-warning";
+                break;
+                }
+                countdetial++;
+                <tr id="detail-@count" class="collapse">
+                <td>@countdetial</td>
+                <td>@Html.DisplayFor(modelItem => item2.FProductDetailId)</td>
+                <td>@Html.DisplayFor(modelItem => item2.FBeginTime)</td>
+                <td>@Html.DisplayFor(modelItem => item2.FEndTime)</td>
+                <td>@Html.DisplayFor(modelItem => item2.FUnitPrice)</td>
+                <td class="@(item2.FSales == 0 ? "text-danger fw-bold" : "")">
+                @(item2.FStock != null && item2.FSales != null && item2.FStock != 0
+                ? (item2.FSales).ToString() + "/" + item2.FStock.ToString()
+                : "0")
+                </td>
+                <td>@Html.DisplayFor(modelItem => item2.FDistrictName)</td>
+                <td class="@statusClassForOrder">@Html.DisplayFor(modelItem => item2.FDetailStatusDescription)</td>
+                <td>@Html.DisplayFor(modelItem => item2.FAddress)</td>
+                <td>@Html.DisplayFor(modelItem => item2.FDealine)</td>
+                <td>
+                @if (item2.FSales != 0)
+                {
+                <button class="btn btn-danger" onclick="showAlert();"><i class="fa-solid fa-trash-can"></i></button>
+                }
+                else
+                {
+                <a href="#" class="btn btn-danger"
+                onclick="deleteAlert(event, @item2.FProductDetailId);">
+                <i class="fa-solid fa-trash-can"></i>
+                </a>
+                }
+                </td>
+                <td>
+                <a href="@Url.Action("DetailList" , "ManagerProduct", new { pid=item2.FProductDetailId , id=item2.FProductId })" class="btn btn-success">
+                <i class="fa-solid fa-list-check"></i>
+                </a>
+                </td>
+                </tr>
+                }
+                *@
+                    }
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="registered-tab-pane" role="tabpanel" aria-labelledby="registered-tab" tabindex="1">
+        <table id="customer-registered-table" class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>身分證字號</th>
+                    @* <th>家長ID</th> *@
+                    <th>性別</th>
+                    <th>電話</th>
+                    <th>信箱</th>
+                    <th>行政區</th>
+                    <th>生日</th>
+                    @* <th>暱稱</th> *@
+                    @* <th>過敏</th> *@
+                    @* <th>過敏描述</th> *@
+                    <th>狀態</th>
+                    <th>編輯/刪除/停(復)權</th>
+                    @* <th>詳細資料</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    statusCustomer = "";//改變會員狀態顏色
+                    Gender = "";//會員性別辨認(M/F/S)
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.Status.Description == "已註冊")
+                        {
+                            //會員生日轉型
+                            Birthday = $"{((DateTime)item.BirthDate).Year}/{((DateTime)item.BirthDate).Month}/{((DateTime)item.BirthDate).Day}";
+
+                            switch (item.Status.Description)
+                            {
+                                case "已註冊":
+                                    statusCustomer = "text-success";
+                                    break;
+                                case "停權中":
+                                    statusCustomer = "text-danger";
+                                    break;
+                                case "未註冊":
+                                    statusCustomer = "text-warning";
+                                    break;
+                            }
+
+                            switch (item.Gender)
+                            {
+                                case "M":
+                                    Gender = "男性";
+                                    break;
+                                case "F":
+                                    Gender = "女性";
+                                    break;
+                                case "S":
+                                    Gender = "隱藏";
+                                    break;
+                            }
+
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.MemberId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ResidentId)</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.ParentId)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.Gender)</td> *@
+                                <td>@Gender</td>
+                                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.District.DistrictName)</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.BirthDate)</td> *@
+                                <td>@Birthday</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.Nickname)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.IsAllergy)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.AllergyDescription)</td> *@
+                                <td class="@statusCustomer">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                                <!-- 編輯/刪除 -->
+
+                                <td>
+                                    <a href="@Url.Action("Edit", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-success">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a> |
+                                    <a href="@Url.Action("Delete", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-danger"
+                                       onclick="return confirm('確定要刪除嗎?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a> |
+                                    @if (item.Status.Description == "停權中")
+                                    {
+                                        <a href="@Url.Action("ReverseStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-primary"
+                                           onclick="return confirm('確定要復權嗎?')">
+                                            <i class="fa-solid fa-unlock fa-lg"></i>
+                                        </a>
+                                    }
+                                    else if (item.Status.Description == "已註冊")
+                                    {
+                                        <a href="@Url.Action("ChangeStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-secondary"
+                                           onclick="return confirm('確定要停權嗎?')">
+                                            <i class="fa-solid fa-lock fa-lg"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" class="btn bg-transparent text-dark"
+                                           onclick="return alert('該會員尚未註冊，無法停權/復權')">
+                                            <i class="fa-solid fa-xmark fa-lg"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <!-- 詳細資料 -->
+
+                            </tr>
+                            <!-- 明細的部分修正版 -->
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="unregistered-tab-pane" role="tabpanel" aria-labelledby="unregistered-tab" tabindex="2">
+        <table id="customer-unregistered-table" class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>身分證字號</th>
+                    @* <th>家長ID</th> *@
+                    <th>性別</th>
+                    <th>電話</th>
+                    <th>信箱</th>
+                    <th>行政區</th>
+                    <th>生日</th>
+                    @* <th>暱稱</th> *@
+                    @* <th>過敏</th> *@
+                    @* <th>過敏描述</th> *@
+                    <th>狀態</th>
+                    <th>編輯/刪除/停(復)權</th>
+                    @* <th>詳細資料</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    statusCustomer = "";//改變會員狀態顏色
+                    Gender = "";//會員性別辨認(M/F/S)
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.Status.Description == "未註冊")
+                        {
+                            //會員生日轉型
+                            Birthday = $"{((DateTime)item.BirthDate).Year}/{((DateTime)item.BirthDate).Month}/{((DateTime)item.BirthDate).Day}";
+
+                            switch (item.Status.Description)
+                            {
+                                case "已註冊":
+                                    statusCustomer = "text-success";
+                                    break;
+                                case "停權中":
+                                    statusCustomer = "text-danger";
+                                    break;
+                                case "未註冊":
+                                    statusCustomer = "text-warning";
+                                    break;
+                            }
+
+                            switch (item.Gender)
+                            {
+                                case "M":
+                                    Gender = "男性";
+                                    break;
+                                case "F":
+                                    Gender = "女性";
+                                    break;
+                                case "S":
+                                    Gender = "隱藏";
+                                    break;
+                            }
+
+                            switch (item.Gender)
+                            {
+                                case "M":
+                                    Gender = "男性";
+                                    break;
+                                case "F":
+                                    Gender = "女性";
+                                    break;
+                                case "S":
+                                    Gender = "隱藏";
+                                    break;
+                            }
+
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.MemberId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ResidentId)</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.ParentId)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.Gender)</td> *@
+                                <td>@Gender</td>
+                                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.District.DistrictName)</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.BirthDate)</td> *@
+                                <td>@Birthday</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.Nickname)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.IsAllergy)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.AllergyDescription)</td> *@
+                                <td class="@statusCustomer">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                                <!-- 編輯/刪除 -->
+
+                                <td>
+                                    <a href="@Url.Action("Edit", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-success">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a> |
+                                    <a href="@Url.Action("Delete", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-danger"
+                                       onclick="return confirm('確定要刪除嗎?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a> |
+                                    @if (item.Status.Description == "停權中")
+                                    {
+                                        <a href="@Url.Action("ReverseStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-primary"
+                                           onclick="return confirm('確定要復權嗎?')">
+                                            <i class="fa-solid fa-unlock fa-lg"></i>
+                                        </a>
+                                    }
+                                    else if (item.Status.Description == "已註冊")
+                                    {
+                                        <a href="@Url.Action("ChangeStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-secondary"
+                                           onclick="return confirm('確定要停權嗎?')">
+                                            <i class="fa-solid fa-lock fa-lg"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" class="btn bg-transparent text-dark"
+                                           onclick="return alert('該會員尚未註冊，無法停權/復權')">
+                                            <i class="fa-solid fa-xmark fa-lg"></i>
+                                        </a>
+                                    }
+                                </td>
+
+                                <!-- 詳細資料 -->
+
+                            </tr>
+                            <!-- 明細的部分修正版 -->
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane fade" id="suspended-tab-pane" role="tabpanel" aria-labelledby="suspended-tab" tabindex="3">
+        <table id="customer-suspended-table" class="table table-hover table-sm" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>序號</th>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>身分證字號</th>
+                    @* <th>家長ID</th> *@
+                    <th>性別</th>
+                    <th>電話</th>
+                    <th>信箱</th>
+                    <th>行政區</th>
+                    <th>生日</th>
+                    @* <th>暱稱</th> *@
+                    @* <th>過敏</th> *@
+                    @* <th>過敏描述</th> *@
+                    <th>狀態</th>
+                    <th>編輯/刪除/停(復)權</th>
+                    @* <th>詳細資料</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    statusCustomer = "";//改變會員狀態顏色
+                    Gender = "";//會員性別辨認(M/F/S)
+                    count = 0;
+                    foreach (var item in Model)
+                    {
+                        if (item.Status.Description == "停權中")
+                        {
+                            //會員生日轉型
+                            Birthday = $"{((DateTime)item.BirthDate).Year}/{((DateTime)item.BirthDate).Month}/{((DateTime)item.BirthDate).Day}";
+
+                            switch (item.Status.Description)
+                            {
+                                case "已註冊":
+                                    statusCustomer = "text-success";
+                                    break;
+                                case "停權中":
+                                    statusCustomer = "text-danger";
+                                    break;
+                                case "未註冊":
+                                    statusCustomer = "text-warning";
+                                    break;
+                            }
+
+                            switch (item.Gender)
+                            {
+                                case "M":
+                                    Gender = "男性";
+                                    break;
+                                case "F":
+                                    Gender = "女性";
+                                    break;
+                                case "S":
+                                    Gender = "隱藏";
+                                    break;
+                            }
+
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>@Html.DisplayFor(modelItem => item.MemberId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ResidentId)</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.ParentId)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.Gender)</td> *@
+                                <td>@Gender</td>
+                                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.District.DistrictName)</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.BirthDate)</td> *@
+                                <td>@Birthday</td>
+                                @* <td>@Html.DisplayFor(modelItem => item.Nickname)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.IsAllergy)</td> *@
+                                @* <td>@Html.DisplayFor(modelItem => item.AllergyDescription)</td> *@
+                                <td class="@statusCustomer">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                                <!-- 編輯/刪除 -->
+
+                                <td>
+                                    <a href="@Url.Action("Edit", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-success">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a> |
+                                    <a href="@Url.Action("Delete", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-danger"
+                                       onclick="return confirm('確定要刪除嗎?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a> |
+                                    @if (item.Status.Description == "停權中")
+                                    {
+                                        <a href="@Url.Action("ReverseStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-primary"
+                                           onclick="return confirm('確定要復權嗎?')">
+                                            <i class="fa-solid fa-unlock fa-lg"></i>
+                                        </a>
+                                    }
+                                    else if (item.Status.Description == "已註冊")
+                                    {
+                                        <a href="@Url.Action("ChangeStatus", "ManagerCustomer", new { id = item.MemberId })" class="btn bg-transparent text-secondary"
+                                           onclick="return confirm('確定要停權嗎?')">
+                                            <i class="fa-solid fa-lock fa-lg"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" class="btn bg-transparent text-dark"
+                                           onclick="return alert('該會員尚未註冊，無法停權/復權')">
+                                            <i class="fa-solid fa-xmark fa-lg"></i>
+                                        </a>
+                                    }
+                                </td>
+
+                                <!-- 詳細資料 -->
+
+                            </tr>
+                            <!-- 明細的部分修正版 -->
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+    <style>
+        /*         table {
+                    font-size: 13px;
+                } */
+    </style>
+}
+
+@section Scripts{
+    <!-- 引入 jQuery 和 DataTables 的 JavaScript 檔案 -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+
+    <script>
+        // $("table").hide();
+        // $("#cardView").hide();
+
+    </script>
+    <script>
+        new DataTable('#customer-all-table', {
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            responsive: true,
+        });
+        new DataTable('#customer-registered-table', {
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            responsive: true,
+        });
+        new DataTable('#customer-unregistered-table', {
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            responsive: true,
+        });
+        new DataTable('#customer-suspended-table', {
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/zh-HANT.json"  // 引入中文語言檔案
+            },
+            responsive: true,
+        });
+
+        function deleteAlert(e, id) {
+            e = e || window.event;
+            e.preventDefault();
+
+            Swal.fire({
+                title: '請問確認要刪除此會員嗎?',
+                showCancelButton: true,
+                confirmButtonText: '確認',
+                cancelButtonText: `取消`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    location.href = `@Url.Action("Delete", "ManagerCustomer")?id=${id}`
+                }
+            })
+        }
+        //目前被註解掉
+        function showAlert() {
+            Swal.fire({
+                icon: 'error',
+                title: 'QQ...',
+                text: '此課程已有報名紀錄，不可以刪除!',
+            });
+        }
+
+        function confirm() {
+            Swal.fire({
+                title: '請問確認要復權?',
+                showCancelButton: true,
+                confirmButtonText: '確認',
+                cancelButtonText: `取消`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    location.href = `@Url.Action("List", "ManagerCustomer")?pid=${id}`
+                }
+
+            })
+    </script>
+}

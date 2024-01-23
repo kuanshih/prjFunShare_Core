@@ -1,0 +1,189 @@
+﻿@model prjFunShare_backend.Models.Supplier
+@{
+    ViewData["Title"] = "Register";
+}
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登入</title>
+    <!-- FunShare icon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v6.4.2/css/all.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+
+<div class="container p-4">
+    <div class="d-flex align-content-center align-items-center justify-content-center">
+            <img src="~/img/FUNShareLOGO.png" width="300" />
+        </div>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+                <form asp-action="Register" id="register">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="TaxId" class="control-label">統一編號</label>
+                    <input asp-for="TaxId" class="form-control" />
+                    <span asp-validation-for="TaxId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SupplierName" class="control-label">供應商名稱</label>
+                    <input asp-for="SupplierName" class="form-control" />
+                    <span asp-validation-for="SupplierName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SupplierPhone" class="control-label">連絡電話</label>
+                    <input asp-for="SupplierPhone" class="form-control" />
+                    <span asp-validation-for="SupplierPhone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label">電子郵件</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CityId" class="control-label">城市</label>
+                    <select asp-for="CityId" class="form-control" asp-items="@ViewBag.Cities"></select>@*在後面藏選擇的編號*@
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Fax" class="control-label">傳真</label>
+                    <input asp-for="Fax" class="form-control" />
+                    <span asp-validation-for="Fax" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label">密碼</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ContactPerson" class="control-label">聯繫人</label>
+                    <input asp-for="ContactPerson" class="form-control" />
+                    <span asp-validation-for="ContactPerson" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LogoImage" class="control-label">供應商圖片</label>
+                    <input asp-for="LogoImage" class="form-control" />
+                    <span asp-validation-for="LogoImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">詳細資料</label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">檔案上傳</label>
+                    <input class="form-control" type="file" id="formFile" name="file">
+                </div>
+                <img id="imagePreview" src="#" alt="圖片預覽" style="max-width: 100%; max-height: 200px;">
+                   
+                <div class="form-group">
+                       @*  <button type="button" class="btn btn-primary" id="submitBtn">送出並加入我們</button> *@
+                    <input type="submit" value="送出並加入我們" class="btn btn-primary" id="submitBtn" />
+                    <input id="btnDemo" type="button" value="Demo" class="btn btn-danger ms-2" />
+                </div>
+            </form>
+        </div>
+
+    </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+        $('#btnDemo').on('click', function () {
+            $('#TaxId').val('56842578');
+            $('#SupplierName').val('大大魚兒親子營隊');
+            $('#SupplierPhone').val('02-85496515');
+            $('#Email').val('sonQQ@gmail.com');
+            $('#Password').val('1234');
+            $('#ContactPerson').val('黃玉蓮');
+        })
+
+            // 用來顯示圖片預覽
+        document.getElementById("formFile").addEventListener("change", function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("imagePreview").src = e.target.result;
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+
+        $(document).ready(function () {
+            $('#submitBtn').on('click', function (e) {
+                e.preventDefault(); 
+                var formData = new FormData(document.querySelector('#register'))
+
+                fetch('@Url.Content("~/Home/Register")', {
+                    body: formData,
+                    method: 'POST'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // alert("新增成功")
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: '加入成功等待審核中',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(function () {
+                                location.href = '@Url.Content("/Home/Login")'
+                            })
+
+                        }
+                        else
+                            alert("新增失敗")                    
+           
+                //後面再研究
+                // $.ajax({
+                //     type: 'Post',
+                //     url: '/Home/Register',
+                //     data: formData,
+                //     success: function (response) {
+                //         if (response == "註冊成功") { 
+                //         Swal.fire("成功提交", "您的表單已提交！", "success")
+                //         .then(function () {
+                //             window.location.href = "/Home/Index";  
+                //         });
+                //         }
+                //     },
+                //     error: function () {
+                //         Swal.fire("提交失敗", "發生無法預期的錯誤！", "error");
+                //     }
+                })
+            });
+          
+            $('#btnDemo').on('click', function () {
+                $('#TaxId').val('56842578');
+                $('#SupplierName').val('大大魚兒親子營隊');
+                $('#SupplierPhone').val('02-85496515');
+                $('#Email').val('sonQQ@gmail.com');
+                $('#Password').val('1234');
+                $('#ContactPerson').val('黃玉蓮');
+              
+            });  
+            
+        });
+        
+        // document.getElementById("formFile").addEventListener("change", function () {
+        //         var reader = new FileReader();
+        //         reader.onload = function (e) {
+        //             document.getElementById("imagePreview").src = e.target.result;
+        //         };
+        //         reader.readAsDataURL(this.files[0]);
+        //     });
+
+
+        </script>
+</body>
+</html>
+

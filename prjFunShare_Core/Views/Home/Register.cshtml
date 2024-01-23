@@ -1,0 +1,282 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <!-- FunShare icon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!--bootstrap-->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="~/css/mdb.min.css" />
+    <!-- 自訂 -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- 密碼眼睛 -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+
+    <style>
+        /*眼睛*/
+        #checkEye {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    @model prjFunShare_Core.Models.CustomerInfomation
+
+    @{
+        ViewData["Title"] = "Register";
+    }
+
+    @Html.AntiForgeryToken()
+
+    @*註冊套版範例*@
+    <div class="border d-flex justify-content-center align-items-center" style="width: 100%; height:calc(100vh)">
+        <div class="col-md-3" style="width: 400px">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="card" style="padding:30px">
+                <h2 class="text-center">註冊</h2>
+                @*用card的外框裝Form*@
+                <form class="row g-3 needs-validation" method="post" id="registerform">
+                    <div class="col-md-12">
+                        @* col-4 代表1/3列 (12就是全滿)*@
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="Name" name="Name" required />
+                            <label for="Name" class="form-label">姓名</label>
+                            <div class="valid-feedback">請輸入姓名</div>
+                        </div>
+                        <label id="NameErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" />
+                            <label for="PhoneNumber" class="form-label">手機號碼</label>
+                            <div class="invalid-feedback">請輸入手機號碼</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="email" class="form-control" id="Email" name="Email" required />
+                            <label for="Email" class="form-label">Email</label>
+                            <div class="invalid-feedback">請輸入Email</div>
+                        </div>
+                        <label id="EmailErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="password" class="form-control" id="Password" name="Password" required />
+                            <label for="Password" class="form-label">密碼</label>
+                            <div class="invalid-feedback">請輸入密碼</div>
+                            <i id="checkEye" class="fas fa-eye-slash"></i>
+                        </div>
+                        <label id="PasswordErrorMesssage" class="text-danger" style="display:none"></label>
+
+                    </div>
+                    <div class="col-md-12">
+                        性別：
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderMale" value="M" />
+                            <label class="form-check-label" for="GenderMale">男</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderFemale" value="F" />
+                            <label class="form-check-label" for="GenderFemale">女</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderSecret" value="S" checked />
+                            <label class="form-check-label" for="GenderSecret">不方便透漏</label>
+                        </div>
+                    </div>
+
+                    @* 生日 *@
+                    <div class="col-md-12">
+                        <input type="date" class="form-control" name="BirthDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="height:35px" />
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <input id="btnDemo" type="button" value="demo" class="btn btn-danger ms-2" />
+                        <input type="submit" value="立即註冊" class="btn btn-success ms-2" id="register" />
+                        <input id="btnLogin" type="button" value="返回登入" class="btn btn-secondary ms-2" onclick="BackToLogin()" />
+                        @* @Html.ActionLink("返回登入", "Login", "Home", null, new { @class = "btn btn-secondary ms-2" }) *@
+                    </div>
+
+                    <input type="hidden" value="1" name="StatusId">
+
+                    <input type="hidden" value="@DateTime.Now.Date " name="RegistrationDay">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="~/js/mdb.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        $('#btnDemo').on('click', function () {
+            $('#Name').addClass('active');
+            $('#Email').addClass('active');
+            $('#Password').addClass('active');
+
+            $('#Name').val('李采慧');
+            $('#Email').val('li@gmail.com');
+            $('#Password').val('lllliiii');
+        })
+
+        function BackToLogin() {
+            history.back();
+        }
+
+        //驗證輸入資料
+        //姓名
+        const Name = document.getElementById("Name")
+        const NameErrorMesssage = document.getElementById("NameErrorMesssage")
+        Name.addEventListener('blur', () => {
+            if (Name.value == "") {
+                NameErrorMesssage.innerHTML = "姓名為必填";
+                NameErrorMesssage.style.display = "";
+            }
+            else {
+                NameErrorMesssage.innerHTML = "";
+                NameErrorMesssage.style.display = "none";
+            }
+        })
+
+        //Email
+        const Email = document.getElementById("Email")
+        const EmailErrorMesssage = document.getElementById("EmailErrorMesssage")
+        Email.addEventListener('blur', () => {
+            if (Email.value == "") {
+                EmailErrorMesssage.innerHTML = "Email為必填";
+                EmailErrorMesssage.style.display = "";
+            }
+            else {
+                EmailErrorMesssage.innerHTML = "";
+                EmailErrorMesssage.style.display = "none";
+            }
+        })
+        //密碼
+        const Password = document.getElementById("Password")
+        const PasswordErrorMesssage = document.getElementById("PasswordErrorMesssage")
+        Password.addEventListener('blur', () => {
+            if (Password.value == "") {
+                PasswordErrorMesssage.innerHTML = "密碼為必填";
+                PasswordErrorMesssage.style.display = "";
+            }
+            else {
+                PasswordErrorMesssage.innerHTML = "";
+                PasswordErrorMesssage.style.display = "none";
+            }
+        })
+
+        $("#checkEye").click(function () {
+            if ($(this).hasClass('fa-eye')) {
+                $("#Password").attr('type', 'password');
+            } else {
+                $("#Password").attr('type', 'text');
+            }
+            $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+        });
+
+        const registerform = document.querySelector('#registerform');
+        $("#registerform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault();
+
+                loadregister();
+                // const xhr = new XMLHttpRequest();
+                // xhr.open('post', '@Url.Content("/api/Register")');
+                // //改用 fetch 傳送FormData到server端
+                // const formData = new FormData(registerform);
+                // fetch('@Url.Content("/api/Register")', {
+                //     body: formData,
+                //     method: 'post'
+                // })
+                //     .then(response => {
+                //         return response.text();
+                //     })
+                //     .then(response => {
+                //         console.log(response);
+                        // if (response.ok) {
+                        //     alert("註冊成功")
+                        //     //登入返回首頁
+                        //     // location.href = '@Url.Content("/home/Index")'
+                        //     //需重新登入
+                        //     location.href = '@Url.Content("/home/login")'
+                        // }
+                        // else {
+                        //     alert("註冊失敗！此用戶已註冊過，請登入")
+                        //     location.href = '@Url.Content("/home/login")'
+                        // }
+            }
+        })
+
+        async function loadregister() {
+            const formData = new FormData(registerform);
+            const response = await fetch('@Url.Content("/api/Register")', {
+                body: formData,
+                method: 'post'
+            })
+            const data = await response.text();
+            if (data == "請重新登入") {
+                // alert("註冊成功");
+                Swal.fire({
+                    icon: 'success',
+                    title: '註冊成功',
+                    text: data,
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        BackToLogin();
+                    }, 2000);
+                    // location.href = '@Url.Content("/home/Index")'
+                // window.history.go(-2);
+            }
+            else {
+                // alert(data);
+                Swal.fire({
+                    icon: 'error',
+                    title: '註冊失敗',
+                    text: data,
+                })
+                setTimeout(
+                    function () {
+                        BackToLogin();
+                    }, 2000);
+                // location.href = '@Url.Content("/home/login")'
+                // window.location.reload();
+            }
+        }
+
+        console.log(document.referrer);
+
+    </script>
+</body>
+</html>

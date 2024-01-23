@@ -1,0 +1,67 @@
+﻿@model prjFunShare_Core.ViewModels.CNavbarViewModel
+
+@{
+    string userSrc = "";
+    string userName = "User";
+    if (Model != null) //有登入紀錄
+    {
+        ViewBag.BeforeLog = "hidden";
+        ViewBag.Logged = "";
+        userSrc = $"data:image / jpg; base64,{Convert.ToBase64String(Model.userPhoto)}";
+        userName = Model.userName;
+
+        <ul class="navbar-nav flex-row" @ViewBag.Logged>
+            <!-- 會員 -->
+            <li class="nav-item dropdown me-3 me-lg-1">
+                <a class="nav-link dropdown-toggle hidden-arrow d-sm-flex align-items-sm-center" style="z-index:99999" href="#" id="navbarDropdownMenuLink" role="button"
+                   data-mdb-toggle="dropdown" aria-expanded="false">
+                    <img src="@userSrc" class="headerImg" loading="lazy">
+                    <strong class="d-none d-sm-block ms-1">@userName</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" style="z-index:99999" aria-labelledby="navbarDropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("UserInfo","Customer")">個人資料</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("myFamily","Customer")">我的家人</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("myPocketList","Customer")">我的收藏</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("myOrderList","Customer")">我的課程</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("chatWindow","Home")">我的聊天室</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("myCoupon","Customer")">我的優惠券</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("myPoint","Customer")">我的紅利金</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("ChooseVerifyWay","Customer")">變更密碼</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("Logout","Home")">登出</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    }
+}
+
+@section Styles{
+    <style>
+        .headerImg {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            border-radius: 50%;
+            overflow: hidden;
+            border-radius: 50% !important;
+        }
+    </style>
+}

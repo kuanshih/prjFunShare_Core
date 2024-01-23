@@ -1,0 +1,65 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.MemberCoupon>
+
+@{
+    ViewData["Title"] = "優惠券發放一覽表";
+    ViewBag.Action = "MemberCouponList";
+}
+
+<h1>優惠券發放一覽表</h1>
+<div align="right">
+    <a asp-controller="ManagerMarketing" asp-action="MemberCouponCreate" class="btn btn-outline-primary">新增發放機制</a>
+</div>
+
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>
+                #
+               @*  @Html.DisplayNameFor(model => model.MemberCouponId) *@
+            </th>
+            <th>優惠券
+               @*  @Html.DisplayNameFor(model => model.CouponId) *@
+            </th>
+            <th>會員清單
+               @*  @Html.DisplayNameFor(model => model.MemberId) *@
+            </th>
+            <th>
+                狀態
+                @*  @Html.DisplayNameFor(model => model.StatusId) *@
+            </th>
+            <th>編輯/刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model) {
+                count++;
+
+                <tr>
+            <td>
+                @count
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Coupon.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberId)
+                @Html.ActionLink("清單資料", "details","ManagerMarketing", new { id=item.MemberCouponId })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusId)
+            </td>
+            <td>
+                        <a href="@Url.Action("Edit" , "ManagerMarketing", new { id=item.MemberCouponId })" class="btn bg-transparent text-success">
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>|
+                        <a href="@Url.Action("Delete" , "ManagerMarketing", new { id=item.MemberCouponId })" class="btn bg-transparent text-danger"
+                           onclick="return confirm('確定要刪除嗎?')">
+                            <i class="fa-solid fa-trash-can fa-lg"></i>
+                        </a>
+            </td>
+        </tr>
+}}
+    </tbody>
+</table>

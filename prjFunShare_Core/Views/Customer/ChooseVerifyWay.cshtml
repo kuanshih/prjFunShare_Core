@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "變更密碼";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="col-12 d-flex justify-content-start" style="margin-bottom:5px">
+    <input id="btnLogin" type="button" value="返回" class="btn btn-secondary" onclick="history.back()" />
+</div>
+
+<div class="border d-flex justify-content-center align-items-center" style="width: 100%; height:calc(100vh)">
+    <div class="col-md-3" style="width: 350px">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @* 選擇驗證方式 *@
+        <div class="card  row g-3" style="display:none; padding: 30px" id="ChooseVerufucationMethod">
+            <h2 class="text-center">請選擇驗證方式</h2>
+            <div class="col-12 d-flex justify-content-center">
+                <input type="button" value="Email驗證" class="btn btn-success ms-2" id="EmailVerufucationBtn" />
+                <input type="button" value="手機號碼驗證" class="btn btn-success ms-2" id="PhoneVerufucationBtn" />
+            </div>
+        </div>
+
+        @* 使用Emai驗證 *@
+        <div class="card  row g-3" id="EmailVerufucation" style="padding: 30px">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <h2 class="text-center">重設密碼</h2>
+            <form class="row g-3 needs-validation" method="post" id="Emailresetpasswordform">
+                @* col-12 代表填滿一列 *@
+                <div class="col-md-12">
+                    <div class="form-outline">
+                        <input type="text" class="form-control" id="txtEmail" name="txtEmail" required />
+                        <label for="txtEmail" class="form-label">Email帳號</label>
+                        <div class="invalid-feedback">請輸入您的會員Email</div>
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <input id="resetpassword" type="submit" value="寄出驗證信" class="btn btn-success ms-2" />
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <input id="ResetPasswordDemoBtn" type="button" value="demo" class="btn btn-danger ms-2" />
+                </div>
+            </form>
+@* 
+            <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+
+            <div class="col-12 d-flex justify-content-center">
+                <input id="back" type="button" value="返回選擇驗證方式" class="btn btn-secondary" onclick="BackToChoose()"/>
+            </div> *@
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        const ChooseVerufucationMethod = document.getElementById("ChooseVerufucationMethod");
+        const EmailVerufucation = document.getElementById("EmailVerufucation");
+
+        // $('#EmailVerufucationBtn').on('click', function () {
+        //     ChooseVerufucationMethod.style.display = "none";
+        //     EmailVerufucation.style.display = "";
+        // })
+
+        // function BackToChoose() {
+        //     ChooseVerufucationMethod.style.display = "";
+        //     EmailVerufucation.style.display = "none";
+        // }
+
+        //api寄送Email
+        $("#Emailresetpasswordform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault();
+
+                Emailresetpassword();
+            }
+        })
+
+        async function Emailresetpassword() {
+            const txtEmail = document.getElementById("txtEmail")
+            const response = await fetch(`@Url.Content("/api/ForgotPassword")?userEmail=${txtEmail.value}`)
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '寄送成功',
+                    text: "重設密碼驗證信已寄至您的電子信箱，請於 30 分鐘內開啟驗證信中的連結以重設密碼。",
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        //返回首頁
+                        window.history.replaceState(null, "", '../');
+                        window.history.go(0);
+                        // history.back();
+                    }, 2000);
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: "寄送失敗，請確認Email是否正確"
+                })
+            }
+        }
+
+        console.log(document.referrer);
+    </script>
+}

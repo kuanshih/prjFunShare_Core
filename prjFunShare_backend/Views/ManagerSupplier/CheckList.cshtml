@@ -1,0 +1,61 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.Supplier>
+@{
+    ViewData["Title"] = "CheckList";
+    ViewBag.Action = "CheckList";
+}
+
+
+<div class="container">
+    <h1>供應商審核作業</h1>
+
+    @using (Html.BeginForm())
+    {
+       
+        <div class="input-group mb-3">
+            @Html.TextBox("txtKeyword", null, new { @class = "form-control", placeholder = "關鍵字" })
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-primary">查詢</button>
+            </div>
+        </div>       
+    }
+
+    <form method="post" action="@Url.Action("CheckSuppliersBulkApproved")">
+        <input type="submit" value="審核通過" class="btn btn-success" onclick="confirmAndSubmit(event);" />
+
+    <div class="table-responsive">
+            <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>批次審核</th>
+                     <th>統一編號 @* @Html.DisplayNameFor(model => model.TaxId) *@</th>
+                     <th>公司名稱 @* @Html.DisplayNameFor(model => model.SupplierName) *@</th>
+                        <th>狀態 @* @Html.DisplayNameFor(model => model.Status.Description) *@</th>
+                    <th>審核</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = 0;
+                    foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td>@count</td>
+                            <td> <input type="checkbox" id="SupplierId" name="SupplierId" value="@item.SupplierId"></td>
+                            <td>@Html.DisplayFor(modelItem => item.TaxId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>                                                  
+                            <td>@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                            <td>
+                                @Html.ActionLink("審核通過", "CheckSupplierApproved", "ManagerSupplier", new { id = item.SupplierId }, new { onclick = "return confirm ('確定要通過嗎?')", @class="btn btn-primary" })
+                                @Html.ActionLink("審核未通過", "CheckSupplierReject", "ManagerSupplier", new { id = item.SupplierId }, new { onclick = "return confirm ('確定要未通過嗎?')", @class="btn btn-danger" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    </form>
+</div>
+

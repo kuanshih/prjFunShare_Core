@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FunShare_backend</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+   @*  <link rel="stylesheet" href="~/prjFunShare_backend.styles.css" asp-append-version="true" /> *@
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3" >
+            <div class="container-fluid">
+                <img src="~/img/funsharelogo.svg" width="200" />
+                @* <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">FunShare_backend</a> *@
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon "></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="ManagerOrder" asp-action="OrderPreview">訂單系統</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false" asp-controller="ManagerSupplier" asp-action="">廠商系統</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item nav-link text-black" asp-area="" asp-controller="ManagerSupplier" asp-action="List">供應商資訊</a></li>
+                                <li><a class="dropdown-item nav-link text-black" asp-area="" asp-controller="ManagerSupplier" asp-action="CheckList">供應商審核作業</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="ManagerProduct" asp-action="List">產品系統</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="ManagerCustomer" asp-action="List">會員系統</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="ManagerReoprt" asp-action="Chart">報表系統</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false" asp-area="" asp-controller="ManagerMarketing" asp-action="index">行銷系統</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item nav-link text-black" asp-area="" asp-controller="ManagerMarketing" asp-action="BonusList">紅利系統</a></li>
+                                <li><a class="dropdown-item nav-link text-black" asp-area="" asp-controller="ManagerMarketing" asp-action="CouponList">優惠券系統</a></li>
+                                <li><a class="dropdown-item nav-link text-black" asp-area="" asp-controller="ManagerMarketing" asp-action="MemberCouponList">優惠券發放系統</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                   
+                </div>
+               
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()            
+        </main>
+    </div>
+    <!-- AI文案產生器 -->
+    <div class="ai-intromaker">
+        @* <button type="button" class=""> *@
+        @* <img src="~/AI001.gif" alt="Scroll Up" title="AI文案產生器" class="ai-intromaker-img" onclick="window.open('@Url.Content("~/OpenAI.html")','AI文案產生器','width=500,height=450');" /> *@
+        @* </button> *@
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - FunShare_backend - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Styles", required: false)
+
+</body>
+</html>

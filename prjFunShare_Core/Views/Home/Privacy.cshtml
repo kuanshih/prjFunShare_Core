@@ -1,0 +1,500 @@
+﻿@model IEnumerable<ImageList>
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+
+<!--Qrcode的使用範例，id傳入OrderDetail_Id-->
+<img src="@Url.Action("getQrCodeImage","Order")?id=1" />
+
+<!-- ======= 日曆======= -->
+<div class="col col-12 calendar ">
+    <div class="ctitle">
+        <h1 class="green" id="calendar-year" align="center">Year</h1>
+        <h2 class="green small" id="calendar-title" align="center">Month</h2>
+        <button type="button" id="prev" class="prev btn btn-success"><i class="fas fa-chevron-left"></i></button>
+        <button type="button" id="next" class="next btn btn-success"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <div class="row text-center">
+        <div class="lightgrey body-list col-12 text-center ">
+            <ul>
+                <li class="day">一</li>
+                <li class="day">二</li>
+                <li class="day">三</li>
+                <li class="day">四</li>
+                <li class="day">五</li>
+                <li class="day">六</li>
+                <li class="day">日</li>
+            </ul>
+        </div>
+        <div class="darkgrey body-list col-12  text-center">
+            <ul id="days">
+            </ul>
+        </div>
+    </div>
+
+    <br />
+</div>
+<!-- Start Stepper HTML -->
+<div class="container">
+    <div class="accordion" id="accordionExample">
+        <div class="steps">
+            <progress id="progress" value=0 max=100></progress>
+            <div class="step-item">
+                <button id="btnOne" class="step-button text-center" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    1
+                </button>
+                <div class="step-title">
+                    First Step
+                </div>
+            </div>
+            <div class="step-item">
+                <button id="btnTwo" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    2
+                </button>
+                <div class="step-title">
+                    Second Step
+                </div>
+            </div>
+            <div class="step-item">
+                <button id="btnThree" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    3
+                </button>
+                <div class="step-title">
+                    Third Step
+                </div>
+            </div>
+        </div>
+
+        <!-- 每頁內容放這裡 -->
+        <div class="card">
+            <div id="headingOne">
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                 data-bs-parent="#accordionExample">
+                <div class="card-body">
+                    <!-- loading效果 -->
+                    <div class="row g-4">
+                        <div class="text-center text-primary">
+                            <div class="spinner-border" style="width: 3rem; height: 3rem;display:none" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- loading效果 -->
+                    第一步
+
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div id="headingTwo">
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="card-body">
+                    第二步
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div id="headingThree">
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                 data-bs-parent="#accordionExample">
+                <div class="card-body">
+                    第三步
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Start Stepper HTML -->
+
+    <div class="row justify-content-center">
+        <button id="prev" class="btn btn-secondary col-md-1 m-3">
+            上一步
+            </button>
+        <button id="next" class="btn btn-primary col-md-1  m-3">
+            下一步
+        </button>
+    </div>
+</div>
+
+
+@section Styles{
+    <style>
+        .calendar {
+            width: 100%;
+            /* height: 500px; */
+            background: #fff;
+            background-color: #D7FFEE;
+            border-radius: 5px;
+            box-shadow: 5px 5px 5px #D0D0D0;
+        }
+
+        .ctitle {
+            margin-block: 15px;
+        }
+
+        .body-list ul {
+            width: 100%;
+            font-family: arial;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+            .body-list ul li {
+                width: 14.28%;
+                height: 36px;
+                line-height: 36px;
+                list-style-type: none;
+                display: block;
+                box-sizing: border-box;
+                float: left;
+                text-align: center;
+            }
+
+        .lightgrey {
+            color: #a8a8a8; /*返灰*/
+        }
+
+        .darkgrey {
+            color: #565656; /*深灰*/
+        }
+
+        .green {
+            color: #6ac13c; /*綠色*/
+        }
+
+        .greenbox {
+            border: 1px solid #6ac13c;
+            background: #e9f8df; /*淺綠色*/
+        }
+
+        .prev {
+            width: 80px;
+            height: 30px;
+            align: left;
+        }
+
+        .next {
+            width: 80px;
+            height: 30px;
+            float: right;
+        }
+
+        .day {
+            background-color: #00AA55;
+            color: white;
+            font-size: 20px;
+            font-weight: 1000;
+        }
+
+        .date-button {
+            width: 100%;
+            height: 34px;
+            background: #95CACA;
+            color: white;
+            border: 1px solid #00DDAA;
+            /* background-color: #00DD77; */
+        }
+
+            .date-button:hover {
+                background-color: #00AA55;
+                color: black;
+            }
+
+    </style>
+    <style>
+        /* Stepper CSS */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .step-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--bs-gray-300);
+            transition: .4s;
+        }
+
+            .step-button[aria-expanded="true"] {
+                width: 60px;
+                height: 60px;
+                background-color: var(--bs-primary);
+                color: #fff;
+            }
+
+        .done {
+            background-color: var(--bs-primary);
+            color: #fff;
+        }
+
+        .step-item {
+            z-index: 10;
+            text-align: center;
+        }
+
+        #progress {
+            -webkit-appearance: none;
+            position: absolute;
+            width: 95%;
+            z-index: 5;
+            height: 10px;
+            margin-left: 18px;
+            margin-bottom: 18px;
+        }
+
+            /* to customize progress bar */
+            #progress::-webkit-progress-value {
+                background-color: var(--bs-primary);
+                transition: .5s ease;
+            }
+
+            #progress::-webkit-progress-bar {
+                background-color: var(--bs-gray-300);
+            }
+    </style>
+}
+
+@section Scripts{
+    <script>
+        //JS for 日曆l
+        var month_olympic = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var month_normal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var month_name = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+
+        var holder = document.getElementById("days");
+        var prev = document.getElementById("prev");
+        var next = document.getElementById("next");
+        var ctitle = document.getElementById("calendar-title");
+        var cyear = document.getElementById("calendar-year");
+
+        // 取得當前年月日
+        var my_date = new Date();
+        var my_year = my_date.getFullYear();
+        var my_month = my_date.getMonth();
+        var my_day = my_date.getDate();
+
+        // 讀取各月份的第一天是星期幾
+        function dayStart(month, year) {
+            var tmpDate = new Date(year, month, 1);
+            return (tmpDate.getDay());
+        }
+
+        // 計算每月有多少天 (辨別是普通年份還是閏年)
+        function daysMonth(month, year) {
+            var temp = year;
+            if (temp % 4 == 0 && temp % 100 !== 0 && temp % 400 === 0) {
+                return (month_olympic[month]);
+            } else {
+                return (month_normal[month]);
+            }
+        }
+
+        // 日曆轉換
+        function refreshDate() {
+            var str = "";
+            // 取得當月總天數
+            var totalDay = daysMonth(my_month, my_year);
+            // 取得當月第一天是星期幾
+            var firstDay = dayStart(my_month, my_year);
+            var myclass;
+            // 起始之前日期填空
+            for (var i = 1; i < firstDay; i++) {
+                str += "<li></li>";
+            }
+
+            for (var i = 1; i <= totalDay; i++) {
+                if ((i < my_day && my_year == my_date.getFullYear() && my_month == my_date.getMonth()) || my_year < my_date.getFullYear() || (my_year == my_date.getFullYear() && my_month < my_date.getMonth())) {
+                    // 過去日期顯示反灰
+                    myclass = " class='lightgrey'";
+                    btnId = "oldButton";
+                }
+                else if (i == my_day && my_year == my_date.getFullYear() && my_month == my_date.getMonth()) {
+                    // 當日以綠色呈現
+                    myclass = " class='green greenbox'";
+                    btnId = "newButton";
+                }
+                else {
+                    // 未來日期以深灰色呈現
+                    myclass = " class='darkgrey'";
+                    btnId = "newButton";
+                }
+                // 建立日期焦點
+                str += "<li" + myclass + "><button id='" + btnId + "' class='date-button' data-year='" + my_year + "' data-month='" + (my_month + 1) + "' data-day='" + i + "'>" + i + "</button></li>";
+                btnId = "";
+            }
+
+            // 設定日期顯示
+            holder.innerHTML = str;
+            // 顯示月份
+            ctitle.innerHTML = month_name[my_month];
+            // 顯示年份
+            cyear.innerHTML = my_year;
+        }
+        refreshDate();
+
+        prev.onclick = function (e) {
+            e.preventDefault();
+            const now = new Date();
+            //只顯示到這個月份
+            if (my_year === now.getFullYear() && my_month === now.getMonth()) {
+                return;
+            }
+            else
+                my_month--;
+            if (my_month < 0) {
+                my_year--;
+                my_month = 11;
+            }
+            refreshDate();
+        }
+        next.onclick = function (e) {
+            e.preventDefault();
+            my_month++;
+            if (my_month > 11) {
+                my_year++;
+                my_month = 0;
+            }
+            refreshDate();
+        }
+        var dateButtons = document.querySelectorAll('.date-button');
+        dateButtons.forEach(function (button) {
+            button.addEventListener('click', selectDate);
+        });
+
+        function selectDate(event) {
+            var year = event.target.dataset.year;
+            var month = event.target.dataset.month;
+            var day = event.target.dataset.day;
+            var clickDate = year + "/" + month + "/" + day;
+            console.log("Clicked Date:", clickDate);
+        }
+     </script>
+@*     <script>
+        // Stepper JS 原生設定
+        const stepButtons = document.querySelectorAll('.step-button');
+        const progress = document.querySelector('#progress');
+
+        Array.from(stepButtons).forEach((button, index) => {
+            button.addEventListener('click', () => {
+                //進度條
+                progress.setAttribute('value', index * 100 / (stepButtons.length - 1));//there are 3 buttons. 2 spaces.
+                //按鈕加大
+                stepButtons.forEach((item, secindex) => {
+                    if (index > secindex) {
+                        item.classList.add('done');
+                    }
+                    if (index < secindex) {
+                        item.classList.remove('done');
+                    }
+                })
+            })
+        })
+
+        // Stepper JS 加入按鈕
+        const next = document.querySelector('#next');
+        const prev = document.querySelector('#prev');
+        const btnOne = document.querySelector('#btnOne');
+        const btnTwo = document.querySelector('#btnTwo');
+        const btnThree = document.querySelector('#btnThree');
+        const divOne = document.querySelector('#collapseOne');
+        const divTwo = document.querySelector('#collapseTwo');
+        const divThree = document.querySelector('#collapseThree');
+
+        let indexCurrent=0;
+
+        // 按下一步
+        next.addEventListener('click', () => {
+            indexCurrent++;
+            setClass()
+
+            progress.setAttribute('value', indexCurrent * 100 / (stepButtons.length - 1));
+
+                stepButtons.forEach((item, secindex) => {
+                if (indexCurrent > secindex) {
+                        item.classList.add('done');
+                    }
+                if (indexCurrent < secindex) {
+                        item.classList.remove('done');
+                    }
+                })
+            })
+
+        // 按上一步
+        prev.addEventListener('click', () => {
+            indexCurrent--;
+            setClass()
+
+            progress.setAttribute('value', indexCurrent * 100 / (stepButtons.length - 1));
+
+            stepButtons.forEach((item, secindex) => {
+                if (indexCurrent > secindex) {
+                    item.classList.add('done');
+                }
+                if (indexCurrent < secindex) {
+                    item.classList.remove('done');
+                }
+            })
+        })
+
+        // 判斷目前索引值
+        function setClass(){
+            switch (indexCurrent) {
+                case -1:
+                    indexCurrent =0;
+                    break;
+                case 0:
+                    btnOne.classList.add('collapsed');
+                    btnOne.setAttribute('aria-expanded', 'true');
+                    divOne.classList.add('show');
+                    btnTwo.classList.remove('collapsed');
+                    btnTwo.setAttribute('aria-expanded', 'false');
+                    divTwo.classList.remove('show');
+                    btnThree.classList.remove('collapsed');
+                    btnThree.setAttribute('aria-expanded', 'false');
+                    divThree.classList.remove('show');
+                    break;
+                case 1:
+                    btnOne.classList.remove('collapsed');
+                    btnOne.setAttribute('aria-expanded', 'false');
+                    divOne.classList.remove('show');
+                    btnTwo.classList.add('collapsed');
+                    btnTwo.setAttribute('aria-expanded', 'true');
+                    divTwo.classList.add('show');
+                    btnThree.classList.add('collapsed');
+                    btnThree.setAttribute('aria-expanded', 'false')
+                    divThree.classList.remove('show');
+                    break;
+                case 2:
+                    btnOne.classList.remove('collapsed');
+                    btnOne.setAttribute('aria-expanded', 'false');
+                    divOne.classList.remove('show');
+                    btnTwo.classList.remove('collapsed');
+                    btnTwo.setAttribute('aria-expanded', 'false');
+                    divTwo.classList.remove('show');
+                    btnThree.classList.add('collapsed');
+                    btnThree.setAttribute('aria-expanded', 'true');
+                    divThree.classList.add('show');
+                    break;
+                case 3:
+                    alert("內容確認加在這裡");
+                    indexCurrent = 2;
+                    break;
+            }
+        }
+    </script> *@
+}

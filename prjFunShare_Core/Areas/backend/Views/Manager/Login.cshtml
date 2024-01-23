@@ -1,0 +1,77 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登入</title>
+    <!-- FunShare icon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v6.4.2/css/all.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <main class="form-signin" style="margin:auto" width=40%>
+
+        <img src="~/img/funsharelogo.svg" width="100%" />
+        <form method="post" class="row g-3 needs-validation" novalidate>
+            <div class="col-md-12">
+                <div class="form-outline">
+                    <input type="text" class="form-control" id="Account" name="txtAccount" required />
+                    <label for="Account" class="form-label">請輸入統一編號</label>
+                    <div class="invalid-feedback">請輸入統一編號</div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-outline">
+                    <input type="password" class="form-control" id="Password" name="txtPassword" required />
+                    <label for="Password" class="form-label">密碼</label>
+                    <i id="checkEye" class="fas fa-eye"></i>
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <input type="submit" value="登入" class="btn btn-primary" />
+                <input id="btnDemo" type="button" value="廠商" class="btn btn-danger ms-2" />
+                <input id="btnDemoForAdmin" type="button" value="管理員" class="btn btn-warning ms-2" />
+            </div>
+            <div class="form-group" style="text-align: center">
+                @Html.ActionLink("忘記密碼", "ForgetPassword", "Manager", null, null)
+            </div>
+            <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+            <div class="form-group" style="text-align: center">
+                @Html.ActionLink("註冊", "Register", "Manager", null, new { @class = "btn btn-secondary" })
+            </div>
+        </form>
+    </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('#btnDemo').on('click', function () {
+            $('#Password').addClass('active');
+            $('#Account').addClass('active');
+            $('#Password').val(1234);
+            $('#Account').val('98270077');
+        })
+        $('#btnDemoForAdmin').on('click', function () {
+            $('#Password').addClass('active');
+            $('#Account').addClass('active');
+            $('#Password').val(987654321);
+            $('#Account').val('FUNShare');
+        })
+        $("#checkEye").click(function () {
+            if ($(this).hasClass('fa-eye')) {
+                $("#Password").attr('type', 'text');
+            } else {
+                $("#Password").attr('type', 'password');
+            }
+            $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

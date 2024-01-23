@@ -1,0 +1,200 @@
+﻿@model IEnumerable<prjFunShare_Core.Models.Product>
+
+@{
+    ViewData["Title"] = "我的收藏";
+}
+
+<h1 class=" mb-8">我的收藏</h1>
+<div class="tab-content" id="ex-with-icons-content">
+    <div id="ex-with-icons-tabs-1">
+        <div class="row g-4" id="div1">
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        const div = document.querySelector('#div1');
+        const docFrag2 = document.createDocumentFragment();
+
+        $.ajax({
+            'url': '@Url.Action("PocketCardItem","api")',
+            'type': 'get',
+            'datatype': 'json'
+        })
+            .done(function (datas) {
+                $.each(datas, function (i, prod) {
+                    const heart = prod.isPocketed ? "fa-solid" : "fa-regular";
+                    const intro = prod.features.substr(0, 50);
+                    const item = `<div class="col-lg-4 col-md-6 " >
+                                                                                               <div class="card" >
+                                                                                        <div class="position-relative overflow-hidden">
+                                                                                             <div class="bg-image hover-zoom">
+                                                                                                              <a href="@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                                                  <img class="card-img-top" src="@Url.Content("~/img/product/")${prod.imagePath}"/>
+                                                                                                      </a>
+                                                                                             </div>
+                                                                                 <div class="position-absolute top-0 end-0 mt-1 me-1">
+                                                                                                 <button type="button" class="btn btn-white btn-floating shadow-0" data-id="${prod.productId}">
+                                                                                                                <i class="${heart} fa-heart fa-xl pe-none" ></i>
+                                                                                                                    </button>
+                                                                                 </div>
+                                                                          <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                                             ${prod.subCategoryName}
+                                                                          </div>
+                                                                          </div>
+                                                                         <div class="p-4 pb-0" >
+                                                                                <a class="d-block h5 mb-2" href = "@Url.Action("List","Product")?id=${prod.productId}">
+                                                                                     ${prod.productName}
+                                                                                     </a>
+                                                                                                             <p class="ellipsis2">${intro}</p>
+                                                                                     <h5 class="text-end mb-3"> ${prod.unitPrice} <small>起</small> </h5>
+                                                                         </div>
+                                                                          <div class="d-flex border-top">
+                                                                                   <small class="flex-fill text-center border-end py-2">
+                                                                                    <i class="fa fa-map-marker-alt text-primary me-2"></i>${prod.cityName}
+                                                                                     </small>
+                                                                                      <small class="flex-fill text-center border-end py-2">
+                                                                                       <i class="fa fa-star text-primary me-2"> </i>${prod.rank}
+                                                                                      </small>
+                                                                                     <small class="flex-fill text-center py-2">
+                                                                                       <i class="fa-solid fa-calendar-days text-primary me-2"></i>${prod.isClass}
+                                                                                        </small>
+                                                                                 </div>
+                                                                       </div>
+                                                              </div>
+                                                             `;
+                    
+
+                    div.innerHTML += item
+                })
+                btnPocket = $('.btn.btn-white.btn-floating.shadow-0');
+
+                btnPocket.on({
+                    mouseenter: function () {
+                        $(this).children('i').addClass("fa-beat");
+                        $(this).children('i').addClass("text-danger")
+                    },
+                    mouseleave: function () {
+                        $(this).children('i').removeClass("fa-beat");
+                        $(this).children('i').removeClass("text-danger");
+                    }
+                })
+
+                btnPocket.on('click', function () {
+                    const selectedProductId = $(this).data('id');
+                    const btn = $(this);
+
+                    $.ajax({
+                        'url': `@Url.Action("addToPocket","Api")?id=${selectedProductId}`,
+                        'type': 'get',
+                        'dataType': 'json'
+                    })
+                        .done(function (data) {
+                            if (data == '0') {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '請登入會員',
+                                }).then(function () {
+                                    var modal = document.getElementById("myModal");
+                                    modal.style.display = "block";
+                                    // location.href = "@Url.Action("Login","Home")";
+                                })
+                            }
+                            if (data == '1') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '已移除收藏',
+                                });
+                                btn.children('i').toggleClass("fa-regular");
+                                btn.children('i').toggleClass("fa-solid");
+                            }
+                            if (data == '2') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '已加入收藏',
+                                });
+                                btn.children('i').toggleClass("fa-regular");
+                                btn.children('i').toggleClass("fa-solid");
+                            }
+                        });
+
+            })
+       
+        })
+    </script>
+        }
+
+@section Styles{
+    <style>
+        .sticky-bottom {
+            position: fixed;
+            left: 50%;
+            bottom: 5px;
+            z-index: 99;
+        }
+
+        .transform {
+            transition: 1s;
+        }
+
+            .transform:hover {
+                transform: scale(1.05);
+            }
+
+        span.category {
+            font-size: 18px;
+        }
+
+        /*css for recipeCarousel*/
+        @@media (max-width: 767px) {
+            #recipeCarousel .carousel-inner .carousel-item > div {
+                display: none;
+            }
+
+                #recipeCarousel .carousel-inner .carousel-item > div:first-child {
+                    display: block;
+                }
+        }
+
+        #recipeCarousel .carousel-inner .carousel-item.active,
+        #recipeCarousel .carousel-inner .carousel-item-next,
+        #recipeCarousel .carousel-inner .carousel-item-prev {
+            display: flex;
+        }
+
+        /* medium and up screens */
+        @@media (min-width: 768px) {
+
+            #recipeCarousel .carousel-inner .carousel-item-end.active,
+            #recipeCarousel .carousel-inner .carousel-item-next {
+                transform: translateX(25%);
+            }
+
+            #recipeCarousel .carousel-inner .carousel-item-start.active,
+            #recipeCarousel .carousel-inner .carousel-item-prev {
+                transform: translateX(-25%);
+            }
+        }
+
+        #recipeCarousel .carousel-inner .carousel-item-end,
+        #recipeCarousel .carousel-inner .carousel-item-start {
+            transform: translateX(0);
+        }
+
+        #recipeCarousel .card {
+            margin: 10px;
+        }
+
+        .ellipsis2 {
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 2; /*行數*/
+            -webkit-box-orient: vertical;
+            white-space: normal;
+        }
+        /*css for recipeCarousel*/
+    </style>
+    }

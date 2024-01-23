@@ -1,0 +1,73 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.CouponList>
+
+@{
+    ViewData["Title"] = "優惠券一覽表";
+    ViewBag.Action = "CouponList";
+}
+
+<h1>優惠券總覽</h1>
+
+<div align="right">
+    <a asp-controller="ManagerMarketing" asp-action="CouponCreate" class="btn btn-outline-primary">新增優惠券</a>
+</div>
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>#
+               @*  @Html.DisplayNameFor(model => model.CouponId) *@
+            </th>
+            <th>名稱
+                @* @Html.DisplayNameFor(model => model.Name) *@
+            </th>
+            <th>折扣
+               @*  @Html.DisplayNameFor(model => model.Discount) *@
+            </th>
+            <th>折扣內容
+               @*  @Html.DisplayNameFor(model => model.Description) *@
+            </th>
+            <th>產品編號
+               @*  @Html.DisplayNameFor(model => model.ProductId) *@
+            </th>
+            <th>截止日期
+               @*  @Html.DisplayNameFor(model => model.DueDate) *@
+            </th>
+            <th>編輯</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model) {
+                count++;
+        <tr>
+            <td>
+               @count
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDate)
+            </td>
+            <td>
+                        <a href="@Url.Action("CouponEdit" , "ManagerMarketing", new { id=item.CouponId })" class="btn bg-transparent text-success">
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>|
+                        <a href="@Url.Action("CouponDelete" , "ManagerMarketing", new { id=item.CouponId })" class="btn bg-transparent text-danger"
+                           onclick="return confirm('確定要刪除嗎?')">
+                            <i class="fa-solid fa-trash-can fa-lg"></i>
+                        </a>
+            </td>
+        </tr>
+}}
+    </tbody>
+</table>

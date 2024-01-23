@@ -1,0 +1,296 @@
+﻿@model prjFunShare_backend.Models.ManagerOrder.CMessage
+
+@{
+    ViewData["Title"] = "Message";
+}
+
+<h1>訂單訊息</h1>
+
+<p>
+    @* <a asp-action="Create">Create New</a> *@
+</p>
+
+   
+<table class="table">
+    <thead>
+        <tr>            
+            <th>
+                訂單編號 @* @Html.DisplayNameFor(model => model.OrderId) *@
+            </th>
+            <th>
+               客服編號 @* @Html.DisplayNameFor(model => model.CustomerServiceId) *@
+            </th>
+            <th>
+               訊息內容 @* @Html.DisplayNameFor(model => model.MessageContent) *@
+            </th>
+            <th>
+               訊息時間 @* @Html.DisplayNameFor(model => model.Datetime) *@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.MessageList) {
+                <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+                @* <td>
+                    <a asp-controller="Order" asp-action="Details" asp-route-id="@item.OrderId">@item.OrderId</a>
+                </td> *@
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerServiceId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MessageContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Datetime)
+            </td>
+                @*<td>
+                    <input type="text" value="請輸入訊息..."></input>
+                </td>*@
+                @*<td><input type="submit" value="送出留言" class="btn btn-primary" /></td>*@
+                @* <td>
+                    <input type="submit" value="請輸入訊息..."></input>
+                </td>  *@
+             @*<td>
+                <a asp-action="Edit" asp-route-id="@item.MessageId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MessageId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MessageId">Delete</a> 
+            </td>*@                    
+        </tr>         
+         
+}
+    </tbody>
+
+</table>
+<form method="post">
+    <input type="hidden" name="OrderIdForView" value="@Model.OrderIdForView" />
+    <div class="form-group">
+        <label for="inputTextContent">留言訊息</label>
+        <span class="message-input__count">0/200</span>
+        <br />
+        <textarea class="form-control" name="MessageForView" id="inputTextContent" rows="4" maxlength="200" placeholder="請輸入訊息內容" oninput="countCharacters(this)"></textarea>
+    </div>
+
+    <br />
+    <div>
+        <button type="button" class="btn btn-outline-primary float-right" id="messageSent" onclick="reviewText()">送出留言</button>
+        <button type="button" class="btn btn-outline-secondary float-right" id="clearMessage">清除</button>
+        <button type="button" class="btn btn-outline-danger float-right" id="btnBadSent">壞的Demo鍵</button>
+        <button type="button" class="btn btn-outline-success float-right" id="btnGoodSent">好的Demo鍵</button>
+        <button type="submit" class="btn btn-outline-primary float-right" id="confirmSent" onclick="Sent()" hidden></button>
+    </div>
+
+</form>
+       
+
+
+
+
+@section Scripts
+    {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- 引入 SweetAlert 的 CDN -->
+    <script>
+
+
+        const endpoint = "https://msit150team04contentmoderator.cognitiveservices.azure.com/";
+        const apiKey = "52b9f75aaced496eb5fedd064400a63b";
+        const inputText = document.getElementById("inputTextContent").value;;
+
+        //  async function analyzeSentiment() {
+        //     const endpoint = "https://msit150team04contentmoderator.cognitiveservices.azure.com/";
+        //     const apiKey = "52b9f75aaced496eb5fedd064400a63b";
+        //     const inputText = document.getElementById("inputTextContent").value;;
+                    
+
+        //     const headers = {
+
+        //         'Ocp-Apim-Subscription-Key': apiKey,
+        //         'Content-Type': 'application/json',
+        //     };
+
+        //     const body = JSON.stringify({
+        //         documents: [
+        //             {
+        //                 id: "1",
+        //                 text: inputText
+        //             }
+        //         ]
+        //     });
+
+        //     try {
+        //         const response = await fetch(endpoint, {
+        //             method: 'POST',
+        //             headers: headers,
+        //             body: body
+        //         });
+
+        //         if (response.ok) {
+        //             const data = await response.json();
+        //             console.log(data);
+        //         } else {
+        //             console.error("Error calling the Text Analytics API:", response.statusText);
+        //         }
+        //     } catch (error) {
+        //         console.error("Error:", error);
+        //     }        
+        
+        // }
+
+
+                // ========================================================
+        // let translatedText = ''; // 定義全域變數
+
+        // 計算留言字數
+        function countCharacters(textarea) {
+            const maxLength = 200;
+            const currentLength = textarea.value.length;
+            const countElement = textarea.parentElement.querySelector('.message-input__count');
+            countElement.textContent = `${currentLength}/${maxLength}`;
+        }
+                
+        // // 翻譯並進行仲裁
+        // async function translateAndReview() {
+        //     const route = "/translate?api-version=3.0&from=zh-Hant&to=en"; // 將繁體中文翻譯成英文
+        //     const translateContent = document.getElementById("inputText").value;
+        //     const body = [{ text: translateContent }];
+        //     const requestBody = JSON.stringify(body);
+
+        //     const endpoint = "https://api.cognitive.microsofttranslator.com";
+        //     const key = "71b37d7805e94efb96a507c0e44747c9";
+
+        //     const headers = {
+        //         'Ocp-Apim-Subscription-Key': key,
+        //         'Content-Type': 'application/json'
+        //     };
+
+        //     const requestOptions = {
+        //         method: 'POST',
+        //         headers: headers,
+        //         body: requestBody
+        //     };
+
+        //     try {
+        //         const response = await fetch(endpoint + route, requestOptions);
+        //         const data = await response.json();
+        //         translatedText = data[0].translations[0].text; // 將翻譯後的文字儲存在全域變數
+
+        //         console.log("Input: " + translateContent);
+        //         console.log("Translated Output: " + translatedText);
+
+        //         reviewText(translatedText); // 翻譯完成文字
+        //     } catch (error) {
+        //         console.error("An error occurred:", error);
+        //     }
+        // }
+
+        // 翻譯後進行文字仲裁
+
+        function reviewText() {
+            const inputContent = document.getElementById("inputTextContent").value;
+            var params = {
+                "autocorrect": true,
+                "PII": true,
+                "classify": true,
+                "language": "eng",
+            };
+            $.ajax({
+                url: "https://msit150team04contentmoderator.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessText/Screen?" + $.param(params),
+                beforeSend: function (xhrObj) {
+                    // Request headers
+                    xhrObj.setRequestHeader("Content-Type", "text/plain");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "52b9f75aaced496eb5fedd064400a63b");
+                },
+                type: "POST",
+                // Request body
+                data: inputContent, // 使用翻譯後的文字進行仲裁 translatedText
+            }).done(function (data) {
+                // alert(JSON.stringify(data));  //可以自行處理仲裁結果
+
+                // 製作爬蟲分析仲裁結果 數據1: 成人內容 數據2: 性暗示 數據3:冒犯性
+                // 數據1 ： 成人內容
+                var Category1 = data['Classification']['Category1']['Score'];
+                // 數據2 ： 性暗示
+                var Category2 = data['Classification']['Category2']['Score'];
+                // 數據3 ： 冒犯性
+                var Category3 = data['Classification']['Category3']['Score'];
+
+                // 顯示在alert上的文案
+                var message = "";
+                var message1 = `<span style="color:black">成人內容：${(Category1 * 100).toFixed(2)}%,</span>`;
+                var message2 = `<span style="color:black">性暗示：${(Category2 * 100).toFixed(2)}%,</span>`;
+                var message3 = `<span style="color:black" >冒犯性：${(Category3 * 100).toFixed(2)}% </span>`;
+
+                if (Category1 > 0.6 || Category2 > 0.6 || Category3 > 0.6) {
+
+                    if (Category1 > 0.6) {
+
+                        message1 = `<span style="color:red">成人內容：${(Category1 * 100).toFixed(2)}%,</span>`
+
+                    }
+                    if (Category2 > 0.6) {
+
+                        message2 = `<span style="color:red">性暗示：${(Category2 * 100).toFixed(2)}%,</span>`
+
+                    }
+                    if (Category3 > 0.6) {
+
+                        message3 = `<span style="color:red" >冒犯性：${ (Category3 * 100).toFixed(2) }% </span>`
+
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: '要確定耶! 真的要跟客人這樣說?',
+                        html: `${message1} ${message2} ${message3},
+                                部分指數過高，請修正！`
+                    })
+                } else {                  
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '訊息已發送',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                    setTimeout(function () {
+                    document.getElementById('confirmSent').click();
+                    }, 1500);
+
+                }
+                // alert(`Category1：${Category1},Category2：${Category2},Category3：${Category3}`);
+                // console.log(Category1);
+            }).fail(function (err) {
+                alert(err.statusText);
+            });
+        }
+
+        // Demo鍵設置
+        $('#btnBadSent').on('click', function () {
+            $('#inputTextContent').addClass('active');
+            $('#inputTextContent').val('你這個差勁的奧客，服務到你真的是倒八輩子的霉。SHIT!');
+        });
+
+        $('#btnGoodSent').on('click', function () {
+            $('#inputTextContent').addClass('active');
+            $('#inputTextContent').val('感謝你訂購FunShare親子課程，我們真摯的希望下次可以再服務您。謝謝');
+        });
+
+        $('#clearMessage').on('click', function () {
+            const inputContent = document.getElementById("inputTextContent");
+            inputContent.value = '';
+        });
+
+
+
+        // document.getElementById("messageSent").addEventListener("click", function () {
+        //     translateAndReview();
+        // });
+        // ========================================================
+
+
+    </script>
+}

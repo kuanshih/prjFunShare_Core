@@ -1,0 +1,67 @@
+﻿@model IEnumerable<prjFunShare_backend.Models.Bonus>
+
+@{
+    ViewData["Title"] = "紅利一覽表";
+    ViewBag.Action = "BonusList";
+}
+
+<h1>紅利總覽</h1>
+
+<div align="right">
+    <a asp-action="BonusCreate" class="btn btn-outline-primary">新增紅利</a>
+</div>
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>#
+                @* @Html.DisplayNameFor(model => model.PointsId) *@
+            </th>
+            <th>會員
+               @*  @Html.DisplayNameFor(model => model.Member.Name) *@
+            </th>
+            <th>點數
+                @* @Html.DisplayNameFor(model => model.Points) *@
+            </th>
+            <th>訂單編號
+                @* @Html.DisplayNameFor(model => model.OrderId) *@
+            </th>
+            <th>截止日期
+                @* @Html.DisplayNameFor(model => model.EndDate) *@
+            </th>
+            <th>編輯</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+            foreach (var item in Model) {
+                count++;
+                <tr>
+            <td>@count
+             
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Points)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td >
+                        <a href="@Url.Action("BonusEdit" , "ManagerMarketing", new { id=item.PointsId })" class="btn bg-transparent text-success">
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>|
+                        <a href="@Url.Action("BonusDelete" , "ManagerMarketing", new { id=item.PointsId })" class="btn bg-transparent text-danger"
+                           onclick="return confirm('確定要刪除嗎?')">
+                            <i class="fa-solid fa-trash-can fa-lg"></i>
+                        </a>
+            </td>
+        </tr>
+}}
+    </tbody>
+</table>

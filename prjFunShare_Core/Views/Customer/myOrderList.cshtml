@@ -1,0 +1,1201 @@
+﻿@{
+    ViewData["Title"] = "我的課程體驗";
+}
+<head>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<h1>我的課程體驗</h1>
+<ul class="nav nav-tabs mb-3 h-100 d-flex justify-content-end align-items-start" id="myTab0" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active"
+                id="home-tab0"
+                data-mdb-toggle="tab"
+                data-mdb-target="#home0"
+                type="button"
+                role="tab"
+                aria-controls="home"
+                aria-selected="true">
+            <i class="fa-solid fa-table-cells-large"></i>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link"
+                id="profile-tab0"
+                data-mdb-toggle="tab"
+                data-mdb-target="#profile0"
+                type="button"
+                role="tab"
+                aria-controls="profile"
+                aria-selected="false">
+            <i class="fa-solid fa-list"></i>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link"
+                id="contact-tab0"
+                data-mdb-toggle="tab"
+                data-mdb-target="#contact0"
+                type="button"
+                role="tab"
+                aria-controls="contact"
+                aria-selected="false">
+            <i class="fa-solid fa-calendar-days"></i>
+        </button>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent0">
+    <div class="tab-pane fade show active"
+         id="home0"
+         role="tabpanel"
+         aria-labelledby="home-tab0">
+        <h3>正在進行的課程與體驗</h3>
+        <div class="row" id="cardFuture">
+            <span id="currentTime" style="display: none;"></span>
+            @*            <button class="btn btn-primary" style="margin:5px;">測試</button>
+            <button class="btn btn-primary" style="margin:5px;">測試</button>
+            <button class="btn btn-primary" style="margin:5px;">測試</button> *@
+        </div>
+        <h3>完成的課程與體驗</h3>
+        <div class="row" id="cardPast">
+        </div>
+
+        <h3>取消的課程與體驗</h3>
+        <div class="row" id="cardCancel">
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="profile0" role="tabpanel" aria-labelledby="profile-tab0">
+        <div id="ex-with-icons-content">
+            <span id="currentTime" style="display: none;"></span>
+            <h3>未來的體驗活動</h3>
+            <table class="table table-hover table-striped  ">
+                <thead class="justify-content-center align-items-center ">
+                    <tr>
+                        <th>
+                            產品名稱
+                        </th>
+                        <th>
+                            提供廠商
+                        </th>
+                        <th>
+                            體驗時間
+                        </th>
+                        <th>
+                            單價
+                        </th>
+                        <th>
+                            報名狀況
+                        </th>
+                        <th>
+                            繳費狀況
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="futuretbody">
+                </tbody>
+            </table>
+            <h3>過去的體驗活動</h3>
+            <table class="table table-hover table-striped  ">
+                <thead class="justify-content-center align-items-center ">
+                    <tr>
+                        <th>
+                            產品名稱
+                        </th>
+                        <th>
+                            提供廠商
+                        </th>
+                        <th>
+                            體驗時間
+                        </th>
+                        <th>
+                            單價
+                        </th>
+                        <th>
+                            報名狀況
+                        </th>
+                        <th>
+                            繳費狀況
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="pasttbody">
+                </tbody>
+            </table>
+            <h3>取消的體驗活動</h3>
+            <table class="table table-hover table-striped  ">
+                <thead class="justify-content-center align-items-center ">
+                    <tr>
+                        <th>
+                            產品名稱
+                        </th>
+                        <th>
+                            提供廠商
+                        </th>
+                        <th>
+                            體驗時間
+                        </th>
+                        <th>
+                            單價
+                        </th>
+                        <th>
+                            報名狀況
+                        </th>
+                        <th>
+                            繳費狀況
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="canceledtbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="contact0" role="tabpanel" aria-labelledby="contact-tab0">
+        <div class="container h-100 d-flex  align-items-start"><div class="type"><span class="dot"></span>體驗課程</div><div class="type"><span class="dot2"></span>長期課程</div></div>
+        <div class="container d-flex">
+            <div class="allCourse d-flex flex-column justify-content-between align-items-center">
+                <div><a id="explore" class="explore d-flex" href="@Url.Content("~/Product/Search?keyword=")">+探索新課程</a></div>
+                <div class="currentCourse" id="currentCourse">
+                    <div hidden><span class="dot"></span>  寶可夢體驗</div>
+                </div>
+                <div class="currentCourse" id="orderDetail">
+                </div>
+                <div class="list">
+                </div>
+            </div>
+            <div class="calendar">
+                <div class="month">
+                    <i class="fas fa-angle-left prev"></i>
+                    <div class="date">
+                        <h1></h1>
+                        <p>Fri May 29,2020</p>
+                    </div>
+
+                    <i class="fas fa-angle-right next"></i>
+                </div>
+                <div class="weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="days">
+                    <div class="prev-date flip " style="color: white,;background-color: #E8E8D0">
+                        <i>1</i><br />
+                        <span>寶可夢體驗營</span>
+                    </div>
+                </div>
+            </div>
+            @*     <div class="schedule panelSch">
+            <div class="title">
+            <div class="pickday">
+            <h1></h1>
+            </div>
+            </div>
+            <div class="list" id="list">
+            </div>
+            </div> *@
+        </div>
+
+        @*詳細課程資訊*@
+        <!-- Modal -->
+        <div class="modal top fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-mdb-backdrop="false" aria-hidden="true" data-mdb-keyboard="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="title" style="font-weight:400; font-family:Arial">Modal title</h5>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="detailBody" class="modal-body">
+                    </div>
+                    <div class="modal-footer" id="detailFooter">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script>
+        // 加入登入與否的判別
+        if ($('#myBtn').attr("hidden") != "hidden") {
+            Swal.fire({
+                icon: 'warning',
+                title: '請登入會員',
+            }).then(function () {
+                var modal = document.getElementById("myModal");
+                modal.style.display = "block";
+                LoginBtn();
+            })
+        }
+        //變數
+        const currentTimeElement = document.querySelector('#currentTime');
+        const futuretbody = document.querySelector('#futuretbody');
+        const pasttbody = document.querySelector('#pasttbody');
+        const canceledtbody = document.querySelector('#canceledtbody');
+        const apiUrl = {
+            getCurrentServerTime: '@Url.Content("~/api/now")',
+            getMyOrder: '@Url.Content("~/api/getmyOrder")'
+        };
+
+        //卡片頁
+        //未來的課程與體驗
+        async function orderCard(tbody, conditionSatus, conditionTime) {
+
+            try {
+                const currentTime = new Date(currentTimeElement.textContent); // Get current time from the stored element's content
+
+                let response = await fetch('@Url.Content("~/api/getmyOrder")')
+                let datas = await response.json()
+                // console.log(datas)
+
+                const filteredData = datas.filter(data =>
+                    data.productId != null && conditionSatus(data) /* data.orderStatus !== "取消"  */ && conditionTime(data, currentTime)
+                );
+                const item = filteredData.map(data => {
+                    //時間格式化
+                    const beginTime = new Date(data.beginTime);
+                    const endTime = new Date(data.endTime);
+                    let beginTimeG = data.beginTime.toString("yyyy-MM-dd")
+                    beginTimeG = beginTimeG.replace(/[-:]/g, '');
+                    let endTimeG = data.endTime.toString("yyyy-MM-dd")
+                    endTimeG = endTimeG.replace(/[-:]/g, '');
+                    //價格格式化
+                    const unitPrice = data.unitPrice;
+                    
+                    const formattedUnitPrice = new Intl.NumberFormat('zh-TW', {
+                        style: 'currency',
+                        currency: 'TWD',
+                        currencyDisplay: 'symbol',
+                        maximumFractionDigits: 0
+                    }).format(unitPrice);
+                    return (
+                        `            <div class="col-md-8" ><div class="card mb-3" onclick="showOrderDetail(${data.orderId})" style="max-width: 800px; max-height:200px" >
+                                <div class="row g-0" >
+                                    <div class="col-md-6" >
+                                        <div class="card-body wide:auto">
+                                                            <h5 class="card-title ellipsis1">${data.productName}</h5>
+                                                    <p class="card-text">${data.supplierName}</p><hr />
+                                                    <p class="card-text ellipsis2">
+                                                ${data.features}
+                                            </p>
+                                            <p class="card-text">
+                                                <small class="text-muted">Last updated 3 mins ago</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                                <img src="@Url.Content("~/img/product/")${data.imagePath}" class="img-fluid rounded-start cardImg" />
+                                    </div>
+                                </div>
+                                    </div> </div>
+                        <div class="col-md-4 d-flex flex-column justify-content-start align-items-start">
+                    </div>`
+                    )
+
+                })
+                tbody.innerHTML = item.join("");
+            }
+            catch (error) {
+                alert("An error occurred:", error)
+            }
+        }
+        async function orderFutureCard() {
+            await orderCard(cardFuture, data => data.orderStatus !== "取消", (data, currentTime) => new Date(data.beginTime) >= currentTime);
+        }
+
+        (async () => {
+            const currentTime = await getCurrentServerTime();
+            currentTimeElement.textContent = currentTime.toISOString();
+            await orderFutureCard();
+
+        })();
+        //過去的課程與體驗
+        async function orderCard2(tbody, conditionSatus, conditionTime) {
+
+            try {
+                const currentTime = new Date(currentTimeElement.textContent); // Get current time from the stored element's content
+
+                let response = await fetch('@Url.Content("~/api/getmyOrder")')
+                let datas = await response.json()
+                // console.log(datas)
+
+                const filteredData = datas.filter(data =>
+                    data.productId != null && conditionSatus(data) /* data.orderStatus !== "取消"  */ && conditionTime(data, currentTime)
+                );
+                const item = filteredData.map(data => {
+                    //時間格式化
+                    const beginTime = new Date(data.beginTime);
+                    const endTime = new Date(data.endTime);
+                    //價格格式化
+                    const unitPrice = data.unitPrice;
+                    const formattedUnitPrice = new Intl.NumberFormat('zh-TW', {
+                        style: 'currency',
+                        currency: 'TWD',
+                        currencyDisplay: 'symbol',
+                        maximumFractionDigits: 0
+                    }).format(unitPrice);
+                    return (
+                        `   <div class="col-md-4 h-100 d-flex smallCard" onclick="showOrderDetail(${data.orderId})">
+                                    <div class="col-4"><img src="@Url.Content("~/img/product/")${data.imagePath}" class="smallImg" /></div>
+                                    <div class="col-8 h-100 d-flex flex-column">
+                                        <span class="name">${data.productName}</span>
+                                                <span>${beginTime.getFullYear()} -${(beginTime.getMonth() + 1).toString().padStart(2, '0')} -${beginTime.getDate().toString().padStart(2, '0')} ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')}-${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}</span>
+                                <span>${data.cityName}${data.districtName}${data.address}</span>
+                            </div>
+                        </div>`
+                    )
+
+                })
+                tbody.innerHTML = item.join("");
+
+            }
+            catch (error) {
+                alert("An error occurred:", error)
+            }
+        }
+        async function orderPastCard() {
+            await orderCard2(cardPast, data => data.orderStatus !== "取消", (data, currentTime) => new Date(data.beginTime) < currentTime);
+        }
+        async function orderCancelCard() {
+            await orderCard2(cardCancel, data => data.orderStatus === "取消", (data, currentTime) => new Date(data.beginTime) < currentTime || new Date(data.beginTime) >= currentTime);
+        }
+
+        (async () => {
+            const currentTime = await getCurrentServerTime();
+            currentTimeElement.textContent = currentTime.toISOString();
+            await orderPastCard();
+            await orderCancelCard();
+        })();
+
+
+        //list頁
+        //共用table function
+        async function orderTable(tbody, conditionSatus, conditionTime) {
+
+            try {
+                const currentTime = new Date(currentTimeElement.textContent); // Get current time from the stored element's content
+
+                let response = await fetch('@Url.Content("~/api/getmyOrder")')
+                let datas = await response.json()
+                // console.log(datas)
+
+                const filteredData = datas.filter(data =>
+                    data.productId != null && conditionSatus(data) /* data.orderStatus !== "取消"  */ && conditionTime(data, currentTime)
+                );
+                const item = filteredData.map(data => {
+                    //時間格式化
+                    const beginTime = new Date(data.beginTime);
+                    const endTime = new Date(data.endTime);
+                    //價格格式化
+                    const unitPrice = data.unitPrice;
+                    const formattedUnitPrice = new Intl.NumberFormat('zh-TW', {
+                        style: 'currency',
+                        currency: 'TWD',
+                        currencyDisplay: 'symbol',
+                        maximumFractionDigits: 0
+                    }).format(unitPrice);
+                    return (
+
+                        `
+                                         <tr onclick="showOrderDetail('${data.orderId}')">
+                                                    <th>
+                                                            ${data.productName}
+                                                            <p>
+                                                                    <img src="@Url.Content("~/img/product/")${data.imagePath}" width="250" height="160" class="img-thumbnail" />
+                                                            </p>
+                                                    </th>
+                                                    <th>
+                                                            ${data.supplierName}
+                                                    </th>
+                                                    <th>
+                                                                           ${beginTime.getFullYear()} -${(beginTime.getMonth() + 1).toString().padStart(2, '0')} -${beginTime.getDate().toString().padStart(2, '0')} ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')}
+                                                                           <br>
+                                                                                   <br>
+                                                                                           <p class="d-flex justify-content-center align-items-center">至</p>
+                                                                                                   <br>
+                                                                             ${endTime.getFullYear()} -${(endTime.getMonth() + 1).toString().padStart(2, '0')} -${endTime.getDate().toString().padStart(2, '0')} ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}
+                                                    </th>
+                                                    <th>
+                                                                     ${formattedUnitPrice} 元
+                                                    </th>
+                                                    <th>
+                                                             ${data.orderDetailStatus}
+                                                    </th>
+                                                    <th>
+                                                            ${data.orderStatus}
+                                                    </th>
+                                                </tr>
+                                            `
+                    )
+
+                })
+                tbody.innerHTML = item.join("");
+
+            }
+            catch (error) {
+                alert("An error occurred:", error)
+            }
+        }
+
+        async function orderFuture() {
+            await orderTable(futuretbody, data => data.orderStatus !== "取消", (data, currentTime) => new Date(data.beginTime) >= currentTime);
+        }
+
+        async function orderPast() {
+            await orderTable(pasttbody, data => data.orderStatus !== "取消", (data, currentTime) => new Date(data.beginTime) <= currentTime);
+        }
+        async function orderCanceled() {
+            await orderTable(canceledtbody, data => data.orderStatus === "取消", (data, currentTime) => new Date(data.beginTime) <= currentTime || Date(data.beginTime) > currentTime);
+        }
+
+        (async () => {
+            const currentTime = await getCurrentServerTime();
+            currentTimeElement.textContent = currentTime.toISOString();
+            await orderFuture();
+            await orderPast();
+            await orderCanceled();
+        })();
+
+        //共用
+        //現在時間api
+        async function getCurrentServerTime() {
+            try {
+                let response = await fetch('@Url.Content("~/api/now")'); // Replace with the actual API endpoint URL
+                let data = await response.json();
+                return new Date(data.currentTime); // Convert the received time to a JavaScript Date object
+            } catch (error) {
+                console.error("An error occurred:", error);
+                return null;
+            }
+        }
+
+        //進入訂單明細頁
+        function showOrderDetail(orderId) {
+            window.location.href = `@Url.Content("~/Customer/asyncmyOrderDetail?orderId=")` + orderId;
+        }
+    </script>
+
+    <script>
+        /* 課表 */
+
+
+        const date = new Date();
+        let getDate;
+
+
+        async function renderCalendar() {
+            const value = await schedule();
+            const getData = value;
+            console.log(getData);
+
+            date.setDate(1);
+
+            const monthDays = document.querySelector(".days");
+
+
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+
+            const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate()
+
+
+
+            const firstDayIndex = date.getDay();
+
+            const lastDayIndex = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay()
+
+            // console.log(lastDayIndex)
+            const nextDays = 7 - lastDayIndex - 1;
+
+
+
+            const months = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+            ];
+            document.querySelector(".date h1").innerHTML = months[date.getMonth()];
+
+            document.querySelector('.date p').innerHTML = new Date().toDateString();
+
+            let days = "";
+
+
+            //上個月
+            for (let x = firstDayIndex; x > 0; x--) {
+                let pick = date.getFullYear() + '-' + (date.getMonth().toString().padStart(2, '0')) + '-' + (prevLastDay - x + 1);
+                // days += `<div class="prev-date flip" data-id="${pick} id="${pick}">${prevLastDay - x + 1}</div>`
+                let pickNew = new Date(pick);
+                let items = "";
+                for (let i = 0; i < getData.length; i++) {
+                    let beginTime = new Date(getData[i].beginTime);
+                    let endTime = new Date(getData[i].endTime);
+                    // console.log(pickNew)
+                    if (beginTime.getFullYear() == pickNew.getFullYear() && beginTime.getMonth() == pickNew.getMonth() && beginTime.getDate() == pickNew.getDate()) {
+                        // console.log(beginTime.getFullYear())
+                        if (!getData[i].isClass) {
+                            items += `<span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot"></span>   ${getData[i].productName}</span>`;
+                        }else{
+                            items += `<span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot2"></span>   ${getData[i].productName}</span>`;
+                        }
+                       
+                        
+                    }
+       
+                }
+
+                if (items != "") {
+                    days += `<div class="prev-date flip" data-id="${pick}" id="${pick}" style="color: white,
+                                                                                               ;background-color: #D0D0D0">${prevLastDay - x + 1}${items}</div>`
+                }
+                else {
+                    days += `<div class="prev-date flip" data-id="${pick}" id="${pick}">${prevLastDay - x + 1}</div>`
+                }
+            }
+            
+            for (let x = 1; x <= lastDay; x++) {
+                if (x === new Date().getDate() && date.getMonth() === new Date().getMonth()) {
+                    let pick = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + x;
+                    let pickNew = new Date(pick);
+                    let items = "";
+                    //今天
+                    for (let i = 0; i < getData.length; i++) {
+                        let beginTime = new Date(getData[i].beginTime);
+                        let endTime = new Date(getData[i].endTime);
+                        // console.log(pickNew)
+                        if (beginTime.getFullYear() == pickNew.getFullYear() && beginTime.getMonth() == pickNew.getMonth() && beginTime.getDate() == pickNew.getDate()) {
+                            // console.log(beginTime.getFullYear())
+                            if (!getData[i].isClass) {
+                                items += ` <span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot"></span>   ${getData[i].productName}</span>`;
+                            }else{
+                                items += ` <span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot2"></span>   ${getData[i].productName}</span>`;
+                            }
+                          
+                        }
+                        else {
+                            
+                        }
+                    }
+
+                    if (items != "") {
+                        days += `<div class="today flip" data-id="${pick}" id="${pick}"  style="background-color:#D0D0D0"><i>${x}</i>${items}</div>`;
+                    }
+                    else {
+                        days += `<div class="today flip" data-id="${pick}" id="${pick}">${x}</div>`;
+                    }
+
+                }
+                //這個月
+                else {
+                    let pick = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + x;
+
+                    let pickNew = new Date(pick);
+                  
+                    let items = "";
+                    for (let i = 0; i < getData.length; i++) {
+                        let beginTime = new Date(getData[i].beginTime);
+                        let endTime = new Date(getData[i].endTime);
+                        // console.log(pickNew)
+                        if (beginTime.getFullYear() == pickNew.getFullYear() && beginTime.getMonth() == pickNew.getMonth() && beginTime.getDate() == pickNew.getDate()) {
+                            // console.log(beginTime.getFullYear())
+                            if (!getData[i].isClass) { 
+                            items += ` <span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot"></span>   ${getData[i].productName}</span>`;
+                       
+                            }else
+                            {
+                                items += `<span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot2"></span>   ${getData[i].productName}</span>`;
+                            }
+                        }
+                    }
+
+                    if (items != "") {
+                        days += `<div class="flip" data-id="${pick}" id="${pick}" style="background-color:#D0D0D0"><i>${x}</i>${items}</div>`;
+                    }
+                    else {
+                        days += `<div class="flip" data-id="${pick}" id="${pick}">${x}</div>`;
+                    }
+                }
+            }
+            //下個月
+            for (let x = 1; x <= nextDays; x++) {
+                let pick = date.getFullYear() + '-' + (date.getMonth() + 2).toString().padStart(2, '0') + '-' + x;
+                let pickNew = new Date(pick);
+              
+                let items = "";
+                for (let i = 0; i < getData.length; i++) {
+                    let beginTime = new Date(getData[i].beginTime);
+                    let endTime = new Date(getData[i].endTime);
+                    // console.log(pickNew)
+                    if (beginTime.getFullYear() == pickNew.getFullYear() && beginTime.getMonth() == pickNew.getMonth() && beginTime.getDate() == pickNew.getDate()) {
+                        // console.log(beginTime.getFullYear())
+                        if (!getData[i].isClass) {
+                        items += `<span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot"></span>   ${getData[i].productName}</span>`;
+                        }else{
+                            items += `<span onclick="(showModal(${getData[i].orderId}))" data-bs-toggle="modal" class="ellipsis1"><span class="dot2"></span>   ${getData[i].productName}</span>`;
+                        }
+                        
+                    }
+                }
+
+                if (items != "") { 
+                    days += `<div class="next-date flip" data-id="${pick}" id="${pick}"  style="background-color:#D0D0D0"><i>${x}</i>${items}</div>`
+                }
+                else {
+                    days += `<div class="next-date flip" data-id="${pick}" id="${pick}">${x}</div>`
+                }
+
+            }
+            monthDays.innerHTML = days;
+            // await flip();
+        }
+
+        document.querySelector('.prev').addEventListener('click', () => {
+            date.setMonth(date.getMonth() - 1);
+            renderCalendar();
+
+        });
+
+        document.querySelector('.next').addEventListener('click', () => {
+            date.setMonth(date.getMonth() + 1);
+            // console.log(this)
+            renderCalendar();
+
+        });
+
+        renderCalendar();
+
+        //load左邊全部課程
+
+        $(document).ready(async function () {
+
+            const value = await schedule();
+            const getCourse = value;
+            const item = getCourse.map(data => {
+                const beginTime = new Date(data.beginTime);
+                const endTime = new Date(data.endTime);
+                if (!data.isClass) {
+                    return `<div onclick="seeDetail(${data.orderId})"><span class="dot"></span><span>${(beginTime.getMonth() + 1).toString().padStart(2, '0')
+                        } /${beginTime.getDate().toString().padStart(2, '0')}       ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')} -
+                                                                                                            ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}</span> <br>
+                                                                                                                           ${data.productName}
+                                                                                    </div>
+                                                        `
+                }else{
+                    return `<div onclick="seeDetail(${data.orderId})"><span class="dot2"></span><span>${(beginTime.getMonth() + 1).toString().padStart(2, '0')
+                        } /${beginTime.getDate().toString().padStart(2, '0')}       ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')} -
+                                                                                                                    ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}</span> <br>
+                                                                                                                                   ${data.productName}
+                                                                                            </div>
+                                                                `
+                }
+            })
+            $("#currentCourse").append(item)
+        });
+        //收合script
+        // let x = 0;
+        // let clicked = false;
+        // async function flip() {
+        //     const value = await schedule();
+        //     const getCourse = value;
+        //     console.log(getCourse)
+        //     $('.flip').click(function () {
+        //         if (!clicked) {
+        //             console.log(this)
+        //             $(".schedule").slideToggle("slow");
+        //             x = $(this).data().id;
+        //             const date = new Date(x);
+        //             $(".schedule h1").html(x + ' schedule')
+        //             $('#list').empty()
+        //             let item = "";
+        //             for (let i = 0; i < getCourse.length; i++) {
+        //                 let beginTime = new Date(getCourse[i].beginTime);
+        //                 let endTime = new Date(getCourse[i].endTime);
+        //                 if (beginTime.getFullYear() == date.getFullYear() && beginTime.getMonth() == date.getMonth() && beginTime.getDate() == date.getDate()) {
+        //                     item += `<li>${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')} 至
+        //                                                                                     ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')} <br>
+        //                                                                                                            ${getCourse[i].productName}
+        //                                                             </li><br>
+        //                                         `
+        //                 }
+
+        //             }
+        //             console.log(item)
+        //             $('#list').append(`${item}`)
+        //             clicked = true
+        //         }
+
+        //         else {
+        //             if ($(this).data().id === x) {
+        //                 $(".schedule").slideToggle("slow");
+
+        //                 clicked = false;
+        //             }
+        //             else {
+        //                 x = $(this).data().id
+        //                 const date = new Date(x);
+        //                 $('#list').empty()
+        //                 $(".schedule h1").html(x + ' schedule')
+        //                 let item = "";
+        //                 for (let i = 0; i < getCourse.length; i++) {
+        //                     let beginTime = new Date(getCourse[i].beginTime);
+        //                     let endTime = new Date(getCourse[i].endTime);
+        //                     if (beginTime.getFullYear() == date.getFullYear() && beginTime.getMonth() == date.getMonth() && beginTime.getDate() == date.getDate()) {
+        //                         item += `<li>${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')} 至
+        //                                                                                                 ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')} <br>
+        //                                                                                                                        ${getCourse[i].productName}
+        //                                                                         </li><br>
+        //                                                     `
+        //                     }
+
+        //                 }
+        //                 console.log(item)
+        //                 $('#list').append(`${item}`)
+        //                 clicked = true;
+        //             }
+        //         }
+        //     })
+        // };
+
+        //暫時 todo....
+
+        const t = new Date().toISOString(); // Get current date and time in the required format
+
+
+        // async function getcourses() {
+        //     let response = await fetch(`@Url.Content("~/api/getschedule")`)
+            
+
+        //     let datas = await response.json();
+        //     const filteredData = datas.filter(data =>
+        //         data.productId !== null && data.orderStatus !== "取消");
+        //     return filteredData;
+        // }
+
+        async function schedule() {
+
+            let response = await fetch(`@Url.Content("~/api/getschedule")`)
+            let datas = await response.json();
+            
+            const filteredData = datas.filter(data =>
+                data.productId !== null && data.orderStatus !== "取消");
+            return filteredData
+        }
+
+        //點選任何一個事情
+        async function seeDetail(orderid) {
+            const value = await schedule();
+            const getCourse = value;
+            let type;
+            let typeforDisplay;
+            const filterData = getCourse.filter(data => data.orderId == orderid);
+            if (!filterData[0].isClass) {
+                type = `<span class="dot"></span>`
+                typeforDisplay = `<div>課程類型:    <span class="dot"></span><span>體驗課程<span></div><br/>`
+            }
+            else {
+                type = `<span class="dot2"></span>`
+                typeforDisplay = `<div>課程類型:    <span class="dot2"></span><span>長期課程<span></div><br/>`
+            }
+            let beginTime = new Date(filterData[0].beginTime);
+            let endTime = new Date(filterData[0].endTime);
+            $("#orderDetail").empty();
+            $("#orderDetail").append(`<h5>${filterData[0].productName}</h5><br>${typeforDisplay}<span>${(beginTime.getMonth() + 1).toString().padStart(2, '0')
+                } /${beginTime.getDate().toString().padStart(2, '0')}       ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')} -
+                                                                                                                            ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}</span> <br/>
+                                                                                                                            <span><i class="fa-solid fa-arrow-right"></i>    描述: ${filterData[0].feature}</span><br/>
+                                                                        <span><i class="fa-solid fa-location-dot"></i>   位置: ${filterData[0].location}</span><br/>
+                                                                                                                                    `)
+        }
+
+
+        async function showModal(orderid) {
+            const value = await schedule();
+            const getCourse = value;
+            let type;
+            let typeforDisplay;
+            seeDetail(orderid);
+            const filterData = getCourse.filter(data => data.orderId == orderid);
+            if (!filterData[0].isClass) {
+                type = `<span class="dot"></span>`
+                typeforDisplay = `<div>課程類型:    <span class="dot"></span><span>體驗課程<span></div><br/>`
+            }
+            else {
+                type = `<span class="dot2"></span>`
+                typeforDisplay = `<div>課程類型:    <span class="dot2"></span><span>長期課程<span></div><br/>`
+            }
+            let beginTime = new Date(filterData[0].beginTime);
+            let endTime = new Date(filterData[0].endTime);
+            let beginTimeG = filterData[0].beginTime.toString("yyyy-MM-dd")
+            beginTimeG = beginTimeG.replace(/[-:]/g, '');
+            let endTimeG = filterData[0].endTime.toString("yyyy-MM-dd")
+            endTimeG = endTimeG.replace(/[-:]/g, '');
+            $("#title").html(type+"     "+filterData[0].productName)
+            $("#detailBody").html(`      <div><i class="fa-solid fa-calendar-days"></i> 日期: ${(beginTime.getMonth() + 1).toString().padStart(2, '0')
+                } /${beginTime.getDate().toString().padStart(2, '0')}       ${beginTime.getHours().toString().padStart(2, '0')}:${beginTime.getMinutes().toString().padStart(2, '0')} -
+                                                                                                                                    ${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}</div><br/>
+                                                        ${typeforDisplay}
+                                                <div><i class="fa-solid fa-arrow-right"></i>    描述: ${filterData[0].feature}</div><br/>
+                                                                <div><i class="fa-solid fa-location-dot"></i>   位置: ${filterData[0].location}</div><br/>
+                                                `)
+            $("#detailFooter").empty();
+            $("#detailFooter").append(`                <button type="button" class="btn btn-secondary" onclick="showOrderDetail(${filterData[0].orderId})">
+                                            進入課程明細
+                                        </button>
+                                                                                <button class="btn btn-secondary" style="margin:5px;"  ><a href="https://calendar.google.com/calendar/u/0/r/eventedit?dates=${beginTimeG}/${endTimeG}&ctz=Asia/Taipei&text=${filterData[0].productName}&location=${filterData[0].location}&details= ${filterData[0].feature}" target="_blank" title="加入Google Calendar">Google 行事曆</a></button>
+
+                                                    <a class="btn btn-secondary mt-2" onclick="toChat(${filterData[0].supplierId})">聊天</a>
+                                
+                                        <button type="button" class="btn btn-primary">評論</button>`)
+            var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+            myModal.show();
+        }
+
+        function showOrderDetail(orderId) {
+            window.location.href = `@Url.Content("~/Customer/myOrderDetail?orderId=")` + orderId;
+        }
+
+        function toChat(supplierId) {
+            window.location.href = `@Url.Content("~/Home/ChatWindow?receiverId=S")` + supplierId;
+        }
+
+    </script>
+}
+
+@section Styles{
+    <style>
+        h3 {
+            /*      margin-top:30px; */
+            margin-bottom: 30px;
+            font-wiight: bolder;
+        }
+        .type{
+            padding:10px;
+            margin-left:20px;
+        /*     border:solid;
+            border-radius:30px; */
+        }
+
+        .col-md-4 {
+            /*             background-color:lightgray;
+                    border:solid; */
+        }
+
+        hr {
+            margin-top: 5px;
+            /*        margin-bottom:5px; */
+        }
+
+        .card {
+            border-radius: 30px;
+            /*      margin-bottom:40px; */
+            cursor: pointer;
+        }
+
+        .mb-3 {
+            margin-bottom: 3rem !important;
+        }
+
+        .ellipsis1 {
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 1; /*行數*/
+            -webkit-box-orient: vertical;
+            white-space: normal;
+        }
+
+        .ellipsis2 {
+            overflow: hidden;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 2; /*行數*/
+            -webkit-box-orient: vertical;
+            white-space: normal;
+        }
+
+        .cardImg {
+            border-radius: 15px;
+            width: 100%;
+            height: auto;
+        }
+
+        .smallCard {
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .smallImg {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-size: cover;
+            border-radius: 10px;
+        }
+
+        .name {
+            font-weight: bolder;
+        }
+
+        .card-text {
+            margin-bottom: 5px;
+        }
+    </style>
+
+
+    <style>
+        .calendar {
+            width: 100%;
+            height: 100%;
+            background-color: #F0F0F0;
+            /*        border-radius: 30px; */
+            box-shadow: 0 0.5rem 3rem rgba(0,0,0,0.4);
+        }
+
+        .month {
+            width: 100%;
+            padding-bottom: 5%;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            text-align: center;
+            text-shadow: 0 0.3rem o.5rem rgba(0,0,0,0.5);
+        }
+
+            .month i {
+                font-size: 2rem;
+                cursor: pointer;
+            }
+
+            .month h1 {
+                font-size: 2rem;
+                font-weight: 400;
+                text-transform: uppercase;
+                letter-spacing: 0.2rem;
+                margin-bottom: 1rem;
+                margin-top: 1rem;
+            }
+
+            .month p {
+                font-size: 1rem;
+            }
+
+        .weekdays {
+            width: 100%;
+            height: 5rem;
+            padding: 0 0.4rem;
+            display: flex;
+            align-items: center;
+            background-color: #FFFFFF;
+        }
+
+            .weekdays div {
+                font-size: 1.5rem;
+                font-weight: 400;
+                letter-spacing: 0.1rem;
+                width: calc(100%/7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+            }
+
+        .days {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0.2rem;
+        }
+
+
+            .days div {
+                font-size: 1.4rem;
+                /*                 margin: 0.3rem; */
+                /*             padding-right:3px; */
+                width: calc(100%/7);
+                height: 120px;
+                /*   padding-bottom: 8%; */
+                /*        display: flex; */
+                /*         justify-content: start;
+                                align-items: start; */
+                text-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+                transition: backgrouod-color 0.2s;
+                border: solid;
+                border-width: thin;
+                border-color: #FCFCFC;
+                position: relative; /* 添加相对定位 */
+            }
+
+                .days div i {
+                    justify-content: end;
+                    align-items: start;
+                    /*         position: absolute;
+                                    top: 0;
+                                    right: 1; */
+                }
+
+                .days div span {
+                    
+                    font-size: 0.8rem;
+                    margin: 0px;
+                    /* background-color:white;*/
+                    /*    border-radius:30px;*/
+                }
+
+                    .days div span:hover {
+                        display: inline-block;
+                        background-color: #FFFFFF;
+                       /* border: 0.2rem solid #777;*/
+                        cursor: pointer;
+                        
+                    }
+
+
+                .days div:hover:not(.today) {
+                    background-color: #262626;
+                    border: 0.2rem solid #777;
+                    cursor: pointer;
+                }
+
+        .prev-date,
+        .next-date {
+            opacity: 0.5;
+        }
+
+        .today {
+            background-color: #94aaa2;
+        }
+
+        .allCourse {
+            width: 30%;
+            background-color: #94aaa2;
+        }
+
+        .explore {
+            margin-top: 30%;
+            padding: 10px;
+            border-radius: 40px;
+            background-color: White;
+            border-color: black;
+            color:black;
+            box-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+        }
+
+        .currentCourse {
+            width: 80%;
+            /*    padding-bottom:80%; */
+            height: 300px;
+            border: solid;
+            /*          border-color: black; */
+            /*   border-radius: 30px; */
+            background-color: white;
+            padding-left: 15px;
+            padding-top: 15px;
+            overflow: auto
+        }
+
+            .currentCourse div:hover {
+                background-color: #FFF8D7;
+                border: 0.2rem solid #777;
+                cursor: pointer;
+                overflow: auto
+            }
+
+            .currentCourse span {
+                font-size: 1rem;
+                font-style: oblique;
+            }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: orange;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot2 {
+            height: 10px;
+            width: 10px;
+            background-color: #84C1FF;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .schedule {
+            width: 30%;
+            padding-bottom: 8%;
+            background-color: #e1dfe1;
+            box-shadow: 0 0.3rem 3rem rgba(0,0,0,0.3);
+            /* display: none; */
+        }
+
+        .title {
+            width: 100%;
+            height: 12rem;
+            background-color: #9ba7a3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            text-align: center;
+            text-shadow: 0 0.3rem o.5rem rgba(0,0,0,0.5);
+        }
+
+            .title h1 {
+                font-size: 3rem;
+                font-weight: 400;
+                text-transform: uppercase;
+                letter-spacing: 0.2rem;
+                margin-bottom: 1rem;
+            }
+
+        .list {
+            margin-left: 2rem;
+            margin-top: 1.8rem;
+            padding-left: 3rem;
+        }
+
+            .list li {
+                font-size: 1rem;
+                font-weight: 400;
+                letter-spacing: 0.1rem;
+                height: calc(38rem/9);
+                text-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+            }
+
+        .time {
+            height: 5rem;
+            padding: 0 0.4rem;
+            align-items: center;
+        }
+
+            .time div {
+                font-size: 1.5rem;
+                font-weight: 400;
+                letter-spacing: 0.1rem;
+                height: calc(38rem/9);
+                text-shadow: 0 0.3rem 0.5rem rgba(0,0,0,0.5);
+            }
+    </style>
+}

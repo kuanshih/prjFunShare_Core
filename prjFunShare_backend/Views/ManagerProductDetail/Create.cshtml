@@ -1,0 +1,82 @@
+﻿@model prjFunShare_backend.Models.ProductDetailWrap
+
+@{
+    ViewData["Title"] = "新增產品明細";
+}
+
+<h1>新增產品明細</h1>
+
+<h4>產品明細</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           @*  <div class="form-group">
+                <label asp-for="ProductDetailId" class="control-label"></label>
+                <input asp-for="ProductDetailId" class="form-control" />
+                <span asp-validation-for="ProductDetailId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <input asp-for="ProductId" class="form-control" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="BeginTime" class="control-label"></label>
+                <input asp-for="BeginTime" class="form-control" />
+                <span asp-validation-for="BeginTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DistrictId" class="control-label"></label>
+                <input asp-for="DistrictId" class="form-control" />
+                <span asp-validation-for="DistrictId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusId" class="control-label"></label>
+                <input asp-for="StatusId" class="form-control" />
+                <span asp-validation-for="StatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitPrice" class="control-label"></label>
+                <input asp-for="UnitPrice" class="form-control" />
+                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dealine" class="control-label"></label>
+                <input asp-for="Dealine" class="form-control" />
+                <span asp-validation-for="Dealine" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClassId" class="control-label"></label>
+                <input asp-for="ClassId" class="form-control" />
+                <span asp-validation-for="ClassId" class="text-danger"></span>
+            </div>
+            </br>
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+                <a class="btn btn-primary" type="button" asp-controller="ManagerProductDetail" asp-action="Create">繼續新增課程明細</a>
+                <a class="btn btn-primary" type="button" asp-controller="ManagerPhoto" asp-action="DragandDrop">新增圖片</a>
+            </div>
+        </form>
+    </div>
+</div>
+</br>
+<div>
+    <a asp-controller="ManagerProduct"  asp-action="List">回到產品首頁</a>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

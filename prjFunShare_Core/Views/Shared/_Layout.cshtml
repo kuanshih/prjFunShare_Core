@@ -1,0 +1,852 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FunShare</title>
+    <!-- FunShare icon -->
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!--bootstrap-->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="~/css/mdb.min.css" />
+    <!-- 自訂 -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+@*     <!-- 密碼眼睛 -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" /> *@
+
+    <style>
+        /*眼睛*/
+        #checkEye {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }        
+        #RegisterCheckEye {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+    </style>
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top z-1">
+        <!-- Container wrapper -->
+        <div class="container">
+            @* <partial name="_CookieConsentPartial" /> *@
+            <!-- Navbar brand -->
+            <a class="navbar-brand me-2" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/img/FUNShareLOGO.png" height="60" alt="FunShare Logo"
+                     loading="lazy" style="margin-right: 20px;" />
+            </a>
+
+            <!-- Toggle button -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarButtons"
+                    aria-controls="navbarButtons" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarButtons">
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item pt-1">
+                        <form method="get" asp-action="Search" asp-controller="Product">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="inputSearch" list="datalistOptions" placeholder="尋找體驗" name="keyword" aria-describedby="button-addon">
+                                <datalist id="datalistOptions">
+                                </datalist>
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon"><i class="fa fa-search"></i></button>
+                            </div>
+                        </form>
+                    </li>
+                    <!-- 測試用連結 -->
+@*                     <li class="nav-item">@Html.ActionLink("單堂課程", "List", "Product", new { id=46 }, new { @class = "nav-link" })</li> 
+                    <li class="nav-item">@Html.ActionLink("長期課程", "List", "Product", new { id=59 }, new { @class = "nav-link" })</li> *@
+                </ul>
+                <!-- Left links -->
+            </div>
+
+            <!-- Right elements -->
+            <div class="d-flex align-items-center">
+                @{
+                    if (Context.Session.Keys.Contains(CDictionary.SK_LOGINED_USER))
+                    {
+                        ViewBag.BeforeLog = "hidden";
+                    }
+                }
+                <div id="divLogin">
+                    <a id="myBtn" class="btn btn-primary me-3" href="#" @ViewBag.BeforeLog>
+                        登入/註冊
+                    </a>
+                </div>
+                <div id="divNav">
+                </div>
+            </div>
+            <!-- Right elements -->
+        </div>
+    </nav>
+    <!-- Navbar -->
+
+    <div class="container-xl my-4">
+        @RenderBody()
+    </div>    
+    
+    <!-- AI客服 -->
+    <div class="ai-customer">
+        <img src="~/icons8-axolotl-bgremoved4.gif" alt="Scroll Up" title="AI客服" class="ai-img" onclick="showIframe()" />
+    </div class="ai-customer">
+    <!-- 隱藏AI客服 -->
+        <iframe id="iframeAI" style="display: none; position: fixed; right: 20px; bottom: 20px; width: 500px; height: 450px; border: none;"></iframe>
+    <!--Login Modal-->
+    <div id="myModal" class="modal-login card">
+        <!-- Modal content -->
+        <div id="myModalContent" class="modal-login-content col-md-3">
+            <span class="close">&times;</span>
+
+            <!-- 登入Modal -->
+            <div id="LoginModalContent">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <h2 class="text-center">登入</h2>
+
+                <p class="text-center">開啟有趣生活的任意門，就從登入開始！</p>
+
+                <div style="width: 100%; height:100%; padding: 10px">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height:100%">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+                        </svg>
+                        使用 Facebook 登入
+                    </button>
+                </div>
+                <div style="width: 100%; height:100%; padding: 10px">
+                    <button type="submit" class="btn btn-light" style="width: 100%; height:100%">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                        </svg>
+                        使用 Google 登入
+                    </button>
+                </div>
+
+                <div class="text-center" style="width: 100%; height:100%; padding: 5px">或</div>
+
+                <form method="post" class="row g-3 needs-validation" id="loginform">
+                    @* col-12 代表填滿一列 *@
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="Account" name="txtAccount" required />
+                            <label for="Account" class="form-label">Email 或 手機號碼</label>
+                            <div class="invalid-feedback">請輸入Email 或 手機號碼</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="password" class="form-control" id="LoginPassword" name="txtPassword" required />
+                            <label for="Password" class="form-label">密碼</label>
+                            <div class="invalid-feedback">請輸入密碼</div>
+                            <i id="checkEye" class="fas fa-eye-slash"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <img id="img-captcha" src="~/get-captcha-image" />
+                        </div>
+                        <input type="text" class="form-control" placeholder="請輸入驗證碼" maxlength="4" id="CaptchaCode" name="txtCaptchaCode" required />
+                    </div>
+
+                    <div class="form-group" style="text-align: end">
+                        @* <input type="button" value="忘記密碼" class="btn btn-outline-secondary" onclick="ResetPasswordBtn()" /> *@
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" ef="javascript: void(0)" onclick="ResetPasswordBtn()">
+                            忘記密碼
+                        </a>
+                        @* @Html.ActionLink("忘記密碼", "ResetPassword", "Home", null, null) *@
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <input type="submit" value="登入" class="btn btn-success" id="login" />
+                    </div>                    
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <input id="LoginDemo1Btn" type="button" value="李慧貞" class="btn btn-danger ms-2" />
+                        <input id="LoginDemo2Btn" type="button" value="王秋夢" class="btn btn-danger ms-2" />
+                    </div>
+
+
+
+                    <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+
+                    <div class="form-group" style="text-align: center">
+                        還不是FunShare會員？
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)" onclick="RegisterBtn()">
+                            立即註冊
+                        </a>
+                        @* <input type="button" value="註冊" class="btn btn-secondary" onclick="RegisterBtn()" /> *@
+                        @*@Html.ActionLink("註冊", "Register", "Home", null, new { @class = "btn btn-secondary" }) *@
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- 註冊Modal -->
+            <div id="RegisterModalContent">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <h2 class="text-center">註冊</h2>
+                @*用card的外框裝Form*@
+                <form class="row g-3 needs-validation" method="post" id="registerform">
+                    <div class="col-md-12">
+                        @* col-4 代表1/3列 (12就是全滿)*@
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="Name" name="Name" required />
+                            <label for="Name" class="form-label">姓名</label>
+                            <div class="valid-feedback">請輸入姓名</div>
+                        </div>
+                        <label id="NameErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" />
+                            <label for="PhoneNumber" class="form-label">手機號碼</label>
+                            <div class="invalid-feedback">請輸入手機號碼</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="email" class="form-control" id="Email" name="Email" required />
+                            <label for="Email" class="form-label">Email</label>
+                            <div class="invalid-feedback">請輸入Email</div>
+                        </div>
+                        <label id="EmailErrorMesssage" class="text-danger" style="display:none"></label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="password" class="form-control" id="Password" name="Password" required />
+                            <label for="Password" class="form-label">密碼</label>
+                            <div class="invalid-feedback">請輸入密碼</div>
+                            <i id="RegisterCheckEye" class="fas fa-eye-slash"></i>
+                        </div>
+                        <label id="PasswordErrorMesssage" class="text-danger" style="display:none"></label>
+
+                    </div>
+                    <div class="col-md-12">
+                        性別：
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderMale" value="M" />
+                            <label class="form-check-label" for="GenderMale">男</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderFemale" value="F" />
+                            <label class="form-check-label" for="GenderFemale">女</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Gender" id="GenderSecret" value="S" checked />
+                            <label class="form-check-label" for="GenderSecret">不方便透漏</label>
+                        </div>
+                    </div>
+
+                    @* 生日 *@
+                    <div class="col-md-12">
+                        <input type="date" class="form-control" name="BirthDate" id="BirthDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="height:35px" />
+                    </div>
+
+                    <p>
+                        點擊「立即註冊」即表示你同意我們的
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)">《服務條款》</a>、
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)">《隱私政策》</a>和
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)">《Cookie 政策》</a>。
+                    </p>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <input id="RegisterDemoBtn" type="button" value="李慧貞Demo" class="btn btn-danger ms-2" />
+                        <input id="register" type="submit" value="立即註冊" class="btn btn-success ms-2" />
+                    </div>
+
+                    <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+
+                    <div class="col-12 d-flex justify-content-center">
+                        已經是 FunShare會員？
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)" onclick="LoginBtn()">
+                            返回登入
+                        </a>
+                        @* <input type="button" value="返回登入" class="btn btn-secondary ms-2" onclick="LoginBtn()" /> *@
+                    </div>
+
+                    <input type="hidden" value="1" name="StatusId">
+
+                    @* <input type="hidden" value="@DateTime.Now.Date " name="RegistrationDay"> *@
+                </form>
+            </div>
+
+            <!-- 忘記密碼Modal -->
+            <div id="ResetPasswordModalContent">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <h2 class="text-center">重設密碼</h2>
+                <form class="row g-3 needs-validation" method="post" id="resetpasswordform">
+                    @* col-12 代表填滿一列 *@
+                    <div class="col-md-12">
+                        <div class="form-outline">
+                            <input type="text" class="form-control" id="txtEmail" name="txtEmail" required />
+                            <label for="txtEmail" class="form-label">Email帳號</label>
+                            <div class="invalid-feedback">請輸入您的會員Email</div>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <input id="resetpassword" type="submit" value="寄出驗證信" class="btn btn-success ms-2" />
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <input id="ResetPasswordDemoBtn" type="button" value="王秋夢Demo" class="btn btn-danger ms-2" />
+                    </div>
+
+                    <hr class="flex-xxl-shrink-1" style="text-align: center; width: 100%" />
+
+                    @*                     <div class="col-12 d-flex justify-content-center">
+                    <input type="button" value="返回登入" class="btn btn-secondary ms-2" onclick="LoginBtn()" />
+                    <input type="button" value="立即註冊" class="btn btn-success ms-2" onclick="RegisterBtn()" />
+                    </div> *@
+
+                    <div class="col-12 d-flex justify-content-center">
+                        想起密碼了？
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)" onclick="LoginBtn()">
+                            返回登入
+                        </a>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        還不是FunShare會員？
+                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="javascript: void(0)" onclick="RegisterBtn()">
+                            立即註冊
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!--Login Modal-->
+    <!--footer-->
+    <footer class="bg-secondary text-white text-center text-lg-start ">
+        <!-- Grid container -->
+        <div class="container p-4">
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <img src="~/img/FUNShareLOGO.png" height="50" />
+                    <p>
+                        <h6>陪你探索孩子的無限可能</h6>
+                        FunShare 提供最多元、高品質的親子體驗預訂服務，讓家長可以一站式完成搜尋及預訂，輕鬆為孩子安排最合適的親子體驗。
+                    </p>
+                </div>
+                <!--Grid column-->
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">認識我們</h5>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="About">About Us</a>
+                        </li>
+                        <li>
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Special">精選特輯</a>
+                        </li>
+                        <li>
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Media">媒體報導</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">加入我們</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Corporation">成為合作廠商</a>
+                        </li>
+                        <li>
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Company-welfare">企業合作洽談</a>
+                        </li>
+                        <li>
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Recruit">徵才資訊</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary mt-2" href="https://localhost:7130/">廠商登入</a>
+                        </li>
+                       
+                    </ul>
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+        </div>
+        <!-- Grid container -->
+        <!-- Grid container -->
+        <div class="container pt-4  text-center">
+            <!-- Section: Social media -->
+            <section class="mb-4">
+                <!-- Facebook -->
+                <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                   data-mdb-ripple-color="dark"><i class="fab fa-facebook-f fa-xl"></i></a>
+
+                <!-- Twitter -->
+@*                <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                   data-mdb-ripple-color="dark"><i class="fab fa-twitter"></i></a>*@
+
+                <!-- Instagram -->
+                <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                   data-mdb-ripple-color="dark"><i class="fab fa-instagram fa-xl"></i></a>
+@*                   <!-- Google -->
+                <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                   data-mdb-ripple-color="dark"><i class="fab fa-google fa-xl"></i></a>*@
+
+                <!-- Line -->
+                <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                   data-mdb-ripple-color="dark"><i class="fa-brands fa-line fa-xl" style="padding-top:22px"></i></a>
+@*                <!-- Github -->
+                <a class="btn btn-link btn-floating btn-lg text-dark m-1" href="#!" role="button"
+                   data-mdb-ripple-color="dark"><i class="fab fa-github"></i></a>*@
+            </section>
+            <!-- Section: Social media -->
+        </div>
+        <!-- Grid container -->
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            <p>&copy; @DateTime.Now.Year - FunShare inc. - <a asp-area="" asp-controller="Home" asp-action="Privacy">All Rights Reserved.</a></p>
+        </div>
+        <!-- Copyright -->
+    </footer>
+    <!--footer-->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MDB -->
+    <script type="text/javascript" src="~/js/mdb.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        //載入會員區塊
+        $('#divNav').load('@Url.Action("_Navbar","Home")')
+
+        $('#inputSearch').on('input',function(){
+            let keyword =  $('#inputSearch').val();
+            keywordMatch(keyword)
+        })
+
+        async function keywordMatch(keyword){
+            const response = await fetch(`@Url.Action("autoCompleteProducts","Api")?keyword=${keyword}`)
+            const datas = await response.json();
+            if(datas != null){
+                const products = datas.map(prod => `<option value="${prod}"/>`);
+            document.querySelector('#datalistOptions').innerHTML= products.join("");
+            }
+        }
+
+        /*切換Modal*/
+        const LoginModalContent = document.getElementById("LoginModalContent");
+        const RegisterModalContent = document.getElementById("RegisterModalContent");
+        const ResetPasswordModalContent = document.getElementById("ResetPasswordModalContent");
+        const myModalContent = document.getElementById("myModalContent");
+
+        function LoginBtn() {
+            LoginModalContent.style.display = "";
+            RegisterModalContent.style.display = "none";
+            ResetPasswordModalContent.style.display = "none";
+            myModalContent.style.width = "350px";
+        }
+
+        function RegisterBtn() {
+            LoginModalContent.style.display = "none";
+            RegisterModalContent.style.display = "";
+            ResetPasswordModalContent.style.display = "none";
+            myModalContent.style.width = "400px";
+        }
+
+        function ResetPasswordBtn() {
+            LoginModalContent.style.display = "none";
+            RegisterModalContent.style.display = "none";
+            ResetPasswordModalContent.style.display = "";
+            myModalContent.style.width = "350px";
+        }
+
+        /*--------------登入--------------*/
+
+        //李慧貞
+        $('#LoginDemo1Btn').on('click', function () {
+            $('#LoginPassword').addClass('active');
+            $('#Account').addClass('active');
+            $('#LoginPassword').val('0202zina');
+            $('#Account').val('ZinaLi0202@gmail.com');
+        })
+        //王秋夢
+        $('#LoginDemo2Btn').on('click', function () {
+            $('#LoginPassword').addClass('active');
+            $('#Account').addClass('active');
+            $('#LoginPassword').val('dream0101');
+            $('#Account').val('DreamWang0101@gmail.com');
+        })        
+
+        $("#checkEye").click(function () {
+            if ($(this).hasClass('fa-eye')) {
+                $("#LoginPassword").attr('type', 'password');
+            } else {
+                $("#LoginPassword").attr('type', 'text');
+            }
+            $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+        });
+
+        $("#img-captcha").click(function () {
+            resetCaptchaImage();
+        });
+
+        function resetCaptchaImage() {
+            d = new Date();
+            $("#img-captcha").attr("src", "/get-captcha-image?" + d.getTime());
+        }
+
+        const loginform = document.querySelector('#loginform');
+        $("#loginform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault(); //防止預設行為(action="~/api/getdemo" 之類)的發生
+
+                loadlogin();
+            }
+        })
+
+        async function loadlogin() {
+            Swal.fire({
+                title: '正在為您登入',
+                html: '請稍後...',
+                // timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+            const formData = new FormData(loginform);
+            const response = await fetch('@Url.Content("/api/Login")', {
+                body: formData,
+                method: 'post'
+            })
+            const data = await response.text();
+            if (data == "登入成功") {
+                // alert("登入成功");
+                Swal.fire({
+                    icon: 'success',
+                    title: '登入成功',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        window.location.reload();
+                    }, 2000);
+            }
+            else if (data == "您的帳號尚未完成信箱驗證，請確認信箱內是否有收到驗證信。") {
+                Swal.fire({
+                    title: '登入失敗',
+                    text: data,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '重新寄送驗證碼',
+                    cancelButtonText: '關閉'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //呼叫寄送驗證信Api
+                        // NotVerified(email)
+                        const Account = document.getElementById("Account")
+                        async function SentEmailVerified() {
+                            const response = await fetch(`@Url.Content("/api/NotVerified")?userEmail=${Account.value}`)
+                            if (response.ok) {
+                                Swal.fire(
+                                    '寄送成功',
+                                    '已重新寄送驗證信，請確認您的Email信箱',
+                                    'success'
+                                )
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '錯誤',
+                                    text: "寄送失敗，請確認Email是否正確"
+                                })
+                            }
+                        }
+                        SentEmailVerified()
+                    }
+                })
+            }
+            else {
+                // alert(data);
+                Swal.fire({
+                    icon: 'error',
+                    title: '登入失敗',
+                    text: data,
+                })
+                // alert("@TempData["LoginErrorMessage"]");
+                $('#CaptchaCode').val("");
+                resetCaptchaImage();
+                // window.location.reload();
+            }
+        }
+
+        /*--------------註冊--------------*/
+        $('#RegisterDemoBtn').on('click', function () {
+            $('#Name').addClass('active');
+            $('#Email').addClass('active');
+            $('#Password').addClass('active');
+            $('#BirthDate').addClass('active');
+
+            $('#Name').val('李慧貞');
+            $('#Email').val('ZinaLi0202@gmail.com');
+            $('#Password').val('0202zina');
+            $('#BirthDate').val('1990-09-10');
+        })
+
+        //驗證輸入資料
+        //姓名
+        const Name = document.getElementById("Name")
+        const NameErrorMesssage = document.getElementById("NameErrorMesssage")
+        Name.addEventListener('blur', () => {
+            if (Name.value == "") {
+                NameErrorMesssage.innerHTML = "姓名為必填";
+                NameErrorMesssage.style.display = "";
+            }
+            else {
+                NameErrorMesssage.innerHTML = "";
+                NameErrorMesssage.style.display = "none";
+            }
+        })
+
+        //Email
+        const Email = document.getElementById("Email")
+        const EmailErrorMesssage = document.getElementById("EmailErrorMesssage")
+        Email.addEventListener('blur', () => {
+            if (Email.value == "") {
+                EmailErrorMesssage.innerHTML = "Email為必填";
+                EmailErrorMesssage.style.display = "";
+            }
+            else {
+                EmailErrorMesssage.innerHTML = "";
+                EmailErrorMesssage.style.display = "none";
+            }
+        })
+        //密碼
+        const Password = document.getElementById("Password")
+        const PasswordErrorMesssage = document.getElementById("PasswordErrorMesssage")
+        Password.addEventListener('blur', () => {
+            if (Password.value == "") {
+                PasswordErrorMesssage.innerHTML = "密碼為必填";
+                PasswordErrorMesssage.style.display = "";
+            }
+            else {
+                PasswordErrorMesssage.innerHTML = "";
+                PasswordErrorMesssage.style.display = "none";
+            }
+        })
+
+        $("#RegisterCheckEye").click(function () {
+            if ($(this).hasClass('fa-eye')) {
+                $("#Password").attr('type', 'password');
+            } else {
+                $("#Password").attr('type', 'text');
+            }
+            $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+        });
+
+        const registerform = document.querySelector('#registerform');
+        $("#registerform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault();
+
+                loadregister();
+            }
+        })
+
+        async function loadregister() {
+            Swal.fire({
+                title: '正在為您註冊',
+                html: '請稍後...',
+                // timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+            const formData = new FormData(registerform);
+            const response = await fetch('@Url.Content("/api/Register")', {
+                body: formData,
+                method: 'post'
+            })
+            const data = await response.text();
+            if (data == "寄送成功") {
+                // alert("註冊成功");
+                Swal.fire({
+                    icon: 'success',
+                    title: '查看你的電子郵件',
+                    text: `我們將驗證鏈接發送至：\n${Email.value}\n檢查您的電子郵件並單擊驗證鏈接以繼續創建您的帳戶。`,
+                    // timer: 4500
+                })
+                    .then((result) => {
+                            LoginBtn();
+                    })
+                // location.href = '@Url.Content("/home/Index")'
+                // window.history.go(-2);
+
+            }
+            else {
+                // alert(data);
+                Swal.fire({
+                    icon: 'error',
+                    title: '註冊失敗',
+                    text: data,
+                })
+                setTimeout(
+                    function () {
+                        LoginBtn();
+                    }, 2000);
+                // location.href = '@Url.Content("/home/login")'
+                // window.location.reload();
+            }
+        }
+
+        /*--------------重設密碼--------------*/
+        $('#ResetPasswordDemoBtn').on('click', function () {
+            $('#txtEmail').addClass('active');
+            $('#txtEmail').val('DreamWang0101@gmail.com');
+        })
+
+        const resetpasswordform = document.querySelector('#resetpasswordform');
+        $("#resetpasswordform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault();
+
+                resetpassword();
+            }
+        })
+
+        async function resetpassword() {
+            Swal.fire({
+                title: '正在寄送驗證信',
+                html: '請稍後...',
+                // timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+            const txtEmail = document.getElementById("txtEmail")
+            const response = await fetch(`@Url.Content("/api/ForgotPassword")?userEmail=${txtEmail.value}`)
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '寄送成功',
+                    text: "重設密碼驗證信已寄至您的電子信箱，請於 30 分鐘內開啟驗證信中的連結以重設密碼。",
+                    // timer: 1500
+                })
+                    .then((result) => {
+                            LoginBtn();
+                    })
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: "寄送失敗，請確認Email是否正確"
+                })
+            }
+        }
+
+        /*--------------Modal預設--------------*/
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+            LoginBtn();
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+            LoginBtn();
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                LoginBtn();
+            }
+        }   
+        
+
+        // AI客服
+        window.addEventListener("message", function (event) {
+            if (event.data === "closeIframe") {
+                closeIframe();
+            }
+        });
+
+        // 顯示 iframe
+        function showIframe() {
+            var iframe = document.getElementById("iframeAI");
+            iframe.src = "@Url.Content("~/AIService.html")";
+            iframe.style.display = "block";
+        }
+
+        // 關閉 iframe
+        function closeIframe() {
+            var iframe = document.getElementById("iframeAI");
+            iframe.style.display = "none";
+        }
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

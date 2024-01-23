@@ -1,0 +1,73 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <h2 class="text-center">重設密碼</h2>
+    <form class="row g-3 needs-validation" method="post" id="Emailresetpasswordform">
+        @* col-12 代表填滿一列 *@
+        <div class="col-md-12">
+            <div class="form-outline">
+                <input type="text" class="form-control" id="txtEmail" name="txtEmail" required />
+                <label for="txtEmail" class="form-label">Email帳號</label>
+                <div class="invalid-feedback">請輸入您的會員Email</div>
+            </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <input id="resetpassword" type="submit" value="寄出驗證信" class="btn btn-success ms-2" />
+        </div>
+        <div class="col-12 d-flex justify-content-center">
+            <input id="ResetPasswordDemoBtn" type="button" value="demo" class="btn btn-danger ms-2" />
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+
+    <!-- MDB -->
+    <script type="text/javascript" src="~/js/mdb.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        //api寄送Email
+        $("#Emailresetpasswordform").submit(function (event) {
+            if ($(this)[0].checkValidity() === false) {
+                event.preventDefault();// 阻止提交表单
+                event.stopPropagation();
+            }
+            else {
+                event.preventDefault();
+
+                Emailresetpassword();
+            }
+        })
+
+        async function Emailresetpassword() {
+            const txtEmail = document.getElementById("txtEmail")
+            const response = await fetch(`@Url.Content("/api/ForgotPassword")?userEmail=${txtEmail.value}`)
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '寄送成功',
+                    text: "重設密碼驗證信已寄至您的電子信箱，請於 30 分鐘內開啟驗證信中的連結以重設密碼。",
+                    timer: 1500
+                })
+                setTimeout(
+                    function () {
+                        // history.back();
+                    }, 2000);
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: "寄送失敗，請確認Email是否正確"
+                })
+            }
+        }
+    </script>
+}
