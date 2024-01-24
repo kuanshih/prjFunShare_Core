@@ -40,7 +40,10 @@ FUNShare 親子學習平台
 ![database](https://github.com/kuanshih/prjFunShare_Core/assets/132976574/93ea5dff-33b6-40a0-90fb-bcd8bbb52cf5)
 
 個人貢獻:
-專案發想並共同規劃整體網站架構，設計資料庫以及前後台規劃，主要負責會員中心的我的課表、我的訂單、我的收藏、產品明細頁面、課程評價、以及即時聊天室，應用技術包含後端:C#以及LINQ語法搭配前端:HTML、CSS、Javascript、bootstrap，並利用Ajax非同步技術增加效能及網頁互動性，除了CRUD的功能，也串接Google Map Api、Google Calendar、並使用SignalR 實作一對一即時聊天室功能。
+
+專案發想並共同規劃整體網站架構，設計資料庫以及前後台規劃。
+主要負責會員中心的我的課表、我的訂單、我的收藏、產品明細頁面、課程評價、以及即時聊天室。
+應用技術包含後端:C#以及LINQ語法搭配前端:HTML、CSS、Javascript、bootstrap，並利用Ajax非同步技術增加效能及網頁互動性，除了CRUD的功能，也串接Google Map Api、Google Calendar、並使用SignalR 實作一對一即時聊天室功能。
 
 
 
