@@ -6,4 +6,39 @@
 台期望專注在孩童的成長，打造親子一站式服務以及中長期的課程規劃，與家長共同編寫孩子
 的成長履歷，紀錄未來主人翁學習的軌跡。
 
+前台網頁：
+
+1. 首頁：網頁導覽、輪播頁面、分頁式頁面、地區熱門課程推薦、商品推薦、AI智慧客服(Azure)、好評推薦。
+2. 搜尋引擎：熱門頁籤快速搜尋、分類篩選、地區篩選、年齡篩選、價格區間篩選、日期篩選、商品排序(價格高低、上架時間、銷售量)。
+3. 商品頁面：產品圖片、適合年紀、星級評價、課程詳細介紹、常見問題、學員評價、廠商介紹、猜你喜歡(推薦同類型商品)、收藏功能、月曆、即時顯示剩餘名額。
+4. 訂購流程：索取訂購人/參與人資料、報名注意事項、優惠券使用、紅利點數使用、快速帶入家庭成員資訊、確認頁面、第三方金流串接(綠界金流)。
+5. 會員登入：Email驗證、驗證碼輸入、會員註冊、忘記密碼。
+6. 會員中心：會員資料修改、家人資訊新增編輯、孩童成長履歷、收藏商品、我的課程(查詢已參加、即將參加和取消的課程)、課程評價(Azure圖片和訊息仲裁)、即時通訊(SignalR)、優惠券總覽、紅利點數總覽、更換密碼(Email驗證、簡訊驗證)、登出。
+
+管理後台：
+1. 廠商/管理員登入：登入身分識別、供應商註冊、忘記密碼。
+2. 首頁：即時數據分析(訂單總數、訂單金額、銷售課程數、銷售狀況、營利成長趨勢)。
+3. 廠商專區：廠商資料維護、即時通訊(SignalR)、報名名單匯出、管理出席。
+4. 會員維護：會員管理(新增、刪除、修改)、會員停權/復權。
+5. 廠商維護：廠商管理(新增、刪除、修改)、廠商註冊審核。
+6. 課程維護：課程管理(新增、刪除、修改)、OpenAI智慧產生產品文案。
+7. 訂單維護：訂單管理(新增、刪除、修改)、留言功能(Azure訊息仲裁)。
+8. 其他：評論管理、紅利管理、優惠券管理
+9. 數據資料分析：年度銷售報表、Power BI圖表分析。
+
+開發技術: 
+1. 編譯工具: Viusal Studio、Viual Studio Code、Git、GitHub
+2. 後端技術: Rest API、C#、ASP.NET、ENTITY Framework、LINQ
+3. 前端技術: HTML、CSS、JS、Bootstrap、JQuery、AJAX
+4. 資料庫: SQL Server
+5. 其他工具: Microsoft Azure、ECPay、Power BI、OpenAI、SignalR
+
+資料庫設計:
+![database](https://github.com/kuanshih/prjFunShare_Core/assets/132976574/93ea5dff-33b6-40a0-90fb-bcd8bbb52cf5)
+
+個人貢獻:
+專案發想並共同規劃整體網站架構，設計資料庫以及前後台規劃，主要負責會員中心的我的課表、我的訂單、我的收藏、產品明細頁面、課程評價、以及即時聊天室，應用技術包含後端:C#以及LINQ語法搭配前端:HTML、CSS、Javascript、bootstrap，並利用Ajax非同步技術增加效能及網頁互動性，除了CRUD的功能，也串接Google Map Api、Google Calendar、並使用SignalR 實作一對一即時聊天室功能。
+
+
+
 簡報: https://www.canva.com/design/DAFtkWKoZ3s/44P9IMWPG6d0qa0WRPSpYQ/view?utm_content=DAFtkWKoZ3s&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink
